@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Vitco Admin Panel</title>
+
+    <meta name="description" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/vitco-logo.ico" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="/css/admin/admin/admin.css" class="template-customizer-core-css" />
+    <!-- Helpers -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    {{#> css}}
+    {{/css}}
+</head>
+{{#> style}}{{/style}}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Poppins:ital,wght@0,400;0,500;0,600;1,500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+    .bg-base-color {
+        background-color: #26abe2 !important;
+    }
+
+    .bg-text-base-color {
+        background-color: #26abe2 !important;
+        color: #fff !important;
+    }
+
+    .bg-text-base-color:hover {
+        background-color: #2699ca !important;
+        color: #fff !important;
+    }
+
+    .bg-text-base-color:focus {
+        background-color: #2699ca !important;
+        color: #fff !important;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .admin-notification-icon {
+        color: #278ad6;
+    }
+
+    .admin-notification-icon:hover {
+        color: #0961a5;
+    }
+
+    .admin-profile-dropdown {
+        background-color: #fff;
+        position: fixed;
+        width: fit-content;
+        top: 5em;
+        right: 0em;
+        padding: 1em 0;
+        list-style: none;
+        border-radius: 5px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    /* Track */
+    .custom-scrollbar::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #26abe2;
+        border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #198ec1;
+    }
+
+    #layout-menu {
+        transition: all 0.3s ease-in-out;
+    }
+
+    #layout-menu.active {
+        left: 16em !important;
+    }
+
+    @media (min-width: 1200px) {
+        .layout-page {
+            margin-left: 17em;
+        }
+
+        .layout-menu {
+            position: fixed !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+    }
+
+    .fixed-bottom-right {
+        position: fixed;
+        bottom: 1em;
+        right: 1em;
+        z-index: 99;
+    }
+
+    .search-form-fixed-backdiv {
+        height: 5em;
+        width: 100%;
+    }
+
+    .search-form-fixed.displayNav {
+        position: fixed;
+        top: 0em;
+        width: 76.3%;
+        left: 18.7em;
+    }
+
+    .search-form-fixed .search-form input {
+        background-color: transparent;
+    }
+
+    .keyboard-shortcuts-container {
+        transition: all 0.2s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+        color: #fff;
+        height: 95vh;
+        width: 97vw;
+        position: fixed;
+        top: 1em;
+        left: 1em;
+        background-color: #202120;
+        z-index: 999999;
+        font-family: 'Open Sans', sans-serif;
+        border-radius: 5px;
+
+    }
+
+    .keyboard-shortcuts-container.active {
+        visibility: visible;
+        opacity: 1;
+
+    }
+
+    .keyboard-shortcuts-container ul li {
+        background-color: transparent;
+        border-color: #4e4e4e;
+        color: #9f9e9f;
+        padding: 0.5em;
+        font-size: small;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .keyboard-shortcuts-container ul li span {
+        margin: 0 1em;
+    }
+
+    .keyboard-shortcuts-container ul li span:nth-child(2) {
+        color: white;
+    }
+
+    @media (max-width: 1200px) {
+        .search-form-fixed.displayNav {
+            left: 1em;
+            top: 0em;
+        }
+    }
+</style>
+
+<body>
+
+    <div class="keyboard-shortcuts-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 mt-3">
+                    <h3 style="font-weight: 400;">Keyboard shortcuts</h3>
+                </div>
+                <div class="col-md-5 mt-4 ms-3">
+                    <h6>Page shortcuts</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span>Alt + M</span> <span>All machine sales data</span></li>
+                        <li class="list-group-item"><span>Alt + P</span> <span>All parts sales data</span></li>
+                        <li class="list-group-item"><span>Alt + S</span> <span>Open service reports</span></li>
+                        <li class="list-group-item"><span>Alt + I</span> <span>Open inbox</span></li>
+                        <li class="list-group-item"><span>Alt + C</span> <span>Open complaints</span></li>
+                        <li class="list-group-item"><span>Alt + H</span> <span>Go to profile page</span></li>
+                    </ul>
+                </div>
+                <div class="col-md-5 mt-4 ms-5 ps-5">
+                    <h6>Common shortcuts</h6>
+                    <ul class="list-group list-group-flush common-shortcuts">
+                        <li class="list-group-item"><span>R</span> <span>Refresh all reports</span></li>
+                        <li class="list-group-item"><span>Ctrl + /</span> <span>Start searching</span></li>
+                        <li class="list-group-item"><span>Alt + A</span> <span>Close report details</span></li>
+                        <li class="list-group-item"><span>Alt + =</span> <span>Add new report</span></li>
+                        <li class="list-group-item"><span>Shift + /</span> <span>Open shortcut box</span></li>
+                        <li class="list-group-item"><span>ESCAPE</span> <span>Close shortcut box</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button class="border-0 text-primary"
+                style="background-color:transparent;position:absolute;bottom:1em;right:1.5em;"
+                onclick="keyboardShortcut.removeClass('active');$('html').css('overflow-y','auto')">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme shadow custom-scrollbar"
+                style="height:100vh;overflow-y:auto;overflow-x:hidden;">
+                <div class="app-brand demo">
+                    <a class="app-brand-link">
+                        <span class="app-brand-logo demo">
+                            <img src="/images/vitco-logo.ico" alt="" style="height:4em;">
+                        </span>
+                        <span class="demo menu-text ms-2 text-capitalize">{{admin.adminName}}</span>
+                    </a>
+                    <a style="position: absolute; top: 1em; right: 1em;" onclick="openMenu()" class="d-xl-none">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="currentColor"
+                                class="bi bi-x" viewBox="0 0 16 16">
+                                <path
+                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </span>
+                    </a>
+
+                    <a href="javascript:void(0);"
+                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bi bi-chevron-left bi-sm align-middle"></i>
+                    </a>
+                </div>
+
+                <div class="menu-inner-shadow"></div>
+
+                <ul class="menu-inner py-1">
+                    <!-- Dashboard -->
+                    <li class="menu-main-item" style="background-color: #red!important;">
+                        <a href="/vitco-india/control" class="menu-link dashboard" data-link="dashboard">
+                            <i class="bi bi-house-door-fill me-3"></i>
+                            <div data-i18n="Analytics">Profile</div>
+                        </a>
+                    </li>
+                    {{#ifeq admin.role.0.roleName "admin"}}
+                    <li class="menu-main-item" style="background-color: #red!important;">
+                        <a href="/vitco-india/control/admins" class="menu-link dashboard" data-link="admins">
+                            <i class="bi bi-person-fill me-3"></i>
+                            <div data-i18n="Analytics">Admins</div>
+                        </a>
+                    </li>
+                    <li class="menu-main-item" style="background-color: #red!important;">
+                        <a href="/vitco-india/control/admin/notifications" class="menu-link dashboard"
+                            data-link="notifications">
+                            <i class="bi bi-envelope me-3"></i>
+                            {{#ifeq admin.notificationNumber 0}}
+                            <div data-i18n="Analytics">Inbox </div>
+                            {{else}}
+                            <div data-i18n="Analytics">Inbox <span class="bg-primary text-light rounded px-2 ms-4">
+                                    {{admin.notificationNumber}}</span>
+                            </div>
+                            {{/ifeq}}
+                        </a>
+                    </li>
+                    <li class="menu-main-item">
+                        <a href="/vitco-india/control/complaints" class="menu-link" data-link="complaints">
+                            <i class="bi bi-question-lg me-3"></i>
+                            <div data-i18n="Basic">Complaints</div>
+                        </a>
+                    </li>
+                    <li class="menu-main-item">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="service-reports"
+                            onclick="$('.drop-down-menu-main-service-report').toggleClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-headset me-3"></i>
+                                <div data-i18n="Basic">Service Reports</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-4 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-service-report">
+                            <li class="menu-main-item my-2">
+                                <a href="/vitco-india/control/service-reports/all" class="menu-link menu-link-dropdown"
+                                    data-link="service-reports-view-all">
+                                    <i class="bi bi-eye-fill me-3"></i>
+                                    <div data-i18n="Basic">View All</div>
+                                </a>
+                            </li>
+                            <li class="menu-main-item">
+                                <a href="/vitco-india/control/service-reports/new-form"
+                                    data-link="service-reports-add-new" class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-plus-square me-3"></i>
+                                    <div data-i18n="Basic">Add new</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-main-item">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
+                            $('.drop-down-menu-main-machine-sales-data').removeClass('active');
+                            $('.drop-down-menu-main-parts-sales-data').removeClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-columns-gap me-3"></i>
+                                <div data-i18n="Basic" id="sales-data-navbar-item">Sales data</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-sales-data">
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown"
+                                    onclick="$('.drop-down-menu-main-machine-sales-data').toggleClass('active')">
+                                    <i class="bi bi-pc-display-horizontal me-3"></i>
+                                    <div data-i18n="Basic">Machine</div>
+                                    <i
+                                        class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-machine-sales-data">
+
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Parts</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-main-item">
+                        <a class="menu-link" style="user-select: none" data-link="production"
+                            onclick="$('.drop-down-menu-main-production').toggleClass('active');">
+                            <i class="bi bi-bar-chart-fill me-3"></i>
+                            <div data-i18n="Basic">Production</div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-production">
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/sales-report/all" class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-shop-window me-3"></i>
+                                    <div data-i18n="Basic">Sales Orders</div>
+                                </a>
+                            </li>
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/sales-report/add-new"
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-quote me-3"></i>
+                                    <div data-i18n="Basic">Make</div>
+                                </a>
+                            </li>
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/sales-report/add-new"
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-bag-fill me-3"></i>
+                                    <div data-i18n="Basic">Purchase</div>
+                                </a>
+                            </li>
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/sales-report/add-new"
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-box me-3"></i>
+                                    <div data-i18n="Basic">Stock</div>
+                                </a>
+                            </li>
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/sales-report/add-new"
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-ticket-fill me-3"></i>
+                                    <div data-i18n="Basic">Items</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-main-item">
+                        <a href="/vitco-impex/vouchers/view" class="menu-link" data-link="vouchers">
+                            <i class="bi bi-ticket-fill me-3"></i>
+                            <div data-i18n="Basic">Vouchers</div>
+                        </a>
+                    </li>
+                    <li class="menu-main-item d-lg-block d-none">
+                        <a onclick="document.getElementsByClassName('keyboard-shortcuts-container')[0].classList.add('active');"
+                            class="menu-link" data-link="shotcuts">
+                            <i class="bi bi-question-circle me-3"></i>
+                            <div data-i18n="Basic">Shortcuts</div>
+                        </a>
+                    </li>
+                    {{else}}
+                    <li class="menu-main-item" style="background-color: #red!important;">
+                        <a href="/vitco-india/control/admin/notifications" class="menu-link dashboard"
+                            data-link="notifications">
+                            <i class="bi bi-envelope me-3"></i>
+                            {{#ifeq admin.notificationNumber 0}}
+                            <div data-i18n="Analytics">Inbox </div>
+                            {{else}}
+                            <div data-i18n="Analytics">Inbox <span class="bg-primary text-light rounded px-2 ms-4">
+                                    {{admin.notificationNumber}}</span>
+                            </div>
+                            {{/ifeq}}
+                        </a>
+                    </li>
+                    {{#each admin.permissions}}
+                    {{#ifeq this.permissionName "complaints"}}
+                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                    <li class="menu-main-item">
+                        <a href="/vitco-india/control/complaints" class="menu-link" data-link="complaints">
+                            <i class="bi bi-question-lg me-3"></i>
+                            <div data-i18n="Basic">Complaints</div>
+                        </a>
+                    </li>
+                    {{/ifeq}}
+                    {{/ifeq}}
+                    {{#ifeq this.permissionName "machineSalesData"}}
+                     machine sales data
+                    <li class="menu-main-item">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
+                            $('.drop-down-menu-main-machine-sales-data').removeClass('active');
+                            $('.drop-down-menu-main-parts-sales-data').removeClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-columns-gap me-3"></i>
+                                <div data-i18n="Basic" id="sales-data-navbar-item">Sales data</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-sales-data">
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Machine</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                </ul>
+                            </li>
+                            {{#ifeq this.permissionName "partSalesData"}}
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Parts</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                </ul>
+                            </li>
+                            {{/ifeq}}
+                        </ul>
+                    </li>
+                    {{else}}
+                    {{#ifeq this.permissionName "partSalesData"}}
+                    partSalesData
+                    <li class="menu-main-item">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
+                            $('.drop-down-menu-main-machine-sales-data').removeClass('active');
+                            $('.drop-down-menu-main-parts-sales-data').removeClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-columns-gap me-3"></i>
+                                <div data-i18n="Basic" id="sales-data-navbar-item">Sales data</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-sales-data">
+                            {{#ifeq this.permissionName "machineSalesData"}}
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Machine</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                </ul>
+                            </li>
+                            {{/ifeq}}
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Parts</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifeq}}
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    {{/ifeq}}
+                    {{/ifeq}}
+                    {{#ifeq this.permissionName "serviceReport"}}
+                    <li class="menu-main-item">
+                        <a class="menu-link" style="user-select: none" data-link="service-reports"
+                            onclick="$('.drop-down-menu-main-service-reports').toggleClass('active')">
+                            <i class="bi bi-file-earmark-fill me-3"></i>
+                            <div data-i18n="Basic">Service Reports</div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-4 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-service-reports">
+                            {{#ifeq this.permissionKeys.0.keyName "view"}}
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/service-reports/all   "
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-eye-fill me-3"></i>
+                                    <div data-i18n="Basic">View All</div>
+                                </a>
+                            </li>
+                            {{/ifeq}}
+                            {{#ifeq this.permissionKeys.2.keyName "create"}}
+                            <li class="menu-main-item mt-2">
+                                <a href="/vitco-india/control/service-reports/new-form"
+                                    class="menu-link menu-link-dropdown">
+                                    <i class="bi bi-plus-square me-3"></i>
+                                    <div data-i18n="Basic">Add new</div>
+                                </a>
+                            </li>
+                            {{/ifeq}}
+                        </ul>
+                    </li>
+                    {{/ifeq}}
+                    {{/each}}
+                    <li class="menu-main-item d-lg-block d-none">
+                        <a onclick="document.getElementsByClassName('keyboard-shortcuts-container')[0].classList.add('active');"
+                            class="menu-link" data-link="shotcuts">
+                            <i class="bi bi-question-circle me-3"></i>
+                            <div data-i18n="Basic">Shortcuts</div>
+                        </a>
+                    </li>
+                    {{/ifeq}}
+
+                </ul>
+            </aside>
+            <!-- / Menu -->
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
+                <div class="search-form-fixed-backdiv hide"></div>
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme search-form-fixed"
+                    id="layout-navbar" style="z-index:10 ;">
+                    <div id="menu-opener-hamburger" style="position:relative;z-index:10;"
+                        class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                        <a class="nav-item nav-link px-0 me-xl-4">
+                            <i class="bi bi-list" style="font-size:1.8rem ;" onclick="openMenu()"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-nav-right d-flex align-items-center w-100" id="navbar-collapse"
+                        style="top:-4em ;">
+                        <!-- Search -->
+                        <div class="navbar-nav align-items-xl-center p-xl-0 ps-4 w-75">
+                            <div class="nav-item d-flex align-items-center w-75">
+                                <i class="bx bx-search fs-4 lh-0"></i>
+
+                                <form id="search-form" class="w-100">
+                                    <input type="text" class="form-control border-0 shadow-none w-100"
+                                        placeholder='press " Ctrl + / " to start searching ' aria-label="Search..."
+                                        id="search-box" />
+                                </form>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                        <ul class="navbar-nav d-flex align-items-center ms-auto ">
+
+                            <!-- User -->
+                            {{!-- <li class="me-3 admin-notification-icon" onclick="location.href='';">
+                                <h5 class="mb-0 cursor-pointer"> </h5>
+                            </li> --}}
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow"
+                                    onclick="$('.admin-profile-dropdown').toggleClass('hide')">
+                                    <div class="avatar avatar-online">
+                                        {{#if admin.profilePhoto}}
+                                        <img src="{{admin.profilePhoto}}" class="img-rounded"
+                                            style="object-fit: cover;" />
+                                        {{else}}
+
+                                        <img src="/images/avatar/boy-avatar.png" class="img-rounded"
+                                            style="object-fit: cover;" />
+                                        {{/if}}
+                                    </div>
+                                </a>
+                                <ul class="admin-profile-dropdown hide shadow">
+                                    <li>
+                                        <a class="dropdown-item">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+                                                        {{#if admin.profilePhoto}}
+                                                        <img src="{{admin.profilePhoto}}" class="img-rounded"
+                                                            style="object-fit: cover;" />
+                                                        {{else}}
+
+                                                        <img src="/images/avatar/boy-avatar.png" class="img-rounded"
+                                                            style="object-fit: cover;" />
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">{{admin.userName}}</span>
+                                                    <small class="text-muted">{{admin.role.0.roleName}}</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {{!-- <li>
+                                        <a class="dropdown-item py-2" href="/vitco-impex/vouchers/view">
+                                            <span class="align-middle"><i class="bi bi-ticket me-3"></i>My vouchers
+                                            </span>
+                                        </a>
+                                    </li> --}}
+                                    <li>
+                                        <a class="dropdown-item py-2" href="/vitco-india/control/admin/notifications">
+                                            <span class="align-middle"><i class="bi bi-bell me-3"></i>Notifications
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2" href="/vitco-india/control/log-out">
+                                            <span class="align-middle"><i class="bi bi-box-arrow-left me-3"></i>Log
+                                                Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!--/ User -->
+                        </ul>
+                    </div>
+                </nav>
+                <!-- / Navbar -->
+
+                {{!--
+            </div> --}}
+            <!-- Core JS -->
+            <!-- build:js assets/vendor/js/core.js -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+                integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js"
+                integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/keyboardjs/2.7.0/keyboard.min.js"
+                integrity="sha512-UrxaOZAJw5p38NProL/UrffryqdMdXFcEdyLt6eU89pH0N7KnmAe8G3ghNbH1qW5cDYdnaoEw1TcbHn8wuqAvw=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            {{#> body}}
+            {{/body}}
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+
+</body>
+<script>
+    function openMenu() {
+        $('#layout-menu').toggleClass('active');
+    }
+    $(document).ready(function () {
+        // .scroll() creates an event when the user scrolls
+        $(window).scroll(function () {
+            // .scrollTop() retrieves vertical position of the scroll bar for the first element in a set of matched elements
+            var scroll = $(window).scrollTop();
+            if (scroll > 20) {
+                $('.search-form-fixed').addClass('displayNav');
+                $('.search-form-fixed-backdiv').removeClass('hide');
+            } else {
+                $('.search-form-fixed').removeClass('displayNav');
+                $('.search-form-fixed-backdiv').addClass('hide');
+            }
+        });
+    });
+
+    //===========================================================================================
+    // SHORTCUTS
+    const searchInput = $('#search-form input')
+    searchInput.on('focus', (e) => {
+        keyboardJS.bind('esc', (e) => {
+            event.preventDefault();
+            searchInput[0].blur()
+        });
+    })
+    searchInput.on('focusout', (e) => {
+        keyboardJS.unbind('esc');
+    })
+    // focus on search box
+    keyboardJS.bind('ctrl + /', (e) => {
+        event.preventDefault();
+        searchInput[0].focus()
+    });
+
+    // open shortcut container
+    keyboardShortcut = $('.keyboard-shortcuts-container')
+    keyboardJS.bind('shift + /', (e) => {
+        event.preventDefault();
+        $('html').css('overflow-y', 'hidden')
+        keyboardShortcut.addClass('active')
+    });
+    // close shortcut container
+    keyboardJS.bind('esc', (e) => {
+        if (keyboardShortcut.hasClass('active')) {
+            $('html').css('overflow-y', 'auto')
+            keyboardShortcut.removeClass('active')
+        }
+    });
+
+
+    //page shortcuts
+    //============================================
+    // machines sales data
+    keyboardJS.bind('alt + m', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-impex/control/sales-report/machine/all")
+    });
+    // parts sales data
+    keyboardJS.bind('alt + p', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-impex/control/sales-report/parts/all")
+    });
+    // service report
+    keyboardJS.bind('alt + s', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-india/control/service-reports/all")
+    });
+    // open inbox
+    keyboardJS.bind('alt + i', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-india/control/admin/notifications")
+    });
+    // open complaints
+    keyboardJS.bind('alt + c', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-india/control/complaints")
+    });
+    // open profile
+    keyboardJS.bind('alt + h', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-india/control")
+    });
+    //================================================================================
+
+
+
+    $(window).resize(function () { mediaQueriesJS() });
+    function mediaQueriesJS() {
+        pageWidth = $(window).width();
+        if (pageWidth < 768) {
+            searchInput.attr('placeholder', 'Search here...')
+        } else {
+            searchInput.attr('placeholder', 'press " Ctrl + / " to start searching')
+        }
+    }
+    $('#search-form').on('submit', (e) => {
+        e.preventDefault()
+    })
+</script>
+<script src="/js/admin/ajaxReq.js"></script>
+<script src="/js/admin/sub-admin.js"></script>
+<script src="/js/admin/shortcuts.js"></script>
+{{#> script}}{{/script}}
+
+</html>

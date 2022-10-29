@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>headTags}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/signup/signup.css">
+    <script src="https://kit.fontawesome.com/7f1332f97e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Sign Up - Vitco Impex</title>
+    <meta name="description"
+        content="Sign Up - Vitco Impex is one of the leading suppliers of Milk Analyzer, Packing Machine, Vending Machine and much more." />
+</head>
+
+<body>
+    {{>loading}}
+    <div class="container justify-content-center">
+        <div class="welcome-container">
+            <img style="transform: scale(1.6);" src="/images/signup.png" alt="">
+        </div>
+        <main class="signup-container">
+            <h1 class="heading-primary">Join
+                <a href="/">
+                    <span style="color:#2196f3 ;">
+                        VITCO.</span></a>
+            </h1>
+            <p class="text-mute">Already A Member? <a href="/user/sign-in">Log in</a></p>
+            <form class="signup-form" method="POST" action="/user/sign-up">
+                <div class="f-row input-wrapper">
+                    <label class="inp">
+                        {{#if userDetails}}
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="firstName"
+                            value="{{userDetails.firstName}}" required>
+                        {{else}}
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="firstName" required>
+                        {{/if}}
+                        <span class="label">First name</span>
+                        <span class="input-icon"><i class="fa-solid fa-address-card"></i></span>
+                    </label>
+                    <label class="inp">
+                        {{#if userDetails}}
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="lastName"
+                            value="{{userDetails.lastName}}" required>
+                        {{else}}
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="lastName" required>
+                        {{/if}}
+                        <span class="label">Last name</span>
+                        <span class="input-icon"><i class="fa-solid fa-address-card"></i></span>
+                    </label>
+                </div>
+                <label class="inp">
+                    {{#if userDetails.phoneNumber}}
+                    <input type="number" class="input-text" placeholder="&nbsp;" name="phoneNumber"
+                        value="{{phoneNumber}}" required>
+                    {{else}}
+                    <input type="number" class="input-text" placeholder="&nbsp;" name="phoneNumber" required>
+                    {{/if}}
+                    <span class="label">Phone Number</span>
+                    <span class="input-icon"><i class="fa-solid fa-phone"></i></span>
+                </label>
+
+                <label class="inp">
+                    {{#if userDetails.password}}
+                    <input type="password" class="input-text" placeholder="&nbsp;" id="password" name="password"
+                        value="{{userDetails.password}}" required>
+                    {{else}}
+                    <input type="password" class="input-text" placeholder="&nbsp;" id="password" name="password"
+                        required>
+                    {{/if}}
+                    <span class="label">Password</span>
+                    <span class="input-icon input-icon-password" data-password><i class="fa-solid fa-eye"></i></span>
+                </label>
+                <label class="inp">
+                    <input type="password" class="input-text" placeholder="&nbsp;" id="confirmPassword"
+                        name="confirmPassword" required>
+                    <span class="label">Confirm Password</span>
+                    <span class="input-icon input-icon-password" data-password><i class="fa-solid fa-eye"></i></span>
+                </label>
+                {{#if errors}}
+                <span style="color: red;text-align: center">{{errors}}</span>
+                {{/if}}
+                <button class="btn btn-signup" type="submit">Create account</button>
+            </form>
+        </main>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const eyeClick = document.querySelector("[data-password]");
+        const password_elem = document.getElementById("password");
+
+        eyeClick.onclick = () => {
+            const icon = eyeClick.children[0];
+            icon.classList.toggle("fa-eye-slash");
+            if (password_elem.type === "password") {
+                password_elem.type = "text";
+            } else if (password_elem.type === "text") {
+                password_elem.type = "password";
+            }
+        };
+
+
+    </script>
+</body>
+{{>commonScripts}}
+
+</html>

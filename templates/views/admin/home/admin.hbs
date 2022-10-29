@@ -1,0 +1,175 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+    .menu-link[data-link="dashboard"] {
+        background-color: #26ABE2;
+        color: #fff;
+    }
+
+    #search-form {
+        display: none;
+    }
+</style>
+{{/style}}
+{{#*inline "body"}}
+<form action="/vitco-impex/control/admin-profile/update-admin" method="post">
+    <input type="hidden" value="{{admin._id}}" name="adminID">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="w-100 d-flex justify-content-center">
+                    <div style="position: relative;">
+                        {{#if admin.profilePhoto}}
+                        <img src="{{admin.profilePhoto}}" alt="" class="img-fluid admin-profile-img"
+                            style="border-radius:50%;max-height:18em;max-width:18em;height: 18em;width: 18em;object-fit: cover;">
+                        <input type="hidden" value="{{admin.profilePhoto}}" name="profilePhoto"
+                            class="upload-admin-profile-photo-data-url-input">
+                        {{else}}
+                        <img src="/images/avatar/boy-avatar.png" alt="" class="img-fluid admin-profile-img"
+                            style="border-radius:50%;max-height:18em;max-width:18em;height: 18em;width: 18em;object-fit: cover;">
+                        <input type="hidden" name="profilePhoto" class="upload-admin-profile-photo-data-url-input">
+                        {{/if}}
+                        <div style="position: absolute;right: 0em;bottom: 3em;cursor: pointer">
+                            <button type="button" class="btn btn-primary shadow-none"
+                                onclick="$('.upload-admin-profile-photo-input').trigger('click');"><i
+                                    class="bi bi-camera-fill"></i></button>
+                            <input type="file" hidden accept="image/jpeg, image/png, image/jpg"
+                                class="upload-admin-profile-photo-input admin-inputs">
+                        </div>
+                        <h5 class="text-center text-secondary mt-3 text-capitalize">{{admin.adminName}}</h5>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-7 mt-md-0 mt-5">
+                <div class="form-group">
+                    <label>Full name</label>
+                    <input type="text" value="{{admin.adminName}}"
+                        class="form-control shadow-none border-0 rounded-0 admin-inputs" aria-describedby="helpId"
+                        placeholder="enter your full name" name="adminName">
+
+                    <label class="mt-3">Vitco ID</label>
+                    <input type="text" value="{{admin.userName}}" class="form-control shadow-none border-0 rounded-0"
+                        aria-describedby="helpId" placeholder="enter Vitco ID" readonly>
+                    {{#ifnoteq admin.role.0.roleName "admin"}}
+                    <label class="mt-3">Password</label>
+
+                    <div class="w-100">
+                        <button class="btn btn-primary shadow-none border-0" type="button" data-toggle="modal"
+                            data-target="#reqToChangePassModal">Request to change</button>
+                    </div>
+                    {{/ifnoteq}}
+                    <h6 class="mt-4">Your role is: {{admin.role.0.roleName}}</h6>
+
+                    <label class="mt-3">Email</label>
+                    <input type="text" class="form-control shadow-none border-0 rounded-0 admin-inputs"
+                        aria-describedby="helpId" placeholder="add your email" name="email" value="{{admin.email}}">
+
+                    <label class="mt-3">Phone number</label>
+                    <input type="number" class="form-control shadow-none border-0 rounded-0 admin-inputs"
+                        aria-describedby="helpId" placeholder="add you number here" name="phone"
+                        value="{{admin.phone}}">
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-end my-3 ">
+                <button class="btn btn-primary shadow-none border-0 hide update-admin-profile-btn" type="submit">Update
+                    Profile</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Modal -->
+<div class="modal" id="reqToChangePassModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content p-0">
+            <div class="modal-header">
+                <h6 class="modal-title">Change your password</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="reqAdminChangePass">
+                <div class="modal-body">
+                    <label class="mt-3">Enter new password</label>
+                    <input type="text" class="form-control shadow-none rounded-0 admin-inputs" aria-describedby="helpId"
+                        placeholder="enter new password" name="pass" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#if serviceReports}}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-md-6 px-0" style="background-color:#fff;">
+            <div class="today-servicereport-heading text-light px-3 pt-2 pb-1 rounded"
+                style="background-color: #4da3ff;">
+                <h6>Your latest service reports</h6>
+            </div>
+            {{#ifeq serviceReportsLength 0}}
+            <h5 class="text-center text-muted my-5 py-5">No reports found</h5>
+            {{else}}
+            <ol class="list-group list-group-numbered today-service-reports" style="height:20em;overflow:auto">
+                {{#each serviceReports}}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Report No. : {{this.reportNumber}} - {{this.date}}</div>
+                        Customer name: {{this.customerName}}
+                    </div>
+                    <span class="badge bg-primary rounded">{{this.time}}</span>
+                </li>
+                {{/each}}
+            </ol>
+            {{/ifeq}}
+        </div>
+    </div>
+</div>
+{{!-- {{else}}
+   <div class="container mb-5">
+    <div class="row">
+        <div class="col-md-6 px-0" style="background-color:#fff;">
+            <div class="today-servicereport-heading text-light px-3 pt-2 pb-1 rounded"
+                style="background-color: #4da3ff;">
+                <h6>Your latest service reports</h6>
+            </div>
+            <h5 class="text-center text-muted my-5 py-5">No reports found</h5>
+        </div>
+    </div>
+</div> --}}
+{{/if}}
+
+
+
+
+
+{{/inline}}
+{{#*inline "css"}}
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/scss/admin/admin.css">
+<link rel="stylesheet" href="/css/admin/complaints/complaints.css">
+{{/inline}}
+
+
+<script>
+    const adminUsername = `{{{admin.userName}}}`
+    $('.menu-inner .menu-item:nth-child(2) a').css({ 'background': 'white' })
+    $('.menu-inner .menu-item:nth-child(1) a').attr('style', 'background:#26ABE2!important;color:white!important')
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+    integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/admin/admin/admin.js"></script>

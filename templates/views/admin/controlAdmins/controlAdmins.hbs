@@ -1,0 +1,497 @@
+{{>adminHeader}}
+{{#*inline "style"}}
+<style>
+    .menu-link[data-link="admins"] {
+        background-color: #26ABE2;
+        color: #fff;
+    }
+
+    #search-form {
+        display: none;
+    }
+</style>
+{{/inline}}
+
+{{#*inline "body"}}
+<div style="width:100%;display:flex;justify-content:center;align-items:center;position:
+    relative;" id="all-complaints-main-body">
+    <table style="margin: 2em 0;">
+        <thead>
+            <tr>
+                <th scope="col" style="border-radius:6px 0 0 0 "></th>
+                <th scope="col">Admin name</th>
+                <th scope="col">ID </th>
+                <th scope="col">Password</th>
+                <th scope="col">Role</th>
+                <th scope="col">Permission</th>
+                <th scope="col" style="border-radius:0 6px 0 0;width:6em"></th>
+            </tr>
+        </thead>
+        <tbody id="all-complaints-body">
+            {{#each allAdmins}}
+            <tr>
+                {{#ifeq this.userName "@vitco-admin9011"}}
+                <td data-label="Username">
+                    <img src="{{this.profilePhoto}}" class="img-fluid"
+                        style="border-radius:50%;max-height:3em;max-width:3em;height:3em;width:3em;object-fit:cover">
+                </td>
+                <td data-label="Username">{{this.adminName}}</td>
+                <td data-label="Username">{{this.userName}}</td>
+                <td data-label="Password"><a class="cursor-pointer text-primary" data-toggle="modal"
+                        data-target="#changePasswordAdmin">Reset password</a>
+                    <div class="modal" id="changePasswordAdmin" tabindex="-1" role="dialog"
+                        aria-labelledby="changePasswordAdmin" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Change Password</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="/vitco-india/control/admin/change-pass" method="post">
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <input type="hidden" name="adminID" value="{{this._id}}">
+                                                    {{!-- <input type="text" class="form-control my-3
+                                                        shadow-none" placeholder="Enter admin password"
+                                                        name="adminPassword" required> --}}
+                                                    <input type="text" class="form-control my-3
+                                                        shadow-none new-password-admin-input"
+                                                        placeholder="Enter new password" name="newPassword" required>
+                                                    <small id="helpId" class="form-text
+                                                text-primary"> <span class="cursor-pointer
+                                                    user-select-none"
+                                                            onclick="$('.new-password-admin-input').val(generatePassword())">
+                                                            Generate Random</span></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn
+                                            btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn
+                                            btn-primary">Change</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                <td data-label="Role">Super Admin</td>
+                {{!-- <td>All</td> --}}
+                <td data-label="Permissions">
+                    All permissions
+                </td>
+                <td data-label="Actions"><i class="bi bi-emoji-frown display-6 text-danger"></i></td>
+                {{/ifeq}}
+                {{#ifnoteq this.userName "@vitco-admin9011"}}
+                <td data-label="Username">
+                    <img src="{{this.profilePhoto}}" class="img-fluid"
+                        style="border-radius:50%;max-height:3em;max-width:3em;height: 3em;width: 3em;">
+                </td>
+                <td data-label="Username" style=" word-break: break-all;">{{this.adminName}}</td>
+                <td data-label="Username" style=" word-break: break-all;">{{this.userName}}</td>
+                <td data-label="Password"><a class="cursor-pointer text-primary" data-toggle="modal"
+                        data-target="#changePassword-{{this._id}}">Reset password</a>
+                    <div class="modal" id="changePassword-{{this._id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="changePassword" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Change Password</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="/vitco-india/control/admin/change-pass" method="post">
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <input type="hidden" name="adminID" value="{{this._id}}">
+                                                    {{!-- <input type="text" class="form-control my-3
+                                                        shadow-none" placeholder="Enter admin password"
+                                                        name="adminPassword" required> --}}
+                                                    <input type="text" class="form-control my-3
+                                                        shadow-none new-password-input"
+                                                        placeholder="Enter new password" name="newPassword" required>
+                                                    <small id="helpId" class="form-text
+                                                text-primary"> <span class="cursor-pointer
+                                                    user-select-none"
+                                                            onclick="$('.new-password-input').val(generatePassword())">
+                                                            Generate Random</span></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn
+                                            btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn
+                                            btn-primary">Change</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                <td data-label="Role" style=" word-break: break-all;">{{this.role.0.roleName}}</td>
+                <td data-label="Permissions">
+                    <div class="dropdown open">
+                        <button class="btn btn-success shadow-none
+                            dropdown-toggle" type="button" id="permissionsDropDown" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Permissions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="permissionsDropDown">
+                            {{#each permissions}}
+                            {{#if this.permissionName}}
+                            <button class="dropdown-item bg-secondary text-light">{{this.permissionName}}</button>
+                            {{/if}}
+                            {{#each permissionKeys}}
+                            {{#if this.keyName}}
+                            <button class="dropdown-item">{{this.keyName}}</button>
+                            {{/if}}
+                            {{/each}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </td>
+                <td data-label="Actions">
+                    <div class="dropdown open d-flex justify-content-end">
+                        <i class="bi bi-three-dots-vertical cursor-pointer me-4" id="adminActions"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <div class="dropdown-menu" aria-labelledby="adminActions">
+                            <button class="dropdown-item editAdminBtn" data-toggle="modal" data-target="#editAdmin"
+                                onclick="getAdminDetails('{{this._id}}')">Edit</button>
+                            <button class="dropdown-item bg-danger text-light"
+                                onclick="deleteAdmin('{{this._id}}')">Delete</button>
+                        </div>
+                    </div>
+                </td>
+                {{/ifnoteq }}
+
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+{{!-- addd new admin button --}}
+<button class="btn btn-primary rounded-0 position-fixed add-new-admin-btn
+    shadow-none" data-toggle="modal" data-target="#addNewAdmin" onclick="$('.add-new-admin-password-input').val('');$('.add-new-admin-username-input').val('');$('.add-new-admin-role-input').val('');$(':checkbox').prop('checked',
+    false);">Add
+    new Admin</button>
+
+{{!-- modals --}}
+{{!-- add new admin --}}
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+{{!-- create new admin --}}
+<div class="modal" id="addNewAdmin" tabindex="-1" role="dialog" aria-labelledby="addNewAdmin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/vitco-india/control/create-admin" method="post">
+                    <div class="container rounded bg-white">
+                        <div class="row">
+                            <div class="col border-right">
+                                <div>
+                                    <div class="row mt-2">
+                                        <div class="col"><label class="labels">Admin
+                                                Name</label><input type="text" class="form-control shadow-non
+                                                shadow-none" placeholder="enter admin full name" name="fullName"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col"><label class="labels">Admin
+                                                ID</label><input type="text" class="form-control shadow-none
+                                                add-new-admin-username-input" placeholder="enter admin ID"
+                                                name="userName" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-12"><label class="labels">Password</label><input type="text"
+                                                class="form-control shadow-none
+                                                add-new-admin-password-input" placeholder="enter password"
+                                                name="password" required>
+                                            <small id="helpId" class="form-text
+                                                text-primary"> <span class="cursor-pointer
+                                                    user-select-none"
+                                                    onclick="$('.add-new-admin-password-input').val(generatePassword())">
+                                                    Generate Random</span></small>
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            <label class="labels">What's the
+                                                role</label><input type="text" class="form-control shadow-none
+                                                add-new-admin-role-input" placeholder="enter role" name="roleName"
+                                                required onkeyup="if($('.add-new-admin-role-input').val()
+                                                ==
+                                                'admin'){$('.add-new-admin-role-input').val('')}">
+                                            <small id="helpId" class="form-text
+                                                text-muted"> You can't use admin
+                                                role
+                                                again</small>
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <table class="table table-striped
+                                                table-inverse table-responsive">
+                                                <thead class="thead-inverse">
+                                                    <tr>
+                                                        <th>Permission</th>
+                                                        <th>View</th>
+                                                        <th>Edit</th>
+                                                        <th>Create</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td scope="row">Complaints</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="complaints">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-complaints" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-complaints" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-complaints" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-complaints" name="permissionName"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Machine SD</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="machineSalesData">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-machineSalesData" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Parts SD</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="partSalesData">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-partSalesData" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Service Re.</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="serviceReport">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-serviceReport" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <button class="btn btn-primary
+                                        profile-button" type="submit">Create a New Admin</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- Edit admin --}}
+<div class="modal" id="editAdmin" tabindex="-1" role="dialog" aria-labelledby="editAdmin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit your admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/vitco-india/control/edit-admin" method="post">
+                    <div class="container rounded bg-white">
+                        <div class="row">
+                            <div class="col border-right">
+                                <div>
+                                    <input type="hidden" name="adminID" class="edit-admin-id-input">
+                                    <div class="row mt-2">
+                                        <div class="col"><label class="labels">Admin
+                                                Name</label><input type="text" class="form-control shadow-nonee
+                                                edit-admin-fullName-input
+                                                shadow-none" placeholder="Admin
+                                                name" name="fullName" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col"><label class="labels">Admin
+                                                ID</label><input type="text" class="form-control shadow-none
+                                                edit-admin-username-input" placeholder="Admin ID" name="userName"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-12"><label class="labels">Password</label><input type="text"
+                                                class="form-control shadow-none
+                                                edit-admin-password-input" placeholder="***************"
+                                                name="password" required readonly>
+                                            <small id="helpId" class="form-text
+                                                text-muted">You can't see the
+                                                password
+                                                once set</small>
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            <label class="labels">What's the
+                                                role</label><input type="text" class="form-control shadow-none
+                                                edit-admin-role-input" placeholder="enter role" name="roleName"
+                                                required>
+                                        </div>
+                                        <div class="col-12 mt-5">
+                                            <table class="table table-striped
+                                                table-inverse table-responsive">
+                                                <thead class="thead-inverse">
+                                                    <tr>
+                                                        <th>Permission</th>
+                                                        <th>View</th>
+                                                        <th>Edit</th>
+                                                        <th>Create</th>
+                                                        <th>Delete</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td scope="row">Complaints</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="complaints">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-complaints" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-complaints" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-complaints" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-complaints" name="permissionName"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Machine SD</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="machineSalesData">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-machineSalesData" name="permissionName">
+                                                        </td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-machineSalesData" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Parts SD</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="partSalesData">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-partSalesData" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-partSalesData" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row">Service Re.</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="serviceReport">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-serviceReport" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-serviceReport" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <button class="btn btn-primary
+                                        profile-button" type="submit">Update
+                                        Admin</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/inline}}
+{{#*inline "css"}}
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="/css/admin/serviceReport/serviceReport.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/scss/controlAdmins/controlAdmins.css">
+{{/inline}}
+<script>
+    const webHost = `{{webHost}}`
+</script>
+<script src="/js/admin/controlAdmins/controlAdmin.js"></script>
+<script src="/js/admin/ajaxReq.js"></script>

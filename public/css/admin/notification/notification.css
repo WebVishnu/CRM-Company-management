@@ -1,0 +1,23 @@
+.delete-notification-btn{
+    background-color: #f8f8f8;
+    color: #dc3545;
+    padding: 3px;
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-notification-btn:hover{
+    background-color: #dc3545;
+    color: white;
+    padding: 3px;
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

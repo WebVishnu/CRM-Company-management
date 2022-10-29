@@ -1,0 +1,298 @@
+<div class="nav">
+    <div class="upper-nav">
+        <div class="logo">
+            <a href="/">
+                <img src="/images/vitco-logo.ico" alt="logo"/>
+            </a>
+            <!-- <div class="category">
+                Shop by category
+                <svg width="25" height="25" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path   
+                        d="M840.4 300H183.6C163.9 300 152.9 320.8 165.1 335L493.5 715.8C502.9 726.7 521 726.7 530.5 715.8L858.9 335C871.1 320.8 860.1 300 840.4 300Z"
+                        fill="black" />
+                </svg>
+            </div> -->
+        </div>
+        <div class="searchbar">
+            <label>
+                <input type="text" name="" id="" placeholder="Search your query here...." onfocus="search()">
+                <button id="search-btn-top-nav">Search</button>
+            </label>
+            <div class="search-overlay" onclick="closeSearch()"></div>
+            <div class="nav-links">
+                {{!-- <span><a href="/"> Home</a></span> --}}
+                <span><a href="/"> Home</a></span>
+                <span> <a href="#">Categories</a>
+                    <div class="dropdown">
+                        <ul>
+                            <li href="#">Category 1</li>
+                            <li href="#">Category 2</li>
+                            <li href="#">Category 3</li>
+                        </ul>
+                    </div>
+                </span>
+                <span> <a href="/blogs"> Blog </a> </span>
+                <span> <a href="/apply-for-job">Apply for Job</a> </span>
+                <span> <a href="/complaint/all">Complaints</a> </span>
+                <!-- <span>About Us</span>
+                <span>FAQs</span>
+                <span>Contact Us</span> -->
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="hotline-number">
+
+                <div class="ico">
+                    <a href="tel:+919319797703">
+                        <span class="material-symbols-outlined" style="transform:scale(2);margin-right:15px">
+                            phone_in_talk
+                        </span>
+                    </a>
+                </div>
+                <div>
+                    <span>Help Line</span>
+                    <div class="number">+91-9319797703</div>
+                </div>
+            </div>
+            <div class="cart">
+                <svg width="60" height="60" viewBox="0 0 45 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M6 2L2 7.33333V26C2 26.7072 2.28095 27.3855 2.78105 27.8856C3.28115 28.3857 3.95942 28.6667 4.66667 28.6667H23.3333C24.0406 28.6667 24.7189 28.3857 25.219 27.8856C25.719 27.3855 26 26.7072 26 26V7.33333L22 2H6Z"
+                        stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M2 7.33337H26" stroke="black" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path
+                        d="M19.3333 12.6666C19.3333 14.0811 18.7714 15.4377 17.7712 16.4379C16.771 17.4381 15.4145 18 14 18C12.5855 18 11.2289 17.4381 10.2288 16.4379C9.22856 15.4377 8.66666 14.0811 8.66666 12.6666"
+                        stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="cart-container">
+                    <h4 style="text-align: center;">CART</h4>
+                    <hr class="light-line">
+                    <ul>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                        <li>
+                            <span>Lorem, ipsum dolor.</span>
+                            <span>Quantity</span>
+                        </li>
+                    </ul>
+                    <div class="cart-container-btn">
+                        <button>Proceed To Checkout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="login-btn">
+                {{#if user}}
+                <button style="background-color:transparent;color:black;padding:16px 0;text-transform: capitalize;"
+                    onclick="openUserMenu()">Hi!
+                    {{user.firstName}}</button>
+                <section class="user-menu-details">
+                    <ul>
+                        <li onclick="window.location.href ='/user/log-out'">Log out</li>
+                        {{!-- <li>Mobile: {{user.phoneNumber}}</li> --}}
+                    </ul>
+                </section>
+                {{else}}
+                <a href="/user/sign-up"> <button>Sign up</button></a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE HEADER-->
+
+<hr style="position: relative;top: 10em;border: 1px solid #e7e7e7;">
+
+<header class="header" id="header">
+    <nav class="navbar nav-container">
+        <div style="position: fixed;bottom:0;left:0;">
+            <div class="menu" id="menu">
+                <ul class="menu-list menu-list-mobile-closed">
+                    <div class="open-mobile-navbar-overlay" onclick="openMenu()"></div>
+                    <li class="menu-item previous-menu">
+                        <a href="/complaint/all" class="menu-link">
+                            <span class="material-symbols-outlined">
+                                forum
+                            </span>
+                            <span class="menu-name">Complaint</span>
+                        </a>
+                    </li>
+                    <li class="menu-item previous-menu">
+                        <a href="tel:+919319797703" class="menu-link">
+                            <span class="material-icons">
+                                call
+                            </span>
+                            <span class="menu-name">Contact</span>
+                        </a>
+                    </li>
+                    <li class="menu-item previous-menu">
+                        <a href="/" class="menu-link is-active">
+                            <span class="material-icons">
+                                home
+                            </span>
+                            <span class="menu-name">Home</span>
+                        </a>
+                    </li>
+                    <li class="menu-item previous-menu">
+                        <a class="menu-link">
+                            <span class="material-icons">
+                                shopping_cart
+                            </span>
+                            <span class="menu-name">Cart</span>
+                        </a>
+                    </li>
+
+                    <!-- EXTRA MENU -->
+                    <!-- ============================================= -->
+                    <!-- <li class="menu-item extra-menu">
+                        <a href="/" class="menu-link">
+                            <span class="material-icons">
+                            home
+                            </span>
+                            <span class="menu-name">Home</span>
+                        </a>
+                    </li>
+                    <li class="menu-item extra-menu">
+                        <a href="#" class="menu-link">
+                            <span class="material-icons">
+                            shopping_cart
+                            </span>
+                            <span class="menu-name">Cart</span>
+                        </a>
+                    </li> -->
+                    <li class="menu-item extra-menu">
+                        <a class="menu-link open-menu">
+                            <span class="material-icons">
+                                expand_more
+                            </span>
+                            <span class="menu-name">Search by Categories</span>
+                        </a>
+                    </li>
+                    <!-- <li class="menu-item extra-menu">
+                        <a href="#" class="menu-link open-menu">
+                            <span class="material-icons">
+                                receipt_long
+                                </span>
+                            <span class="menu-name">Check Out</span>
+                        </a>
+                    </li> -->
+
+
+                    <li class="menu-item extra-menu">
+                        <a class="menu-link open-menu">
+                            <span class="material-icons">
+                                rss_feed
+                            </span>
+                            <span class="menu-name">Blog</span>
+                        </a>
+                    </li>
+                    <li class="menu-item extra-menu">
+                        <a class="menu-link open-menu">
+                            <span class="material-icons">
+                                info
+                            </span>
+                            <span class="menu-name">About Us</span>
+                        </a>
+                    </li>
+                    <li class="menu-item extra-menu">
+                        <a class="menu-link open-menu">
+                            <span class="material-icons">
+                                quiz
+                            </span>
+                            <span class="menu-name">FAQs</span>
+                        </a>
+                    </li>
+                    <!-- <li class="menu-item extra-menu">
+                        <a class="menu-link">
+                            <span class="material-icons">
+                            phone
+                            </span>
+                            <span class="menu-name">Contact</span>
+                        </a>
+                    </li> -->
+
+                    <li class="menu-item extra-menu">
+                        {{#if user}}
+                        <a href="/user/log-out" class="menu-link">
+                            <span class="material-symbols-outlined">
+                                logout
+                            </span>
+                            <span class="menu-name">Log out</span>
+                        </a>
+                        {{else}}
+                        <a href="/user/sign-up" class="menu-link">
+                            <span class="material-icons">
+                                login
+                            </span>
+                            <span class="menu-name">Sign Up</span>
+                        </a>
+                        {{/if}}
+
+                    </li>
+                    <li class="menu-item extra-menu" onclick="openMenu()">
+                        <a class="menu-link">
+                            <span class="material-icons">
+                                close
+                            </span>
+                            <span class="menu-name">Close Menu</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link open-menu" onclick="openMenu()">
+                            <span class="material-icons">
+                                expand_less
+                            </span>
+                            <span class="menu-name">More</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<script>
+    function openUserMenu() {
+        $(".user-menu-details").css({
+            "opacity": 1,
+            "visibility": "visible",
+            "top": "2.5em"
+        }).toggle();
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/partials/header/header.js"></script>

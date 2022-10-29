@@ -1,0 +1,415 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Poppins:ital,wght@0,400;0,500;0,600;1,500&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .text-grey {
+        color: #ADADAD;
+    }
+
+    #search-form {
+        display: none;
+    }
+
+    .menu-link[data-link="service-reports"] {
+        background-color: #26ABE2;
+        color: #fff !important;
+    }
+
+    .menu-link[data-link="service-reports-add-new"] {
+        background-color: #229ccf !important;
+        color: #fff !important;
+    }
+</style>
+{{/style}}
+{{#*inline "body"}}
+<form id="service-report-main-form">
+    <input type="text" class="report-number-input" hidden name="reportNumber">
+    <div class="container-fluid mt-md-5 mt-4 px-md-5">
+        <div class="row">
+            <div class="col-md-9 text-md-left text-center" style="font-weight:600;">
+                <h3>Create a new service report - <span class="report-number"></span> </h3>
+            </div>
+            <div class="col-md-3 text-end text-grey">
+                <div>
+                    Date: <span class="date">{{date}}</span> <input hidden name="date">
+                </div>
+                <div>
+                    <input hidden name="time">
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Customer Name : </h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <input type="text" class="form-control shadow-none" name="customerName" id=""
+                        aria-describedby="helpId" required>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0;">
+        <div class="row mt-3">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Mobile Number : </h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <input type="text" class="form-control shadow-none" name="mobile" id="" aria-describedby="helpId"
+                        required>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0;">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Technician Name : </h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <input type="text" class="form-control shadow-none" name="technicianName" id=""
+                        aria-describedby="helpId" required>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0;">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Attending Location :</h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <input type="text" class="form-control shadow-none" name="attendingLocation" id=""
+                        aria-describedby="helpId" required>
+                </div>
+            </div>
+        </div>
+        {{!-- <hr style="border: 0;">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Password : </h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <input type="text" class="form-control shadow-none" name="Password" id="" aria-describedby="helpId"
+                        required>
+                </div>
+            </div>
+        </div> --}}
+        <hr style="border: 0;">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 d-flex align-items-center">
+                <div>
+                    <h6 class="m-0 mx-md-4">Customer Address : </h6>
+                </div>
+
+            </div>
+            <div class="col-lg-4 col-md-5 mt-md-0 mt-3">
+                <div>
+                    <textarea class="form-control shadow-none" id="exampleFormControlTextarea1" rows="3"
+                        style="resize: none;" name="address" required></textarea>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0;">
+        <div class="row mb-4 mt-4">
+            <div class="col">
+                <h4>Add new machine</h4>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label for="machine-name-input">Machine Name</label>
+                        <input type="text" class="form-control shadow-none" id="machine-name-input">
+                    </div>
+
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label for="seriel-num-input">Serial Number</label>
+                        <input type="text" class="form-control shadow-none" id="seriel-num-input">
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-group">
+                        <label for="machine-password-input">Password</label>
+                        <input type="text" class="form-control shadow-none" id="machine-password-input">
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-4 mb-4">
+                    <label for="warranty">Select Warranty</label>
+                    <select class="form-control form-control-sm shadow-none rounded-0" id="warranty">
+                        <option value="IW">In Warranty (IW)</option>
+                        <option value="OW">Out Of Warranty (OW)</option>
+                    </select>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 mt-sm-0 mt-4">
+                    <div class="form-group">
+                        <label for="problem-input">Problem / Defect</label>
+                        <textarea class="form-control shadow-none" id="problem-input" rows="3"
+                            style="resize:none ;"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="form-group">
+                        <label for="action-input">Action</label>
+                        <textarea class="form-control shadow-none" id="action-input" rows="3"
+                            style="resize:none ;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9 col-sm-4 d-flex flex-column parts-in-inputs-container">
+                    <div class="form-group parts-in-inputs">
+                        <div class=" d-flex">
+                            <div>
+                                <label for="partName">Part Name</label>
+                                <input type="text" class="form-control shadow-none partName">
+                            </div>
+                            <div>
+                                <label for="partSno">Part Sno.</label>
+                                <input type="text" class="form-control shadow-none partSno">
+                            </div>
+                            <div>
+                                <label for="partWTY">Part Wty</label>
+                                <input type="text" class="form-control shadow-none partWTY">
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3" onclick="addNewPartsIN()">
+                        + Add more</span>
+                </div>
+                <div class="col-md-3 col-sm-4 d-flex flex-column">
+                    <div class="form-group  parts-out-inputs">
+                        <label for="partsOUT">Parts OUT</label>
+                        <input type="text" class="form-control shadow-none partsOUT">
+                    </div>
+                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3"
+                        onclick="$('.parts-out-inputs').append(`<input type='text' class='form-control shadow-none my-2 partsOUT'>`);appyOnFocusShortcuts();">
+                        + Add more</span>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control form-control-sm shadow-none rounded-0" id="status">
+                            <option value="OK">OK</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-end flex-wrap">
+                    <h6 class="text-center text-danger mt-2 me-2 add-new-machine-error"></h6>
+                    <button type="button" class="btn btn-primary shadow-none add-new-machine-btn">Add Machine</button>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 0;">
+        <div class="row">
+            <div class="col">
+                <h4>Machines</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div style="width:100%;display:flex;justify-content:center;align-items:center" id="all-reports-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                {{!-- <th scope="col"
+                                    style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0">
+                                    SNo.</th> --}}
+                                <th scope="col"
+                                    style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0">M. SNo.
+                                </th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">M. Name</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">Wty</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">Prob.</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">Action</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. IN</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. Out</th>
+                                <th scope="col"
+                                    style="word-break:break-all;white-space: nowrap;border-radius:0 6px 0 0">
+                                    Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-reports-body">
+                        </tbody>
+                    </table>
+                    <div>
+                        <img src="/images/spineer.gif" class="loading-reports-gif" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4 mt-4">
+            <div class="col">
+                <h4>Sign your report</h4>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col d-flex justify-content-end flex-wrap">
+                {{!-- Customer Signature =============================================== --}}
+                <button type="button" class="btn btn-primary mx-sm-4 shadow-none my-2" style="height:3em;"
+                    data-toggle="modal" data-target="#CustomerSignatureModal">Add Customer Signature</button>
+                <img class="customer-sign-img">
+                <input type="text" hidden class="customer-sign-input" name="customerSignImgDataUrl">
+                <!-- Modal -->
+                <div class="modal" id="CustomerSignatureModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="height:44%">
+                        <div class="modal-content" style="height: 79%;">
+                            <div>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Customer Signature <br>
+                                        <small class="text-secondary">Please review service report before signing it
+                                        </small>
+                                    </h5>
+
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="position:relative">
+                                    <canvas id="customer-sign-canvas"
+                                        style="width:100%; height:15em;background-color:rgb(219, 219, 219);"></canvas>
+                                    <div id="CustomerCanvasStartCover" class="startCoverCanvas">Click To Start</div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"
+                                        class="btn btn-danger shadow-none clear-btn-customer-canvas">Clear</button>
+                                    <button type="button" class="btn btn-secondary shadow-none"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button"
+                                        class="btn btn-primary shadow-none save-btn-customer-canvas">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{!-- Technician Signature ============================================= --}}
+                <button type="button" class="btn btn-primary shadow-none my-2" style="height:3em;" data-toggle="modal"
+                    data-target="#TechnicianSignatureModal">Add Technician Signature</button>
+                <img class="technician-sign-img">
+                <input type="text" hidden class="technician-sign-input" name="technicianSignImgDataUrl">
+                <!-- Modal -->
+                <div class="modal" id="TechnicianSignatureModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="height:44%">
+                        <div class="modal-content" style="height: 79%;">
+                            <form id="technician-sign-form">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Technician Signature <br>
+                                        <small class="text-secondary">Please review service report before signing it
+                                        </small>
+                                    </h5>
+
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <canvas id="technician-sign-canvas"
+                                        style="width:100%; height:15em;background-color:rgb(219, 219, 219);"></canvas>
+                                    <div id="TechnicianCanvasStartCover" class="startCoverCanvas">Click To Start
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"
+                                        class="btn btn-danger shadow-none clear-technician-sign-btn">Clear</button>
+                                    <button type="button" class="btn btn-secondary shadow-none"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button"
+                                        class="btn btn-primary shadow-none save-btn-technician-canvas">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4 mt-4">
+            <div class="col">
+                <h4>Submit Report</h4>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col d-flex justify-content-end">
+                {{#if error}}
+                <h6 class="text-center text-danger mt-2 me-2">{{error}}</h6>
+                {{/if}}
+                <h6 class="submit-report-error-text text-center text-danger mt-2 me-2"></h6>
+                <input type="text" hidden id="service-report-machine-id-input" name="serviceReportMachineIdInput">
+                {{!-- <button class="btn btn-success shadow-none share-service-report-btn mx-2" type="button"><i
+                        class="bi bi-whatsapp mx-2"></i>Share</button> --}}
+                <button class="btn btn-primary shadow-none submit-service-report-btn" type="submit">Submit & Add
+                    more</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+{{/inline}}
+
+{{#*inline "css"}}
+<!-- Compiled and minified CSS -->
+<!-- Compiled and minified JavaScript -->
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/admin/serviceReport/addNewServiceReport.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+
+{{/inline}}
+{{#*inline "script"}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.4/underscore-min.js"
+    integrity="sha512-uLKRd6hCNYAENFn2h7w0p5hrUAz21bAu/85eqSqmQ1Y565lFInwRga9Lgk+QAAR9QvNfSlZjnEb+HHfzkAC/8Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+    integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const webHost = `{{host}}`
+</script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="/js/admin/service-report/addNewServiceReport.js"></script>
+{{/inline}}

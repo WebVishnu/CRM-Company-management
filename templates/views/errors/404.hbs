@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Page not found</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="/css/loading/loading.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+</head>
+<style>
+  body,html{
+    overflow: hidden;
+    color: #26ABE2;
+  }
+  .container button{
+    background-color: #26ABE2;
+    color: white;
+    border: none;
+    padding: 0.3em 0.7em;
+    margin-top: 1em;
+  }
+</style>
+<body>
+  {{>loading}}
+  <div class="container d-flex flex-column align-items-center justify-content-center px-md-5" style="height:100vh;">
+    <img src="/images/404.png" alt="404 - Page not found" width="70%">
+    <h5 class="text-center mt-3">You didn't break the internet, but we can't find what you are looking for.</h5>
+    <button onclick="location.href='/';"> Go Home </button>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/partials/loading/loading.js"></script>
+</html>

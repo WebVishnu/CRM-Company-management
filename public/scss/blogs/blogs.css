@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap");
+* {
+  font-family: "Open Sans", sans-serif;
+}
+
+body,
+html {
+  overflow-x: hidden;
+}
+
+:root {
+  --theme-colour: #209CD1;
+  --grey-color: #F6F6F6;
+  --dark-grey-color: #484848;
+}
+
+.blog-heading {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  padding: 3em 5em;
+  background-color: var(--grey-color);
+  margin-top: 10em;
+}
+.blog-heading > div h3 {
+  font-weight: 300;
+  background-color: var(--theme-colour);
+  padding: 0.5em;
+  display: inline;
+  border-radius: 6px;
+  color: white;
+  width: calc(90% - 1vw);
+}
+.blog-heading div:nth-child(2) {
+  font-size: calc(1.5em + 1vw);
+  width: 90%;
+  margin-top: 1em;
+  font-weight: 800;
+  color: var(--theme-colour);
+}
+
+.blog {
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+}
+.blog > div {
+  display: flex;
+  padding: 3em 5em;
+}
+.blog > div > div {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+  max-width: 61em;
+}
+.blog > div > div > div > span:nth-child(1) {
+  background-color: var(--theme-colour);
+  border-radius: 6px 0 0 6px;
+  color: white;
+  padding: 0.5em;
+}
+.blog > div > div > div > span:nth-child(2) {
+  color: var(--dark-grey-color);
+  font-weight: 500;
+}
+.blog > div > div div:nth-child(4) button {
+  color: var(--theme-colour);
+  border-radius: 3px;
+  margin-top: 1em;
+  display: flex;
+  align-items: center;
+}
+.blog > div > div div:nth-child(4) button span {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  left: -10px;
+}
+.blog > div > div div:nth-child(4) button:hover span {
+  visibility: visible;
+  opacity: 1;
+  left: 0;
+}
+
+@media screen and (max-width: 960px) {
+  .blog-heading {
+    padding: 3em 1em;
+  }
+}
+@media screen and (max-width: 769px) {
+  .blog-heading {
+    margin-top: 6em;
+  }
+  .blog > div {
+    flex-direction: column;
+  }
+  .blog > div > div {
+    margin-bottom: 2em;
+  }
+}
+@media screen and (max-width: 500px) {
+  .blog-heading {
+    margin-top: 3.7em;
+  }
+}/*# sourceMappingURL=blogs.css.map */

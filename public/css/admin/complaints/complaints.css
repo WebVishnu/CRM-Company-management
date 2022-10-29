@@ -1,0 +1,589 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Poppins:ital,wght@0,400;0,500;1,500&display=swap");
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  background-color: #F8F8F8;
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0;
+  font-family: 'Poppins', sans-serif !important;
+}
+hr{
+  border-top: none!important;
+}
+
+.nav-link.active[data-filter-value="All"] {
+  background-color: #26ABE2 !important;
+}
+
+.nav-link.active[data-filter-value="Solved"] {
+  background-color: #2FB182 !important;
+}
+
+.nav-link.active[data-filter-value="Pending"] {
+  background-color: #E05274 !important;
+}
+
+.nav-link.active[data-filter-value="Progress"] {
+  background-color: #FFAE00 !important;
+}
+
+.complaint-categories::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* TABLE ---------- */
+
+table {
+  border-collapse: collapse;
+  margin: 2em 0;
+
+  width: 95%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+
+table tr {
+  background-color: #ffffff;
+  padding: .35em;
+}
+
+table th,
+table td {
+
+  padding: 1em 0;
+  text-align: center;
+}
+
+table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background-color: #26ABE2;
+  color: white;
+}
+
+@media screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+
+  table td::before {
+    /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+
+
+.complaint-status[data-status="Progress"] button {
+  background-color: #FFF7E6;
+  color: #FFB20B;
+  border-radius: 3px;
+  border: 1px solid #FFB20B;
+  padding: 3px;
+  cursor: default;
+
+}
+
+.complaint-status[data-status="Pending"] button {
+  background-color: #FDF4F6;
+  color: #DE486C;
+  border-radius: 3px;
+  border: 1px solid #DE486C;
+  padding: 3px;
+  cursor: default;
+
+}
+
+.complaint-status[data-status="Solved"] button {
+  background-color: #EBF9F4;
+  color: #34B385;
+  border-radius: 3px;
+  border: 1px solid #34B385;
+  padding: 3px;
+  cursor: default;
+
+}
+
+.complaint-status[data-status="Deleted"] button {
+  background-color: #ff6666;
+  color: #ffffff;
+  border-radius: 3px;
+  border: 1px solid #ff0000;
+  padding: 3px;
+  cursor: default;
+
+}
+
+.close-complaint-details-btn:hover{
+  color: #DE486C;
+}
+
+.rotate-360{
+  animation: rotation 2s infinite linear;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+.refresh-complaints {
+  border-radius: 50%;
+  background-color: white;
+  height: 2em;
+  width: 2em;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s ease-in-out;
+}
+
+.refresh-complaints:hover {
+  background-color: #26ABE2;
+  color: #fff;
+}
+
+/* details modal css */
+
+
+.back-button button {
+  background-color: transparent;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.delete-button button {
+  background-color: #FDF4F6;
+  color: #E05274;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  border: 1px solid #E05274;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.user-details-container .user-detail {
+  margin: 1em 0;
+  display: flex;
+  width: 100%;
+}
+
+.user-details-container .user-detail:nth-child(8) {
+  display: flex;
+  align-items: center;
+}
+
+.user-details-container .user-detail section {
+  display: flex;
+}
+
+/* .user-details-container .user-detail-status[data-status="Pending"] {
+  color: #E05274 !important;
+  border: 1px solid #E05274 !important;
+}
+.user-details-container .user-detail-status[data-status="Progress"] {
+  color: #FFB61A !important;
+  border: 1px solid #FFB61A !important;
+}
+.user-details-container .user-detail-status[data-status="Solved"] {
+  color: #42B98E !important;
+  border: 1px solid #42B98E !important;
+} */
+
+.user-details-text-fields span {
+  text-transform: uppercase;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: calc(0.1em + 0.9vw);
+  padding: 4px 6px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.user-details-input-fields span {
+  font-family: "Poppins", sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  margin-left: 1em;
+  max-width: 40em;
+  display: flex;
+  align-items: center;
+}
+
+.user-details-input span:nth-child(2) {
+  font-family: "Poppins", sans-serif;
+  font-style: italic;
+  color: #CCCCCC;
+  cursor: pointer;
+  font-weight: 400;
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+}
+
+.user-details-input span:nth-child(2):hover {
+  color: #18527F;
+}
+
+.user-detail-change-status:nth-child(1) {
+  background-color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  border: 1px solid #CCCCCC;
+  padding: 4px;
+  margin: 0 1em;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.1s all ease-in-out;
+}
+
+/* .user-details-container .user-detail-change-status:nth-child(1):hover {
+    color: #E05274;
+    border: 1px solid #E05274;
+    background-color: #FDF4F6;
+  } */
+.user-details-container .user-detail-change-status:nth-child(2) {
+  background-color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  border: 1px solid #CCCCCC;
+  padding: 4px;
+  margin: 0 1em;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.1s all ease-in-out;
+}
+
+/* .user-details-container .user-detail-change-status:nth-child(2):hover {
+  color: #FFB20B;
+  border: 1px solid #FFB20B;
+  background-color: #FFF7E6;
+} */
+
+.user-details-container .user-detail-change-status:nth-child(3) {
+  background-color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  border: 1px solid #CCCCCC;
+  padding: 4px;
+  margin: 0 1em;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.1s all ease-in-out;
+}
+
+.user-details-container .user-detail-change-status:nth-child(1):hover {
+  /* Pending button status */
+  color: #DE486C;
+  border: 1px solid #DE486C;
+  background-color: #FDF4F6;
+}
+
+.user-details-container .user-detail-change-status:nth-child(2):hover {
+  /* Progress button status */
+  color: #FFAE00;
+  border: 1px solid #FFAE00;
+  background-color: #FFF7E6;
+}
+
+.user-details-container .user-detail-change-status:nth-child(3):hover {
+  /* Solved button status */
+  color: #34B385;
+  border: 1px solid #34B385;
+  background-color: #EBF9F4;
+}
+
+@media (max-width: 1200px) {
+  .bd-example-modal-lg {
+    overflow-y: auto !important;
+  }
+
+
+  .user-details-text-fields span,
+  .user-details-input-fields span {
+    color: black;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: calc(0.5em + 0.9vw);
+    padding: 4px 6px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #6c757d;
+}
+
+.delete-button-div {
+  height: 1.5em;
+}
+
+.delete-button-div h3 {
+  font-size: calc(10px + 0.7vw);
+  text-align: center !important;
+}
+
+.list-group-div {
+  height: 63%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+.list-group-div .list-group .list-group-item .w-100 h5 {
+  font-size: calc(12px + 0.5vw);
+}
+
+.list-group-div .list-group .list-group-item .w-100 small {
+  font-size: calc(8px + 0.4vw);
+  color: #6c757d;
+}
+
+.list-group-div .list-group .list-group-item p {
+  font-size: calc(8px + 0.5vw);
+  color: #6c757d;
+}
+
+.textarea-div {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-left: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.textarea-div h3 {
+  font-size: calc(10px + 0.6vw);
+  font-weight: 700;
+}
+
+.textarea-div textarea {
+  color: #6c757d;
+  font-size: calc(8px + 0.5vw);
+  width: 100%;
+  padding: 10px;
+  outline: 1px solid #CCCCCC;
+  border: none;
+  resize: none;
+  height: 150px;
+}
+
+.textarea-div button {
+  background-color: transparent;
+  color: #9d9d9d;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #cccccc;
+}
+
+/* .modal-content .container-fluid {
+  background-color: azure;
+} */
+
+@media (max-width: 1200px) {
+  .modal-content {
+    height: fit-content !important;
+    padding: 0 0 5em 0;
+  }
+
+}
+
+
+
+@media (max-width: 764px) {
+  .add-action-main-container {
+    position: absolute !important;
+    bottom: -15em !important;
+    height: 24em !important;
+    background-color: white;
+    width: 100vw !important;
+  }
+
+  .textarea-div {
+    position: relative;
+    top: -2em;
+  }
+}
+
+@media (max-width: 550px) {
+  .textarea-div {
+    position: relative;
+    top: -3.3em;
+  }
+}
+
+@media (max-width: 463px) {
+
+  .textarea-div textarea {
+    width: 96%;
+    height: 4em;
+  }
+
+  .textarea-div {
+    position: relative;
+    top: 0em;
+  }
+
+  .action-main-div {
+    height: 72vh;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* complaitn modal */
+.complaint-details-modal{
+  height: 100vh;
+  width: -webkit-fill-available;
+  position: fixed;
+  display: none;
+  background-color: #fff;
+  z-index: 999090;
+  top: 0;
+  left: 17em;
+  overflow: auto;
+}
+@media (max-width: 1200px) {
+  .complaint-details-modal{
+    width: 100%!important;
+    left: 0;
+  }
+}
+.single-complaint-row:hover{
+  background-color: #F8F8F8;  
+}
+.complaint-details-modal.active{
+  display: block;
+}
+.actions-dialog-box-container {
+  position: fixed;
+  width: 30vw;
+  right: 0;
+  height: 85vh;
+  transition: 0.3s ease-in-out;
+  bottom: calc(4em - 85vh);
+}
+.actions-dialog-box-container .bi-arrow-90deg-up::before {
+  transition: all 0.3s ease-in-out;
+}
+.actions-dialog-box-container.open {
+  bottom: 0 !important;
+}
+.actions-dialog-box-container.open .bi-arrow-90deg-up::before {
+  transform: rotate(180deg);
+}
+.actions-dialog-box-container .actions-dialog-box-header {
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 1em;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+}
+.actions-dialog-box-container .actions-dialog-message {
+  background-color: #fff;
+  height: 100%;
+  overflow-y: auto;
+}
+.actions-dialog-box-container .complaint-details-title {
+  display: flex;
+  align-items: center;
+}
+.actions-dialog-box-container .actions-dialog-input-box {
+  background-color: #fff;
+  box-shadow: 0px -4px 5px 0px rgb(232, 232, 232);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .actions-dialog-box-container {
+    width: 98vw;
+    transform: translateX(-1vw);
+  }
+}

@@ -1,0 +1,575 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+
+  .menu-link[data-link="service-reports"] {
+    background-color: #26ABE2;
+    color: #fff !important;
+  }
+
+  .menu-link[data-link="service-reports-view-all"] {
+    background-color: #229ccf !important;
+    color: #fff !important;
+  }
+
+  .all-service-report-filters,
+  .search-add-on-container {
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link-ok.active {
+    background-color: #42ad51 !important;
+  }
+
+  .nav-link-all.active {
+    background-color: #26abe2 !important;
+  }
+
+  .nav-link-pending.active {
+    background-color: #de5162 !important;
+  }
+
+  .fixed-bottom-center {
+    position: fixed;
+    bottom: 1em;
+    left: 1;
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    z-index: 4;
+
+  }
+
+
+  .fixed-bottom-center .total-search-results {
+    background-color: #fff;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+
+  }
+
+  @media (max-width:1200px) {
+    .fixed-bottom-center {
+      left: 1;
+      width: 100%;
+      bottom: 4em;
+    }
+  }
+</style>
+{{/style}}
+
+
+{{#*inline "css"}}
+<!-- Compiled and minified CSS -->
+
+<!-- Compiled and minified JavaScript -->
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="/css/admin/serviceReport/serviceReport.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+{{/inline}}
+
+
+{{#*inline "body"}}
+<script>
+  window.scrollTo(0, 0)
+</script>
+
+
+
+<div class="container-fluid px-md-5 mt-3">
+  <div class="row">
+    <div class="col-md-8 complaint-categories" style="overflow:auto;">
+      <ul class="nav nav-pills d-flex flex-nowrap" id="pills-tab" role="tablist">
+        <li class="nav-item mx-2" role="presentation" onclick="totalSearchResults.addClass('hide');refreshAllReports()" data-filter="all">
+          <button class="nav-link px-2 nav-link-all active rounded-0 d-block" id="pills-all-tab rounded-0"
+            style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab"
+            aria-controls="pills-home" aria-selected="true" data-filter-value="All"> All
+            Reports <span class="total-reports"></span> </button>
+        </li>
+        <li class="nav-item mx-2" role="presentation" onclick="checkActiveFilter()" data-filter="OK">
+          <button class="nav-link px-2 nav-link-ok rounded-0" id="pills-solved-tab rounded-0"
+            style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-OK" type="button" role="tab"
+            aria-controls="pills-OK" aria-selected="false" data-filter-value="Solved">Success (OK)
+            <span class="total-reports"></span></button>
+        </li>
+        <li class="nav-item mx-2" role="presentation" onclick="checkActiveFilter()" data-filter="pending">
+          <button class="nav-link px-2 nav-link-pending rounded-0" id="pills-pending-tab rounded-0"
+            style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-pending" type="button" role="tab"
+            aria-controls="pills-pending" aria-selected="false" data-filter-value="pending">Pending <span
+              class="total-reports"></span></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+{{!-- report table --}}
+<div class=" mb-5" style="width:100%;display:flex;justify-content:center;align-items:center" id="all-reports-header">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col" class="user-select-none"
+          style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">Date</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">C Name.</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">T. Name</th>
+        <th scope="col" class="user-select-none"
+          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
+      </tr>
+    </thead>
+    <tbody id="all-service-reports-body">
+    </tbody>
+  </table>
+</div>
+<div class="container service-report-loading hide" style="
+    position: relative;
+    bottom: 4em;
+">
+  <div class="row">
+    <div class="col-12 p-0 d-flex justify-content-center">
+      <div class="spinner-border sales-data-loader" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <div class="col-12 p-0 mt-2 ms-2">
+      <h5 class="text-center text-secondary">Please wait...</h5>
+    </div>
+  </div>
+</div>
+<h3 class="text-center text-secondary hide no-results-found-text">No results found</h3>
+
+<!-- Modal -->
+<div class="view-sale-data-details-modal p-md-3 p-2 h-100 hide"
+  style="position: fixed;background-color: white;z-index:99;overflow-y:auto">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-10 my-3">
+        <h3 class="service-report-heading">Service Report</h3>
+      </div>
+      <div class="col-md-4 col-2 my-4 d-flex justify-content-end">
+        <img src="/images/letters/alt.png" alt="" height="30em" width="53em" class="mx-2 d-lg-inline d-none">
+        <i class="bi bi-plus-lg d-lg-inline d-none"></i>
+        <img src="/images/letters/a.png" alt="" height="30em" width="30em" class="mx-2 d-lg-inline d-none">
+        <i class="bi bi-x-circle cursor-pointer" style="font-size:1.5em"
+          onclick="$('.view-sale-data-details-modal').addClass('hide');$('html').css('overflow-y', 'scroll');checkActiveFilter()"></i>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Date & Time</label>
+          <input readonly type="hidden" class="service-report-details-_id">
+          <input readonly type="text" class="form-control shadow-none service-report-details-data-time" name="" id=""
+            aria-describedby="helpId" placeholder="enter invoice date">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Created By</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-create-by" name="" id=""
+            aria-describedby="helpId" placeholder="enter admin name">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Customer Name</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-customer-name" name=""
+            id="" aria-describedby="helpId" placeholder="enter machine name">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Mobile Number</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-mobile" name="" id=""
+            aria-describedby="helpId" placeholder="enter machine number">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Technician name</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-tech-name" name="" id=""
+            aria-describedby="helpId" placeholder="enter barcode">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Attending location</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-attend-loc" name="" id=""
+            aria-describedby="helpId" placeholder="enter customer name">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Customer Address</label>
+          <input readonly type="text" class="form-control shadow-none service-report-details-address" name="" id=""
+            aria-describedby="helpId" placeholder="enter address">
+        </div>
+      </div>
+      <div class="col-12 p-0">
+        <div style="width:100%;display:flex;justify-content:center;align-items:center">
+          <table class="all-service-machines-table">
+            <thead>
+              <tr>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">M. name</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;">M. number</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Wty</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Prob.</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Action</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">P. IN</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;">P. OUT</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Status</th>
+              </tr>
+            </thead>
+            <tbody id="all-service-machines-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {{!-- <div class="col-md-3 col-6 p-0 offset-md-6 mb-5">
+        <img height="50%" width="50%" src="" alt="Technician signature" class="technician-signature-img-service-report">
+        <hr style="width:80%">
+        <h6>Technician signature</h6>
+      </div>
+      <div class="col-md-3 col-6 p-0 mb-5">
+        <img height="50%" width="100%" src="" alt="Customer signature" class="customer-signature-img-service-report">
+        <hr style="width:80%">
+        <h6>Customer signature</h6>
+      </div> --}}
+
+      <div class="col-12 d-flex justify-content-end sales-report-actions"
+        style="position: fixed;bottom: 0.5em;right: -0.5em;">
+        {{#each admin.permissions}}
+        {{#ifeq this.permissionName "all"}}
+        <button class="btn text-light bg-base-color shadow-none mt-3 change-service-report-btn" onclick="toggleServiceReportInputs('report',false);
+          $('.all-service-machines-table').addClass('hide');
+          $('.submit-changes-service-report-btn').removeClass('hide');
+          $(this).addClass('hide')">
+          <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
+        <button class='btn btn-info shadow-none mt-3 submit-changes-service-report-btn hide'
+          onclick='saveServiceReport()'>Apply Changes</button>
+        {{/ifeq}}
+        {{#ifeq this.permissionName "serviceReport"}}
+        {{#each this.permissionKeys}}
+        {{#ifeq this.keyName "edit"}}
+        <button class="btn btn-primary shadow-none mt-3 change-service-report-btn" onclick="toggleServiceReportInputs('report',false);
+          $('.all-service-machines-table').addClass('hide');
+          $('.submit-changes-service-report-btn').removeClass('hide');
+          $(this).addClass('hide')">
+          <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
+        <button class='btn btn-info shadow-none mt-3 submit-changes-service-report-btn hide'
+          onclick='saveServiceReport()'>Apply Changes</button>
+        {{/ifeq}}
+        {{/each}}
+        {{/ifeq}}
+        {{/each}}
+        <button class="btn text-light bg-base-color mx-3 shadow-none mt-3 print-service-report-btn"><i
+            class="bi bi-printer-fill mr-2"></i>Print</button>
+        <button class="btn btn-secondary shadow-none mt-3"
+          onclick=" $('.view-sale-data-details-modal').addClass('hide');$('html').css('overflow-y', 'scroll');checkActiveFilter()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- service machine modal --}}
+<div class="service-machine-modal bg-light py-md-5 py-3 hide h-100"
+  style="position:fixed;z-index:100;overflow-y: auto;">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Report number</label>
+          <input readonly type="hidden" class="service-report-machine-details-_id">
+          <input readonly type="text" class="form-control shadow-none service-report-number" aria-describedby="helpId"
+            placeholder="report number">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Machine name</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-machine-name"
+            aria-describedby="helpId" placeholder="enter machine name">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Machine number</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-machine-number"
+            aria-describedby="helpId" placeholder="enter machine number">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Machine Password</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-machine-password"
+            aria-describedby="helpId" placeholder="enter machine number">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Warranty</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-wty" name="" id=""
+            aria-describedby="helpId" placeholder="enter warranty">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Problem</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-prob" name="" id=""
+            aria-describedby="helpId" placeholder="enter problem">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Action</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-action" name=""
+            id="" aria-describedby="helpId" placeholder="enter action">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">Status</label>
+          <input readonly type="text" class="form-control shadow-none service-report-machine-details-status" name=""
+            id="" aria-describedby="helpId" placeholder="enter status here">
+        </div>
+      </div>
+      <div class="col-md-3 d-flex flex-column mb-2">
+        <div class="form-group">
+          <label for="">Parts OUT</label>
+          <div class="parts-out-inputs">
+          </div>
+        </div>
+        <span class="cursor-pointer text-primary add-new-parts-out hide"
+          onclick="$('.parts-out-inputs')
+          .append(`
+          <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partsOut my-1' placeholder='enter parts out'>`)">
+          + add new
+        </span>
+      </div>
+      <div class="col-md-9 mb-5 pb-5 mt-3" style="position:relative" >
+        <span class="px-2" style="position:absolute;top:-0.7em;left:2em;background-color:#f8f9fa">Part IN</span>
+        <div class="form-group d-flex p-3 pt-5" style="border: 1px solid rgb(194, 194, 194)!important;">
+          <div class="w-100">
+            <div class="d-flex justify-content-around">
+              <label class="w-100">Part name</label>
+              <label class="w-100">Part Sno.</label>
+              <label class="w-100">Part Wty</label>
+            </div>
+            <div class="parts-in-inputs">
+            </div>
+          </div>
+          {{!-- <div class="w-50">
+            <label for="">Parts wty</label>
+            <div class="parts-wty-inputs">
+            </div>
+          </div> --}}
+        </div>
+        <span class="cursor-pointer text-primary add-new-parts-in hide mb-5" onclick="$('.parts-in-inputs')
+          .append(`
+          <div class='d-flex'>
+                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partName my-1' placeholder='enter parts name'>
+                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partSno my-1' placeholder='enter parts sno'>
+                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partWty my-1' placeholder='enter parts wty'>
+                </div>`)
+         ">+ add
+          new</span>
+      </div>
+
+      <div class="col-12 d-flex justify-content-end align-items-end p-0" style="position: fixed;right:1em;bottom:1em">
+        {{#each admin.permissions}}
+        {{#ifeq this.permissionName "all"}}
+        <button class="btn text-light bg-base-color shadow-none mt-3 change-service-report-machine-details-btn" onclick="toggleServiceReportInputs('machine',false);
+          $('.submit-changes-service-report-machine-details-btn').removeClass('hide');
+          $(this).addClass('hide')
+          $('.add-new-parts-in').removeClass('hide')
+          $('.add-new-parts-out').removeClass('hide')">
+          <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
+        <button class='btn btn-info shadow-none mt-3 submit-changes-service-report-machine-details-btn hide'
+          onclick='saveReportMachinesDetails()'>Apply Changes</button>
+        {{/ifeq}}
+        {{#ifeq this.permissionName "serviceReport"}}
+        {{#each this.permissionKeys}}
+        {{#ifeq this.keyName "edit"}}
+        <button class="btn text-light bg-base-color shadow-none mt-3 change-service-report-machine-details-btn" onclick="toggleServiceReportInputs('machine',false);
+          $('.submit-changes-service-report-machine-details-btn').removeClass('hide');
+          $(this).addClass('hide')
+          $('.add-new-parts-in').removeClass('hide')
+          $('.add-new-parts-out').removeClass('hide')">
+          <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
+        <button class='btn btn-info shadow-none mt-3 submit-changes-service-report-machine-details-btn hide'
+          onclick='saveReportMachinesDetails()'>Apply Changes</button>
+        {{/ifeq}}
+        {{/each}}
+        {{/ifeq}}
+        {{/each}}
+        <button class="btn text-light bg-base-color shadow-none mx-2"
+          onclick=" $('.service-machine-modal').addClass('hide');">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
+  integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+{{!-- search add ons --}}
+<div class="addtional-search-options" style="position:fixed;bottom:1em;right:1em;z-index:5">
+  <button class="btn text-light bg-base-color border-0 shadow-none" onclick="refreshAllReports()"><i
+      class="bi bi-arrow-clockwise"></i></button>
+  <button class="btn text-light bg-base-color border-0 shadow-none" data-toggle="modal"
+    data-target="#advanceSearchModal"
+    onclick="$('#advance-serach-form')[0].reset();$('.delete-advance-inputs-btn').click()">Advance Search</button>
+</div>
+
+{{!-- fixed div --}}
+<div class="fixed-bottom-center">
+  <span class="total-search-results hide shadow"></span>
+</div>
+
+<!-- Modal -->
+<div class="modal p-0" style="overflow-y: hidden;" id="advanceSearchModal" tabindex="-1" role="dialog"
+  aria-labelledby="modelTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="advance-search-grip-horizontal">
+        <h5 class="modal-title ">Advance Search</h5>
+
+        <button type="button" class="close m-0" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <script>
+        $('#advanceSearchModal').draggable({
+          cursor: "grabbing",
+          opacity: 0.8,
+          handle: "#advance-search-grip-horizontal"
+        })
+      </script>
+      <form id="advance-serach-form">
+
+        <div class="modal-body" style="overflow-y: auto;height: 12em;">
+          <h6>Search with combination</h6>
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <h6 style="font-size: 0.8em;" class="d-flex justify-content-between"><span> Select Fields</span>
+                  <span>
+                    <a class="text-danger mx-2 cursor-pointer user-select-none delete-advance-inputs-btn"
+                      onclick="addNewAdvanceSearchInput('clear')">Delete all</a>
+                    <a class="text-primary cursor-pointer user-select-none"
+                      onclick="addNewAdvanceSearchInput('combination')">Add more</a></span>
+                </h6>
+              </div>
+
+            </div>
+
+            <div class="row create-combination-container">
+              <div class="col-6">
+                <select class="form-select border-0" style="background-color: #f6f7f7;"
+                  aria-label="Default select example" name="adv-search-combination-select">
+                  <option value="date">Date</option>
+                  <option value="customerName">C. name</option>
+                  <option value="mobile">Mobile</option>
+                  <option value="address">C. Address</option>
+                  <option value="service.machineNum">Machine number</option>
+                  <option value="technicianName">Technician name</option>
+                  <option value="attendingLocation">Att. Location</option>
+                </select>
+              </div>
+              <div class="col-6 p-0">
+                <div class="form-group ">
+                  <input type="text" name="adv-search-input-query" class="form-control shadow-none"
+                    aria-describedby="helpId" placeholder="enter value" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex">
+          <span class="totalResult mx-3"></span>
+          <button type="submit" class="btn text-light bg-base-color border-0 shadow-none ">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{{!-- <div
+  class="d-flex hide search-add-on-container-btn align-items-center justify-content-center cursor-pointer rounded text-light"
+  style="position:fixed;bottom:1em;right:3.5em;background:#26abe2;height:2em;width:2em;">
+  Advance Search
+</div> --}}
+
+
+{{!-- all filters --}}
+<div
+  class="d-flex hide open-service-report-filters-btn align-items-center justify-content-center cursor-pointer rounded text-light"
+  style="position:fixed;bottom:1em;right:1em;background:#26abe2;height:2.3em;width:2.3em;">
+  <i class="bi bi-funnel-fill" onclick="openFilterMenu();"></i><i class="bi bi-x-lg hide"
+    onclick="closeFilterMenu();"></i>
+</div>
+<ul class="list-group all-service-report-filters hide"
+  style="width:13em;position:fixed;right:1em;bottom:3.5em;z-index:10">
+  <li class="list-group-item d-flex justify-content-start">
+    <span class="d-flex align-items-center">
+      <input type="radio" name="filters" data-filter-type="date" onchange="
+        if(this.checked) {
+        searchReport('d: '+ searchInput.val())
+        }else{searchReport(searchInput.val())}" class="service-report-filter-date service-report-filter">
+      <span class="mx-2 user-select-none"> Date</span>
+    </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-start">
+    <span class="d-flex align-items-center">
+      <input type="radio" name="filters" data-filter-type="sno" onchange="
+        if(this.checked) {
+        searchReport('sn: '+ searchInput.val())
+        }else{searchReport(searchInput.val())}" class="service-report-filter-sno service-report-filter">
+      <span class="mx-2 user-select-none"> SNo.</span>
+    </span>
+  </li>
+  <li class="list-group-item d-flex justify-content-start">
+    <span class="d-flex align-items-center">
+      <input type="radio" name="filters" data-filter-type="machineNo" onchange="
+        if(this.checked) {
+        searchReport('mn: '+ searchInput.val())
+        }else{searchReport(searchInput.val())}" class="service-report-filter-machine-num service-report-filter">
+      <span class="mx-2 user-select-none">Machine No.</span>
+    </span>
+  </li>
+  {{!-- <li class="list-group-item d-flex justify-content-start">
+    <span class="d-flex align-items-center">
+      <input type="text" id="inputPassword5" class="form-control shadow-none user-select-none"
+        aria-describedby="passwordHelpBlock" placeholder="add condition.."
+        oninput="searchReport(`cond: ${searchInput.val()} + ${$(this).val()}`)">
+    </span>
+  </li> --}}
+</ul>
+
+{{/inline}}
+{{#*inline "script"}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+  integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/keyboardjs/2.7.0/keyboard.min.js"
+  integrity="sha512-UrxaOZAJw5p38NProL/UrffryqdMdXFcEdyLt6eU89pH0N7KnmAe8G3ghNbH1qW5cDYdnaoEw1TcbHn8wuqAvw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="/js/admin/service-report/allServiceReport.js"></script>
+{{/inline}}

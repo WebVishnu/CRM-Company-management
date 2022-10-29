@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Control - Vitco Impex</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="shortcut icon" href="/images/vitco-logo.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/admin/login/login.css">
+</head>
+
+<body>
+    <!--  Request me for a signup form or any type of help  -->
+    <div class="login-form">
+        <form action="/vitco-india/admin/login" method="post">
+            <div class="avatar"><i class="material-icons">&#xE7FF;</i></div>
+            <h4 class="modal-title">Login to Your Account</h4>
+            <div class="form-group">
+                <input type="text" class="form-control" name="userName" placeholder="Username" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password-input" placeholder="Password" name="password"
+                    required="required">
+                <h5 style="color:red;text-align:center;" id="caps-on-password-text"></h5>
+            </div>
+            <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
+            {{#if error}}
+            <h5 style="color:red;text-align:center;">{{error}}</h5>
+            {{/if}}
+        </form>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+    integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $('input[name="userName"]').on('keyup', () => {
+        username = $('input[name="userName"').val()
+        if (username != "") {
+           $('input[name="userName"').val(`${username[0].toLowerCase()}${username.slice(1,username.length)}`)
+        }
+        //$('input[name="userName"').val()
+    })
+    const password = document.querySelector('#password-input');
+    const message = document.querySelector('#caps-on-password-text');
+    password.addEventListener('keyup', function (e) {
+        if (e.getModifierState('CapsLock')) {
+            message.textContent = 'Caps lock is on';
+        } else {
+            message.textContent = '';
+        }
+    });
+</script>
+
+</html>

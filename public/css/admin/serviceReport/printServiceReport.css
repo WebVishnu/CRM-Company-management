@@ -1,0 +1,326 @@
+body {
+  margin: 0;
+  line-height: normal;
+  background-color: #e7e6e6 !important;
+}
+
+/* .all-machines-table-0 {
+  height: 31em;
+} */
+
+
+.all-machines-table-0::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+.all-machines-table-0::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(255, 255, 255); 
+}
+ 
+/* Handle */
+.all-machines-table-0::-webkit-scrollbar-thumb {
+  background: #0d6efd; 
+}
+
+/* Handle on hover */
+.all-machines-table-0::-webkit-scrollbar-thumb:hover {
+  background: #ffffff; 
+}
+page {
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  position: relative;
+  overflow: hidden;
+}
+
+page[size="A4"] {
+  width: 8.3in;
+  height: 10.8in;
+}
+
+table {
+  position: relative;
+  left: 1.2em;
+  width: 95% !important;
+  overflow: auto;
+}
+
+th {
+  font-size: x-small;
+  width: fit-content;
+}
+
+tr {
+  height: 1em !important;
+}
+tr td{
+  font-size:9px!important;
+}
+/* tr td textarea{
+  width: 100%!important;
+} */
+.print-textarea{
+  overflow-y: hidden;
+  resize: none;
+}
+.print-textarea:focus {
+  background-color: #d6dae1;
+  outline: none
+}
+
+
+.rectangle-icon {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 345px;
+  height: 53px;
+}
+
+.report-no-4545 {
+  position: absolute;
+  top: 28px;
+  left: 45px;
+  font-weight: 600;
+  display: inline-block;
+}
+.qrCode{
+  position: absolute;
+  right: 0.5em;
+  bottom: 0;
+  
+}
+.qrCode svg{
+  height: 4.5em;
+  width: 4.5em;
+}
+.group-icon {
+  position: absolute;
+  height: 63.53%;
+  width: 14.47%;
+  top: 18.39%;
+  right: 3.86%;
+  bottom: 18.08%;
+  left: 81.67%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.frame-div {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 100%;
+  height: 85px;
+  overflow: hidden;
+  font-size: 14px;
+  color: #fff;
+}
+
+.mobile-number {
+  top: 0;
+  left: 0;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.div {
+  position: absolute;
+  top: 0;
+  left:106px;
+  font-weight: 600;
+  color: #424242;
+  width: 35em;
+  display: inline-block;
+}
+
+.group-div {
+  position: absolute;
+  top: 6px;
+  left: 61px;
+  width: 260px;
+  height: 17px;
+}
+
+.fgsdgsdfffffffffffffffff-div {
+  position: absolute;
+  top: 0;
+  left: 107px;
+  font-weight: 600;
+  color: #424242;
+  display: inline-block;
+  width: 113px;
+}
+
+.group-div1 {
+  position: absolute;
+  top: 6px;
+  left: 280px;
+  width: 220px;
+  height: 17px;
+}
+
+.div1 {
+  position: absolute;
+  top: 0;
+  left: 95px;
+  font-weight: 600;
+  color: #424242;
+  display: inline-block;
+  width: 11em;
+}
+
+.frame-div2,
+.group-div2 {
+  position: absolute;
+  top: 6px;
+  left: 574px;
+  width: 132px;
+  height: 17px;
+}
+
+.frame-div2 {
+  left: 879px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.frame-div1 {
+  position: absolute;
+  top: 123px;
+  left: 0;
+  width: 735px;
+  height: 29px;
+}
+
+.vasipara {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.atrauli-p {
+  margin: 0;
+}
+
+.frame-div4 {
+  position: absolute;
+  top: calc(50% - -25px);
+  left: calc(50% - 322px);
+  border-radius: 6px;
+  border: 1px solid silver;
+  width: 661px;
+  display: flex;
+  justify-content: space-between;
+  padding: 2em 3em;
+  overflow: hidden;
+}
+
+.group-icon1,
+.group-icon2 {
+  position: absolute;
+    top: 94.54px;
+    left: 45px;
+    width: 13px;
+    height: 45px;
+}
+
+.group-icon2 {
+  left: 558px;
+}
+
+.customer-name-div,
+.ram-prasad-chaurasiya {
+  position: absolute;
+  top: 43px;
+  left: 2px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.ram-prasad-chaurasiya {
+  left: 99.5px;
+  color: #424242;
+  width: 36em;
+}
+
+.frame-div6,
+.group-div5 {
+  position: absolute;
+  height: 100px;
+}
+
+.frame-div6 {
+  top: 0;
+  left: 150.5px;
+  width: 100px;
+  overflow: hidden;
+}
+
+.group-div5 {
+  top: -36px;
+  left: 57px;
+  width: 445.5px;
+}
+
+.div2 {
+  position: absolute;
+  top: 0;
+  left: 36.5px;
+  font-weight: 600;
+  color: #424242;
+  display: inline-block;
+  width: 16em;
+}
+
+.group-div6 {
+  position: absolute;
+  top: 7px;
+  left: 573px;
+  width: 131.5px;
+  height: 17px;
+}
+
+.frame-div5 {
+  position: absolute;
+  top: calc(50% - 82px);
+  left: calc(50% - 365.5px);
+  width: 732px;
+  height: 31px;
+}
+
+.a4-1,
+.frame-div3 {
+  height: 336px;
+  overflow: hidden;
+}
+
+.frame-div3 {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 734px;
+}
+
+.a4-1 {
+  position: relative;
+  background-color: #fff;
+  width: 100%;
+  text-align: left;
+  font-size: 11px;
+  color: #000;
+  font-family: Poppins;
+}
+
+.service-report-issued-by-text {
+  font-size: smaller;
+  font-weight: 500;
+}
+
+.SignatureImg {
+  height: 5em;
+  width: 10em;
+}

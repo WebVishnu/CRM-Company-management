@@ -1,0 +1,334 @@
+.voucher-bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.voucher-short-details {
+    margin: 1em 0 0 1em;
+}
+
+.voucher-short-details .voucher-details,
+.voucher-short-details .profile {
+    display: flex;
+}
+
+.voucher-short-details .profile img {
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 50%;
+}
+
+.voucher-short-details .profile h5 {
+    font-size: large;
+
+}
+
+.voucher-short-details .profile h6 {
+    font-size: small;
+    font-weight: lighter;
+}
+
+.voucher-short-details .voucher-details {
+    margin-top: 1.5em;
+}
+
+.voucher-short-details .voucher-details h6 {
+    font-size: smaller;
+    font-weight: lighter;
+}
+
+.card-body {
+    transition: all 0.4s ease-in-out;
+    height: 0;
+    overflow-y: hidden;
+    position: relative;
+    bottom: 10em;
+    z-index: -1;
+    opacity: 0
+}
+
+.card-body.open {
+    height: auto !important;
+    bottom: 0 !important;
+    opacity: 1 !important;
+    z-index: 1 !important;
+}
+
+.voucher-short-details {
+    cursor: pointer;
+}
+
+.voucher-short-details .voucher-number h4 {
+    position: absolute;
+    right: 1.8em;
+    top: 11px;
+    font-size: large;
+}
+
+.voucher-short-details .logo img {
+    position: absolute;
+    opacity: 0.7;
+    right: 9px;
+    top: 4em;
+    height: 3em;
+    width: 6em;
+}
+
+
+/* ------------------------------ */
+/* ------------------------------ */
+/* ------------------------------ */
+/* ------------------------------ */
+
+a {
+    text-decoration: none;
+}
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+.easeSlow {
+    -webkit-transition: all 1600ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1600ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.ease,
+.header .desc {
+    -webkit-transition: all 680ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 680ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.easeFast {
+    -webkit-transition: all 230ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 230ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.bossWrapp {
+    overflow: hidden;
+    border-radius: 8px;
+    width: 100%;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.single {
+    padding: 39px 30px;
+    display: flex;
+    flex-direction: row;
+    background: white;
+    width: 100%;
+    border-bottom: 1px solid #E3EBF1;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    align-items: center;
+    align-content: flex-start;
+}
+
+.single:last-child {
+    border-bottom: 0px solid #E3EBF1;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.btn-transparent {
+    border: 0;
+    background-color: transparent;
+}
+
+.icon {
+    font-size: 2em;
+    height: 2em;
+    width: 2em;
+    padding: 1em;
+    border-radius: 50%;
+    background-color: #f0f4f7;
+    display: flex;
+    margin: 0 30px 0 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: flex-start;
+    width: 100%;
+}
+
+.header h3 {
+    font-size: 16px;
+    margin: 0 0 12px 0;
+}
+
+.header .desc {
+    height: 68px;
+    will-change: height;
+    overflow: hidden;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.header h5 {
+    font-size: 14px;
+    width: 80%;
+    line-height: 1.4;
+    font-weight: 300;
+}
+
+.functions {
+    margin: 0px 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+}
+
+.functions span {
+    font-size: 14px;
+}
+
+.functions span:first-child {
+    color: #577083;
+}
+
+.functions span:last-child {
+    color: #3899ec;
+}
+
+.functions span:last-child:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.functions span:last-child svg {
+    margin: 0 0 0 9px;
+    vertical-align: middle;
+}
+
+.reveal {
+    height: 68px;
+}
+
+.cardTitle {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: #162D3D;
+    padding: 0 30px;
+    height: 72px;
+    background: white;
+    width: 100%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    border-bottom: 1px solid #E3EBF1;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.soon {
+    color: #FB7D33 !important;
+}
+
+.claimed {
+    background: #FAFBFC;
+}
+
+.claimed .text .desc {
+    height: 38px;
+}
+
+.devider {
+    background: #F7F9FB;
+    width: 100%;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.noBd {
+    border: 0px solid black;
+}
+
+
+
+/* voucher details  */
+.voucher-details {
+    border-radius: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 85vh;
+    width: 100%;
+    background-color: #fff;
+    color: rgb(185, 185, 185);
+}
+
+.voucher-details i::before{
+    font-size:10em;
+}
+.voucher-details .list-group button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.voucher-details .list-group .list-group-devider {
+    background: #e8edf3;
+    width: 100%;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+
+}
+
+.voucher-details .list-group .list-group-sub-devider {
+    background: #f6f9fbc2;
+    display: flex;
+    justify-content: space-between;
+
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Complaint Form</title>
+    {{>headTags}}
+    <link rel="stylesheet" href="/css/complaints/addComplaint.css">
+    <link rel="stylesheet" href="/css/loading/loading.css">
+
+</head>
+<style>
+    body,
+    html {
+        overflow-x: hidden;
+    }
+</style>
+
+<body>
+    {{>loading}}
+
+    <form action="/complaint-new/new" enctype="multipart/form-data" method="post">
+        <div class="logo" style="width: 100%;display:flex;justify-content: center">
+            <a href="/">
+                <img src="/images/vitco-logo.ico" alt="" height="100rem">
+            </a>
+        </div>
+        <h1>Submit Your complaint</h1>
+        {{#if error}}
+        <h4 style="text-align: center;color:red">{{error}}</h4>
+        {{/if}}
+        <fieldset>
+            <legend><span class="number">1</span>Enter Your Details</legend>
+            {{#if user}}
+            <label for="name">Name: {{user.firstName}} {{user.lastName}}</label>
+            <input type="text" id="name" name="user_name" value='{{user.firstName}} {{user.lastName}}' required
+                style="visibility:hidden;opacity: 0;position:absolute">
+            {{else}}
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="user_name" required>
+            {{/if}}
+
+            {{#if user}}
+            <label for="universityname">Mobile Number: {{user.phoneNumber}}</label>
+            <input type="number" id="mail" name="user_number" value='{{user.phoneNumber}}' required
+                style="visibility:hidden;opacity: 0;position:absolute">
+            {{else}}
+            <label for="universityname">Mobile Number:</label>
+            <input type="number" id="mail" name="user_number" required>
+            {{/if}}
+            {{!-- <label for="cityname">State: </label>
+            <input type="text" id="mail" name="user_state"> --}}
+
+            <label for="mail">Address: </label>
+            <textarea type="text" id="address" name="user_address" style="resize:none ;" required></textarea>
+
+        </fieldset>
+
+        <fieldset>
+            <legend><span class="number">2</span>Your problem</legend>
+            <label for="name">Seriel Number: </label>
+            <input type="number" id="name" name="MserielNumber" placeholder="seriel Number" required>
+            <label for="name">Machine name: </label>
+            <input type="text" id="name" name="machineName" placeholder="machine name" required>
+
+            <label for="mail">Date Of Purchase: </label>
+            <input type="text" id="mail" name="DOP" placeholder="When you purchased our machine" required>
+
+            <label for="upload-file-label">Upload problem Video: </label>
+            <input type="file" hidden accept=".mp4,.mov,.wmv,.flv,.mkv" id="upload-file-input" style="display:none;"
+                name="problemVideo" onchange="javascript:updateList()">
+            <p class="upload-file-btn" onclick="$('#upload-file-input').trigger( 'click' );" id="upload-file-btn">Upload
+                Video</p>
+
+            <label for="mail">Issue: </label>
+            <textarea type="text" name="user_issue" style="resize:none;" placeholder="Explain your problem"
+                required></textarea>
+
+        </fieldset>
+
+        <button type="submit">Submit</button>
+        <h6 style="display: flex;justify-content: end;margin:0"><a href="/" style="color:#26abe2;font-size:19px"
+                class="text-center">Go Home</a></h6>
+    </form>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    const button = $("#upload-file-button");
+    const input = $("#upload-file-input");
+    button.onclick = () => {
+        input.click();
+    };
+
+    updateList = function () {
+        var input = document.getElementById('upload-file-input');
+        var output = document.getElementById('upload-file-btn');
+        output.innerHTML = input.files[0].name
+    }
+    $("#upload-file-input").on('change', () => {
+        if ($("#upload-file-input").prop('files')[0].size > 104857600) {
+            alert("Your File size is more than 100mb");
+            $("#upload-file-btn").html("Upload Video");
+            $("#upload-file-input").val("")
+            console.log($("#upload-file-input").val())
+        };
+    })
+</script>
+{{>commonScripts}}
+
+</html>

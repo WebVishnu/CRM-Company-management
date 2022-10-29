@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>headTags}}
+    <title>Sign In - Vitco Impex</title>
+    <meta name="description" content="Sign In - Vitco Impex is one of the leading suppliers of Milk Analyzer, Packing Machine, Vending Machine and much more." />
+    <link rel="stylesheet" href="/css/signin/signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    {{>loading}}
+
+
+    <!-- =========================================== -->
+    <div class="container mt-5">
+        <div class="welcome-container">
+            <img style="transform: scale(1.7);" src="/images/signin.png" alt="">
+        </div>
+        <main class="signup-container">
+            <h1 class="heading-primary">Sign In<span class="custom-dot">.</span></h1>
+            <p class="text-mute">Not A Member? <a href="/user/sign-up">Sign Up</a></p>
+            <form class="signup-form" method="post" action="/user/sign-in">
+                {{!-- <div class="f-row input-wrapper">
+                    <label class="inp">
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="firstName" required>
+                        <span class="label">First name</span>
+                        <span class="input-icon"><i class="fa-solid fa-address-card"></i></span>
+                    </label>
+                    <label class="inp">
+                        <input type="text" class="input-text" placeholder="&nbsp;" name="lastName" required>
+                        <span class="label">Last name</span>
+                        <span class="input-icon"><i class="fa-solid fa-address-card"></i></span>
+                    </label>
+                </div> --}}
+                <label class="inp">
+                    <input type="number" class="input-text" placeholder="&nbsp;" name="phoneNumber" required>
+                    <span class="label">Phone number</span>
+                </label>
+                <label class="inp">
+                    <input type="password" class="input-text" placeholder="&nbsp;" id="password" name="password"
+                        required>
+                    <span class="label">Password</span>
+                    <span class="input-icon input-icon-password" data-password><i class="fa-solid fa-eye"></i></span>
+                </label>
+                {{#if error}}
+                <label style="color: red;text-align:center">
+                    <span>{{error}}</span>
+                </label>
+                {{/if}}
+                <button class="btn btn-signup">Log In</button>
+            </form>
+        </main>
+
+    </div>
+
+    <script>
+        const eyeClick = document.querySelector("[data-password]");
+        const password_elem = document.getElementById("password");
+
+        eyeClick.onclick = () => {
+            const icon = eyeClick.children[0];
+            icon.classList.toggle("fa-eye-slash");
+            if (password_elem.type === "password") {
+                password_elem.type = "text";
+            } else if (password_elem.type === "text") {
+                password_elem.type = "password";
+            }
+        };
+    </script>
+
+
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</body>
+{{>commonScripts}}
+
+</html>

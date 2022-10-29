@@ -1,0 +1,50 @@
+:root {
+  --theme-colour: #209CD1;
+  --theme-dark-colour: #41b6e9;
+  --grey-color: #F6F6F6;
+  --dark-grey-color: #484848;
+}
+
+.jobs-heading {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  padding: 3em 5em;
+  background-color: var(--grey-color);
+  margin-top: 10em;
+}
+.jobs-heading > div h3 {
+  font-weight: 300;
+  background-color: var(--theme-colour);
+  padding: 0.5em;
+  display: inline;
+  border-radius: 6px;
+  color: white;
+  width: calc(90% - 1vw);
+}
+.jobs-heading > div:nth-child(2) {
+  font-size: calc(1.5em + 1vw);
+  width: 90%;
+  margin-top: 1em;
+  font-weight: 800;
+  color: var(--theme-colour);
+}
+.jobs-heading > div:nth-child(2) a {
+  color: var(--theme-dark-colour);
+}
+
+@media screen and (max-width: 960px) {
+  .jobs-heading {
+    padding: 3em 1em;
+  }
+}
+@media screen and (max-width: 769px) {
+  .jobs-heading {
+    margin-top: 6em;
+  }
+}
+@media screen and (max-width: 500px) {
+  .jobs-heading {
+    margin-top: 3.7em;
+  }
+}/*# sourceMappingURL=applyForJobs.css.map */

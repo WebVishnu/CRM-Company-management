@@ -1,0 +1,419 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+    .menu-link[data-link="complaints"] {
+        background-color: #26ABE2;
+        color: #fff;
+    }
+</style>
+{{/style}}
+{{#*inline "body"}}
+
+
+{{!-- header tabs --}}
+<div class="container-fluid px-md-5 my-3">
+    <div class="row">
+        <div class="col-md-8 complaint-categories" style="overflow:auto;">
+            <ul class="nav nav-pills mb-3 d-flex flex-nowrap" id="pills-tab" role="tablist">
+                <li class="nav-item mx-2" role="presentation" onclick="getAllComplaints()" data-filter="all">
+                    <button class="nav-link px-2 nav-link-all active rounded-0 d-block" id="pills-all-tab rounded-0"
+                        style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-home" type="button"
+                        role="tab" aria-controls="pills-home" aria-selected="true" data-filter-value="All"> All
+                        Complaints <span class="total-complaints"></span> </button>
+                </li>
+                <li class="nav-item mx-2" role="presentation" onclick="filterComplaint('Solved')" data-filter="Solved">
+                    <button class="nav-link px-2 nav-link-solved rounded-0" id="pills-solved-tab rounded-0"
+                        style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-solved" type="button"
+                        role="tab" aria-controls="pills-solved" aria-selected="false" data-filter-value="Solved">Solved
+                        <span class="total-complaints"></span></button>
+                </li>
+                <li class="nav-item mx-2" role="presentation" onclick="filterComplaint('Progress')"
+                    data-filter="Progress">
+                    <button class="nav-link px-2 nav-link-progress rounded-0" id="pills-progress-tab rounded-0"
+                        style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-progress" type="button"
+                        role="tab" aria-controls="pills-progress" aria-selected="false"
+                        data-filter-value="Progress">Progress <span class="total-complaints"></span></button>
+                </li>
+                <li class="nav-item mx-2" role="presentation" onclick="filterComplaint('Pending')"
+                    data-filter="Pending">
+                    <button class="nav-link px-2 nav-link-pending rounded-0" id="pills-pending-tab rounded-0"
+                        style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-pending" type="button"
+                        role="tab" aria-controls="pills-pending" aria-selected="false"
+                        data-filter-value="Pending">Pending <span class="total-complaints"></span></button>
+                </li>
+                <li class="nav-item mx-2" role="presentation" onclick="filterComplaint('Deleted')"
+                    data-filter="Deleted">
+                    <button class="nav-link px-2 nav-link-deleted rounded-0" id="pills-pending-tab rounded-0"
+                        style="white-space: nowrap" data-bs-toggle="pill" data-bs-target="#pills-deleted" type="button"
+                        role="tab" aria-controls="pills-deleted" aria-selected="false"
+                        data-filter-value="Pending">Deleted <span class="total-complaints"></span></button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">
+            <h6 class="mt-2 me-2">Refresh Complaints</h6> &nbsp;
+            <i class="bi bi-arrow-repeat refresh-complaints rotate-360 fa-5x" onclick="getAllComplaints()"
+                style="transition: all 0.3s ease-in-out;"></i>
+        </div>
+    </div>
+
+</div>
+
+{{!-- table --}}
+<div style="width:100%;display:flex;justify-content:center;align-items:center;position: relative;top:-2em"
+    id="all-complaints-main-body">
+    <table>
+        <thead>
+            <tr>
+                <th scope="col" style="word-break:break-all;border-radius:6px 0 0 0 ">On</th>
+                <th scope="col" style="word-break:break-all;">SNo.</th>
+                <th scope="col" style="word-break:break-all;">Name</th>
+                <th scope="col" style="word-break:break-all;">Number</th>
+                <th scope="col" style="word-break:break-all;">Problem</th>
+                <th scope="col" style="word-break:break-all;">Address</th>
+                <th scope="col" style="word-break:break-all;">DOP</th>
+                <th scope="col" style="word-break:break-all;border-radius:0 6px 0 0 ">status</th>
+                {{!-- <th scope="col" style="width:5em;border-radius:0 6px 0 0 "></th> --}}
+            </tr>
+        </thead>
+        <tbody id="all-complaints-body">
+        </tbody>
+
+    </table>
+</div>
+
+<h5 style="text-align:center;display:none;" id="loading-for-searched-complaints">No Searched complaint found</h5>
+
+<h5 style="text-align:center" id="loading-for-all-complaints">Loading complaints...</h5>
+
+
+
+
+{{!-- Edit modal content--}}
+<!-- Modal -->
+<div class="complaint-details-modal" style="padding-bottom:10em ;">
+    <div class="container-fluid px-md-5 mt-md-3">
+        <div class="row">
+            <div class="col my-3 mb-md-5 mb-3 d-flex justify-content-between">
+                <h3>Complaint Details</h3>
+                <div class="d-flex align-items-center">
+                    <img src="/images/letters/alt.png" height="30em" width="53em" class="mx-2 d-lg-inline d-none">
+                    <i class="bi bi-plus-lg d-lg-inline d-none"></i>
+                    <img src="/images/letters/a.png" alt="" height="30em" width="30em" class="mx-2 d-lg-inline d-none">
+                    <i class="bi bi-x-circle close-complaint-details-btn" style="cursor: pointer;font-size:1.5em"
+                        onclick="checkclass();$('.complaint-details-modal').toggleClass('active');$('.actions-dialog-box-container').removeClass('open');"></i>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Complaint ID : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-complaintID form-control shadow-none" name="" id=""
+                        readonly aria-describedby="helpId" placeholder="enter complaintID">
+                    <input type="hidden" class="user-details-input-_id form-control shadow-none" name="" id="" readonly
+                        aria-describedby="helpId" placeholder="">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Date of Complaint : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-registeration-date form-control shadow-none" name=""
+                        id="" readonly aria-describedby="helpId" placeholder="enter date">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Serial Number : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-machineSerielNumber form-control shadow-none" name=""
+                        id="" readonly aria-describedby="helpId" placeholder="enter machineSerielNumber">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Machine name : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-machine-name form-control shadow-none" name="" id=""
+                        readonly aria-describedby="helpId" placeholder="enter machine name">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Customer Name : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-customerName form-control shadow-none" name="" id=""
+                        readonly aria-describedby="helpId" placeholder="enter customerName">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Customer Number : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-contactNumber form-control shadow-none" name="" id=""
+                        readonly aria-describedby="helpId" placeholder="enter contactNumber">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Date of Purchase : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-DOP form-control shadow-none" name="" id="" readonly
+                        aria-describedby="helpId" placeholder="enter DOP">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Problem : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-issue form-control shadow-none" name="" id="" readonly
+                        aria-describedby="helpId" placeholder="enter issue">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Address : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <input type="text" class="user-details-input-address form-control shadow-none" name="" id=""
+                        readonly aria-describedby="helpId" placeholder="enter address">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Status : </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div>
+                    <h5 class="d-inline me-3" id="user-details-input-current-status">Loading...</h5>
+                    {{!-- <div class="hide">
+                        <button class="btn btn-secondary shadow-none" type="button" id="changeStatusDropDown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                                class="bi bi-caret-down-fill"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="changeStatusDropDown">
+                            <a style="cursor: pointer;" class="dropdown-item">Pending</a>
+                            <a style="cursor: pointer;" class="dropdown-item">Progress</a>
+                            <a style="cursor: pointer;" class="dropdown-item">Solved</a>
+                            <a style="cursor: pointer;" class="dropdown-item delete-btn-complaint-action">Deleted</a>
+                        </div>
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3 mx-2">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Problem video: </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="complaint-video-outer">
+                </div>
+            </div>
+        </div>
+        {{#each admin.permissions}}
+        {{#ifeq this.permissionName "complaints"}}
+        {{#each this.permissionKeys}}
+        {{#ifeq this.keyName "edit"}}
+        <div class="row">
+            <div class="col-8">
+                <hr style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="row mt-md-3">
+            <div class="col-md-3">
+                <div class="complaint-details-title">
+                    <h6> Request changes </h6>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <button class="btn btn-primary shadow-none req-changes-btn">Request Changes</button>
+                <button class="btn btn-success shadow-none req-changes-submit-btn hide">Submit</button>
+                <h6 class="text-muted req-changes-submitted-h6 hide">Your request has been submitted to admin</h6>
+            </div>
+        </div>
+        {{/ifeq}}
+        {{/each}}
+        {{/ifeq}}
+        {{/each}}
+
+    </div>
+
+
+
+    <!-- Actions dialog box -->
+    <div class="actions-dialog-box-container" style="box-shadow: -5px -5px 5px -5px rgb(112 112 112 / 63%);">
+        <div class="actions-dialog-box-header" onclick="$('.actions-dialog-box-container').toggleClass('open');">
+            <h5><img src="https://d1nhio0ox7pgb.cloudfront.net/_img/v_collection_png/512x512/shadow/keyboard_key_a.png"
+                    height="30em" width="30em" class="d-lg-inline d-none">&nbsp;&nbsp;Actions &nbsp;&nbsp; <i
+                    class="bi bi-arrow-90deg-up"></i></h5>
+        </div>
+        <div class="actions-dialog-message">
+            <div class="list-group complaint-actions" style="margin-bottom: 10em;">
+            </div>
+        </div>
+        <div class="actions-dialog-input-box" style="z-index: 99;">
+            <div class="container-fluid">
+                <div class="row">
+                    {{#each admin.permissions}}
+                    {{#ifeq this.permissionName "complaints"}}
+                    {{#each this.permissionKeys}}
+                    {{#ifeq this.keyName "edit"}}
+                    <form class="add-new-action-form mt-1 mb-2">
+                        <small class="form-text text-muted ms-3">Type "done" if solved</small>
+                        <div class="col d-flex add-new-action-container">
+                            <input type="text" class="form-control shadow-none new-action-text-area" name="" id=""
+                                aria-describedby="helpId" placeholder="Enter your action here..." required>
+                            <button type="submit" class="btn" style="padding:0 10px 0 10px;"><i
+                                    class="bi bi-caret-right-square" style="font-size:30px;display:grid"></i></button>
+                        </div>
+                    </form>
+                    <div class="add-new-action-completed-text pt-2 pb-1 bg-success hide">
+                        <h5 class="text-center text-light">Good, you solved it !</h5>
+                    </div>
+                    {{/ifeq}}
+                    {{/each}}
+                    {{/ifeq}}
+                    {{/each}}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{{/inline}}
+
+{{#*inline "css"}}
+<!-- Compiled and minified CSS -->
+
+<!-- Compiled and minified JavaScript -->
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="/css/admin/complaints/complaints.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+{{/inline}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+    integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const webHost = `{{host}}`
+    const adminName = `{{admin.adminName}}`
+    const permissions = [`{{admin.permissions.0.permissionKeys.0.keyName}}`, `{{admin.permissions.0.permissionKeys.1.keyName}}`, `{{admin.permissions.0.permissionKeys.2.keyName}}`, `{{admin.permissions.0.permissionKeys.3.keyName}}`]
+</script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+    integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/keyboardjs/2.7.0/keyboard.min.js"
+    integrity="sha512-UrxaOZAJw5p38NProL/UrffryqdMdXFcEdyLt6eU89pH0N7KnmAe8G3ghNbH1qW5cDYdnaoEw1TcbHn8wuqAvw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/admin/complaints2.js"></script>
