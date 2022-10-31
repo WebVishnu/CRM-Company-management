@@ -1,0 +1,427 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+    .menu-link[data-link="vouchers"] {
+        background-color: #26ABE2;
+        color: #fff !important;
+    }
+
+    .product-details-input {
+        background-color: #ffffff;
+    }
+
+    .product-tooltip {
+        position: relative;
+    }
+
+    #search-box {
+        display: none;
+    }
+
+    /* Tooltip text */
+    .product-tooltip .product-tooltiptext {
+        visibility: hidden;
+        width: 3em;
+        background-color: #005ba2;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        top: -2.5em;
+        margin: 0.5em;
+        z-index: 1;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .product-tooltip:hover .product-tooltiptext {
+        visibility: visible;
+    }
+
+
+    .suggestionbox-container {
+        position: relative;
+    }
+
+    .suggestionbox {
+        visibility: visible;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        text-align: center;
+        border-radius: 6px;
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        top: 3em;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        z-index: 1;
+    }
+
+    .suggestionbox li {
+        cursor: pointer;
+    }
+
+    .product-tooltip.active .product-tooltiptext {
+        visibility: visible;
+    }
+</style>
+{{/style}}
+
+
+{{#*inline "css"}}
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+{{/inline}}
+
+
+{{#*inline "body"}}
+<div class="container-fluid mb-5 pb-5">
+    <h4 class="my-3 ms-1">Create new delivery order</h4>
+    <form action="">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="orderDate">Order Date</label>
+                        <input required type="text" class="form-control shadow-none" id="orderDate"
+                            placeholder="enter order date">
+                    </div>
+                    <div class="my-3">
+                        <label for="partyContactPerson">Receiver Name </label>
+                        <div class="suggestionbox-container">
+                            <input required type="text" class="form-control shadow-none" id="partyContactPerson"
+                                placeholder="enter contact person name">
+
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <label for="partyName">Party Name</label>
+                        <input required type="text" class="form-control shadow-none" id="partyName"
+                            placeholder="enter party name">
+                    </div>
+                    <div class="my-3">
+                        <label for="address">Address</label>
+                        <textarea required style="resize: none;" type="text" rows="4" class="form-control shadow-none"
+                            id="address" placeholder="enter address"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1">
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="dispatchDate">Dispatch Date</label>
+                        <input required type="text" class="form-control shadow-none" id="dispatchDate"
+                            placeholder="enter dispatch date">
+                    </div>
+                    <div class="my-3">
+                        <label for="representativePerson">Representative person </label>
+                        <input required type="text" class="form-control shadow-none" id="representativePerson"
+                            placeholder="enter representative person">
+                    </div>
+                    <div class="my-3">
+                        <label for="mobile">Mobile No.</label>
+                        <input required type="text" class="form-control shadow-none" id="mobile"
+                            placeholder="enter mobile num">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="gstNum">GST IN NO.</label>
+                        <input required type="text" class="form-control shadow-none" id="gstNum"
+                            placeholder="enter gst invoice number">
+                    </div>
+                    <div class="my-3">
+                        <label for="aadhaarNum">Aadhaar no. </label>
+                        <input required type="text" class="form-control shadow-none" id="aadhaarNum"
+                            placeholder="enter aadhaar number">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1">
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="panNum">PAN NO.</label>
+                        <input required type="text" class="form-control shadow-none" id="panNum"
+                            placeholder="enter pan card number ">
+                    </div>
+                    <div class="my-3">
+                        <label for="specialIns">Special Instructions</label>
+                        <input required type="text" class="form-control shadow-none" id="specialIns"
+                            placeholder="enter special instruments">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table mt-5" id="allProductsTable">
+            <thead>
+                <tr>
+                    <th scope="col" style="word-break: keep-all;">Product Name</th>
+                    <th scope="col">Specification</th>
+                    <th scope="col">QTY</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">GST @</th>
+                    <th scope="col">GST</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody class="allProductsTbody">
+            </tbody>
+        </table>
+        <div class="row add-product-section">
+            <div class="col-12 d-flex justify-content-between">
+                <small class="ms-3 text-danger">Minimum 1 product required</small>
+                <button class="btn btn-primary text-light bg-base-color border-0 shadow-none" onclick="addNewProduct()"
+                    type="button">Add product</button>
+            </div>
+            <div class="col-12 mt-3 text-secondary">
+                <h5>Amount : &#8377; 0</h5>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-5">
+                <select class="form-select shadow-none" aria-label="Default select example">
+                    <option selected>Choose mode of payment</option>
+                    <option value="bank">Bank</option>
+                    <option value="cash">Cash</option>
+                    <option value="upi">UPI </option>
+                </select> <br>
+                <h6 class="text-secondary">Total advance : &#8377; <span class="totalAdvncSpan"> 0 </span></h6>
+            </div>
+            <div class="col-md-6 offset-md-1">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="word-break: keep-all;">Advance Date</th>
+                            <th scope="col">Advance Amount</th>
+                            <th scope="col" style="padding: 7px;"><i class="bi bi-plus-circle display-6 cursor-pointer"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Add more"
+                                    onclick="addMoreAdvInputs()"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="advanceEntryTbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <h4 class="my-2">Dispatch Details</h4>
+            <div class="col-md-5">
+                <div class="form-group">
+
+
+                    <div class="my-3">
+                        <label for="dispatchedBy">Dispatched By </label>
+                        <input required type="text" class="form-control shadow-none" id="dispatchedBy"
+                            placeholder="who dispatched it ?">
+                    </div>
+                    <div class="my-3">
+                        <label for="dispatchVehicleNum">Dispatch vehicle no. </label>
+                        <input required type="text" class="form-control shadow-none" id="dispatchVehicleNum"
+                            placeholder="enter vehicle number">
+                    </div>
+                    <div class="my-3">
+                        <label for="dispatchVehicleNum">Remark </label>
+                        <textarea required style="resize: none;" type="text" class="form-control shadow-none"
+                            id="dispatchVehicleNum" placeholder="enter summary of order"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1">
+                <div class="form-group">
+                    <div class="my-3">
+                        <label for="machineSrNo">Machine Serial No. </label>
+                        <input required type="text" class="form-control shadow-none" id="machineSrNo"
+                            placeholder="enter serial number">
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoiceNum">Invoice No.</label>
+                        <input required type="text" class="form-control shadow-none" id="invoiceNum"
+                            placeholder="enter invoice number">
+                    </div>
+                    <div class="mb-3">
+                        <label for="invoiceDate">Invoice Date</label>
+                        <div class="input-group date" data-date-format="dd/mm/yyyy">
+                            <input type="text" readonly required class="form-control" placeholder="choose date">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="submit-container" style="position: fixed;bottom:1em;right:1em;">
+            <span class="error"></span>
+            <button style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" class="btn bg-base-color text-light"
+                type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{{/inline}}
+{{#*inline "script"}}
+
+{{!-- bootstrap date picker --}}
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+
+{{!-- inline script --}}
+<script>
+
+    var people = [];
+    $.getJSON('/js/admin/vouchers/delivery-order/people.json', function (data) {
+        console.log(data)
+        //$.each(data.person, function (i, f) {
+        //    var tblRow = "<tr>" + "<td>" + f.firstName + "</td>" +
+        //        "<td>" + f.lastName + "</td>" + "<td>" + f.job + "</td>" + "<td>" + f.roll + "</td>" + "</tr>"
+        //    $(tblRow).appendTo("#userdata tbody");
+        //});
+    }).catch((e)=>{
+        console.log("error")
+    });
+
+
+    // enable tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    // enable popovers
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    // script
+
+    // on form submit
+    $('form').on('submit', (e) => {
+        if ($('.allProductsTbody tr').length == 0) {
+            e.preventDefault()
+            $('.error').html("please add a product to the list")
+            $('html, body').animate({ scrollTop: $("#allProductsTable").offset().top - 20 * 16 }, 500);
+        }
+    })
+
+
+    let advanceInputNum = 1
+    addMoreAdvInputs()
+    $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
+    // make advance total 
+    function totalAdvAmt() {
+        total = 0
+        for (var i = 0; i < $('.advance-money-input').length; i++) {
+            let tempVal = parseInt($('.advance-money-input')[i].value.replaceAll('₹', ''))
+            if (tempVal != NaN) {
+                total += tempVal
+            }
+        }
+        $('.totalAdvncSpan').html(total)
+    }
+    //add more advance payment inputs
+    async function addMoreAdvInputs() {
+        $('.advanceEntryTbody').append(`
+            <tr data-advance-row="${advanceInputNum}">
+                <td>
+                    <div class="input-group date" data-date-format="dd/mm/yyyy">
+                        <input required type="text" readonly class="form-control" placeholder="dd/mm/yyyy">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                </td>
+                <td><input required type="text" maxlength="10"
+                        class="product-details-input advance-money-input w-100 form-control shadow-none" onkeyup="$(this).val('₹' + $(this).val().replaceAll('₹',''));totalAdvAmt()"></td>
+                <td class="px-1">
+                    <button data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="button"
+                        class="btn btn-danger shadow-none" onclick="deleteAdvInputs(${advanceInputNum})"><i class="bi bi-trash3-fill"></i></button>
+                </td>
+            </tr>`)
+        $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
+        advanceInputNum++
+    }
+    //delete advance inputs
+    function deleteAdvInputs(row) {
+        $(`tr[data-advance-row="${row}"]`).remove()
+        totalAdvAmt()
+    }
+    //=============================== ======= ======= ======= ======= ======= =====
+    let productCursor = 0
+    // delete product
+    async function deleteProduct(row) {
+        $(`tr[data-product-row="${row}"]`).remove()
+        if ($('.allProductsTbody tr').length == 0) {
+            $('.add-product-section small').fadeIn(0)
+            $('.add-product-section > .d-flex').removeClass('justify-content-end').addClass('justify-content-between')
+        }
+    }
+    // total for single product
+    function getTotalSingleProduct(row){
+        let total,qty,rate,amount = 1
+        qtyInput = $(`tr[data-product-row="${row}"] td:nth-child(3) input`)
+        rateInput = $(`tr[data-product-row="${row}"] td:nth-child(4) input`)
+        amountInput = $(`tr[data-product-row="${row}"] td:nth-child(5) input`)
+        if(qtyInput.val() != ""){
+            total = parseInt(qtyInput.val()) * parseInt(rateInput.val())
+            amountInput.val(total)
+        }
+    }
+    // add new product
+    async function addNewProduct() {
+        $('.add-product-section small').fadeOut(0)
+        $('.add-product-section > .d-flex').removeClass('justify-content-between').addClass('justify-content-end')
+        productCursor++
+        $('.allProductsTbody').append(`
+            <tr data-product-row="${productCursor}">
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="text" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="text" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="number" class="product-details-input w-100 form-control shadow-none" onkeyup="getTotalSingleProduct(${productCursor})">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="number" class="product-details-input w-100 form-control shadow-none" onkeyup="getTotalSingleProduct(${productCursor})">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="number" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="text" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="text" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                    <td class="p-1 product-tooltip">
+                        <span class="product-tooltiptext"><i class="bi bi-trash3-fill cursor-pointer" onclick="deleteProduct(${productCursor})"></i></span>
+                        <input required type="text" class="product-details-input w-100 form-control shadow-none">
+                    </td>
+                </tr>
+        `)
+
+    }
+</script>
+{{/inline}}
