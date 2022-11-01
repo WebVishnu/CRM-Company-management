@@ -51,6 +51,7 @@ const serviceReportApi = require(path.join(__dirname, '/apis/serviceReportApi'))
 const machineSalesDataApi = require(path.join(__dirname, '/apis/machineSalesDataApi'))
 const partSalesDataApi = require(path.join(__dirname, '/apis/partSalesDataApi'))
 const notificationsApi = require(path.join(__dirname, '/apis/notificationsApi'))
+const deliveryOrderApi = require(path.join(__dirname, '/apis/deliveryVoucherApi'))
 
 //api use
 app.use(complaintApiRoute)
@@ -60,6 +61,7 @@ app.use(adminComplaintRoute)
 app.use(machineSalesDataApi)
 app.use(partSalesDataApi)
 app.use(notificationsApi)
+app.use(deliveryOrderApi)
 
 // routes use
 app.use(userRoute)
