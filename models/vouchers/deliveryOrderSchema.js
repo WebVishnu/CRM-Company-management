@@ -14,6 +14,10 @@ const deliveryOrder = new mongoose.Schema({
             required: true
         }
     },
+    voucherNum: {
+        type: 'string',
+        required: true
+    },
     orderDate: {
         type: 'string',
         required: true
@@ -103,17 +107,13 @@ const deliveryOrder = new mongoose.Schema({
             mode: {
                 type: 'string',
             },
-            paymentModeDetails: [],
-            paymentDetails: [
-                {
-                    advanceDate: {
-                        type: 'string',
-                    },
-                    advanceAmount: {
-                        type: 'string',
-                    }
-                }
-            ]
+            advanceDate: {
+                type: 'string',
+            },
+            advanceAmount: {
+                type: 'string',
+            },
+            paymentModeDetails: {}
         }
     ],
     dispatchDetails: {
@@ -129,11 +129,11 @@ const deliveryOrder = new mongoose.Schema({
             type: 'string',
             required: true
         },
-        InvoiceNum: {
+        invoiceNum: {
             type: 'string',
             required: true
         },
-        InvoiceDate: {
+        invoiceDate: {
             type: 'string',
             required: true
         },
@@ -145,4 +145,4 @@ const deliveryOrder = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model("deliveryOrder", deliveryOrder)
+module.exports = mongoose.model("delivery-order", deliveryOrder)

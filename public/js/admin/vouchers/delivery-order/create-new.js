@@ -72,26 +72,42 @@ $('form').on('submit', (e) => {
         }
 
         // mode of payment
-        data["advancePayment"] = {}
+        data["advancePayment"] = []
         let modeOfPayment = $('.mode-of-advance-payment').val()
         if (modeOfPayment != "not selected") {
+            data["advancePayment"] = []
             data["advancePaymentReceived"] = true
-            data["advancePayment"] = { mode: modeOfPayment }
+            paymentModeDetails = {}
             advanceTb = $('.advanceEntryTbody')
+            if (modeOfPayment === "upi") {
+                paymentModeDetails["utrNum"] = $('#utrNum').val()
+            } else if (modeOfPayment === "others") {
+                paymentModeDetails["others"] = $('#otherAdvnc').val()
+            }
             for (let i = 0; i < $('.advanceEntryTbody tr').length; i++) {
                 tempElement = advanceTb.children(i).children().children(`input`)
-                data["advancePayment"] = {
-                    paymentDetails: {
-                        advanceDate: tempElement[0].value,
-                        advanceAmount: tempElement[1].value,
-                    }
-                }
+                data["advancePayment"].push({
+                    mode: modeOfPayment,
+                    advanceDate: tempElement[0].value,
+                    advanceAmount: tempElement[1].value,
+                    paymentModeDetails,
+                })
             }
         } else {
             data["advancePaymentReceived"] = false
         }
+        submitBtn = $('button[type="submit"]')
+        submitBtn.attr('type', 'button').html(`
+        <div class="spinner-border spinner-border-sm" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>`)
         axios.post('/api/v1/vitco-impex/voucher/delivery-order/new', data).then((res) => {
-            console.log(res)
+            if (res.data.success == true) {
+                location.reload();
+            } else {
+                submitBtn.removeClass("bg-base-color").addClass("btn-danger").html("Error !")
+                $('.error').html('Please wait until it is resolved')
+            }
         }).catch((err) => { console.log(err) })
     }
 })
@@ -134,7 +150,7 @@ async function addMoreAdvInputs() {
     advanceInputNum++
 
 }
-//delete advance inputs
+// delete advance inputs
 function deleteAdvInputs(row) {
     $(`tr[data-advance-row="${row}"]`).remove()
     totalAdvAmt()

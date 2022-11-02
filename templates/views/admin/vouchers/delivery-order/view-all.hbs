@@ -6,158 +6,124 @@
         color: #fff !important;
     }
 
-    .text-base-color {
-        color: #3c3c3c;
-    }
-
-    input[type="checkbox"] {
+    .tb-row {
         cursor: pointer;
-        border: 1px solid #26abe2;
     }
 
-    input[type="checkbox"]:focus {
-        border: 1px solid #26abe2;
+    .tb-row:hover {
+        background-color: #f4f4f4;
     }
 
-    input[type="checkbox"]:checked {
-        background-color: #26abe2;
-        border: 1px solid #26abe2;
-    }
-
-    .advanceDetailsCheckbox {
-        position: relative;
-        bottom: 5px;
-    }
-
-    .product-details-input {
-        background-color: #ffffff;
-    }
-
-    .product-tooltip {
-        position: relative;
-    }
-
-    #search-box {
-        display: none;
-    }
-
-    /* Tooltip text */
-    .product-tooltip .product-tooltiptext {
-        visibility: hidden;
-        width: 8em;
-        background-color: #dc3545;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        /* Position the tooltip text - see examples below! */
-        position: absolute;
-        top: -2em;
-        z-index: 1;
-    }
-
-    /* Show the tooltip text when you mouse over the tooltip container */
-    .product-tooltip:hover .product-tooltiptext {
-        visibility: visible;
-    }
-
-
-    .suggestionbox-container {
-        position: relative;
-    }
-
-    .suggestionbox {
-        visibility: visible;
+    .voucher-details-container {
+        height: 100vh;
         width: 100%;
-        background-color: rgb(255, 255, 255);
-        color: rgb(0, 0, 0);
-        text-align: center;
-        border-radius: 6px;
-        /* Position the tooltip text - see examples below! */
+        background-color: #fff;
         position: absolute;
-        top: 3em;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        z-index: 1;
-    }
-
-    .suggestionbox li {
-        cursor: pointer;
-    }
-
-    .product-tooltip.active .product-tooltiptext {
-        visibility: visible;
+        top: -8em;
+        left: 0;
+        z-index: 999;
+        overflow-y: auto;
     }
 </style>
 {{/style}}
-
-
 {{#*inline "css"}}
-<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/css/admin/vouchers/delivery-order/view-all.css">
 {{/inline}}
-
-
 {{#*inline "body"}}
-<div class="container-fluid mb-5 pb-5">
-    <h4 class="my-3 ms-1 text-base-color">Create new delivery order - {{voucherNum}}</h4>
-    <form id="createNewDo">
-        <div class="row">
+<div class="container-fluid mt-5" style="position: relative;">
+    <div class="row">
+        <div class="col">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col" class="user-select-none"
+                            style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">
+                            Voucher No.</th>
+                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">
+                            Order Date</th>
+                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">
+                            Consignee</th>
+                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">
+                            Total Amt.</th>
+                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">
+                            Advance</th>
+                        <th scope="col" class="user-select-none"
+                            style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">
+                            Dispatched By</th>
+                    </tr>
+                </thead>
+                <tbody id="all-delivery-voucher-tbody">
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    {{!-- =========================================================== --}}
+    {{!-- DETAILS PAGE --}}
+    {{!-- =========================================================== --}}
+    <div class="voucher-details-container container-fluid px-4">
+        <h3 style="background-color:#26abe2;position:absolute;top:1em;left:0px"
+            class="py-2 px-5 text-light rounded shadow">Delivery order</h3>
+        <div class="row mt-5 pt-5" style="position: relative;">
             <div class="col-md-5">
                 <div class="form-group">
-                    <div class="mb-3">
-                        <label for="orderDate">Order Date</label>
-                        <div class="input-group date" data-date-format="dd/mm/yyyy">
-                            <input  autocomplete="off" required type="text" class="form-control" placeholder="dd/mm/yyyy" name="orderDate">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
+                    <div class="my-3">
+                        <label for="orderDate">Order Date </label>
+                        <div class="suggestionbox-container">
+                            <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="orderDate"
+                                name="orderDate" placeholder="dd/mm/yyyy">
                         </div>
                     </div>
                     <div class="my-3">
                         <label for="partyContactPerson">Receiver Name </label>
                         <div class="suggestionbox-container">
-                            <input  autocomplete="off" required type="text" class="form-control shadow-none" id="partyContactPerson"
-                                name="receiverName" placeholder="enter contact person name">
+                            <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none"
+                                id="partyContactPerson" name="receiverName" placeholder="enter contact person name">
 
                         </div>
                     </div>
                     <div class="my-3">
                         <label for="partyName">Consignee</label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="partyName" name="consignee"
-                            placeholder="enter party name">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="partyName"
+                            name="consignee" placeholder="enter party name">
                     </div>
                     <div class="my-3">
                         <label for="address">Consignee Address</label>
-                        <textarea required style="resize: none;" type="text" rows="4" class="form-control shadow-none"
+                        <textarea style="background-color:transparent" readonly style="resize: none;" type="text" rows="4" class="form-control shadow-none"
                             name="consigneeAddress" id="address" placeholder="enter party address"></textarea>
                     </div>
                 </div>
             </div>
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
-                    <label for="dispatchDate">Dispatch Date</label>
-                    <div class="mb-3 input-group date">
-                        <input  autocomplete="off" type="text" class="form-control" placeholder="dd/mm/yyyy" name="dispatchDate">
-                        <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th"></span>
-                        </div>
+                    <div class="my-3">
+                        <label for="dispatchDate">Dispatch Date </label>
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="dispatchDate"
+                            name="dispatchDate" placeholder="enter representative person">
                     </div>
                     <div class="my-3">
                         <label for="representativePerson">Representative person </label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="representativePerson"
-                            name="representativeName" placeholder="enter representative person">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="representativePerson"
+                            name="representativeName" placeholder="dd/mm/yyyy">
                     </div>
                     <div class="my-3" style="position: relative;">
                         <label for="mobile">Consignee Mobile </label>
-                        <input  autocomplete="off" style="padding-left: 40px;" required type="number" class="form-control shadow-none" id="mobile" name="consigneeMobile"
+                        <input readonly autocomplete="off" style="padding-left: 40px;background-color: transparent;" type="number"
+                            class="form-control shadow-none" id="mobile" name="consigneeMobile"
                             placeholder="enter party mobile number">
-                            <span style="position:absolute;left:5px;bottom:6px;">+91</span>
+                        <span style="position:absolute;left:5px;bottom:6px;">+91</span>
                     </div>
                 </div>
             </div>
@@ -168,13 +134,13 @@
                 <div class="form-group">
                     <div class="mb-3">
                         <label for="gstNum">GST IN NO.</label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="gstNum" name="gstInNum"
-                            placeholder="enter gst invoice number">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="gstNum"
+                            name="gstInNum" placeholder="enter gst invoice number">
                     </div>
                     <div class="my-3">
                         <label for="aadhaarNum">Aadhar no. </label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="aadhaarNum" name="aadharNum"
-                            placeholder="enter aadhaar number">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="aadhaarNum"
+                            name="aadharNum" placeholder="enter aadhaar number">
                     </div>
                 </div>
             </div>
@@ -182,12 +148,12 @@
                 <div class="form-group">
                     <div class="mb-3">
                         <label for="panNum">PAN NO.</label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="panNum" name="panNum"
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="panNum" name="panNum"
                             placeholder="enter pan card number ">
                     </div>
                     <div class="my-3">
                         <label for="specialIns">Special Instructions</label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="specialIns"
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="specialIns"
                             name="specialInstructions" placeholder="enter special instruments">
                     </div>
                 </div>
@@ -212,35 +178,25 @@
             </table>
         </div>
         <div class="row add-product-section">
-            <div class="col-12 d-flex justify-content-between align-items-center">
-                <small class="ms-3 text-danger">Minimum 1 product required</small>
+            {{!-- <div class="col-12 d-flex justify-content-between align-items-center">
+                <small class="ms-3 text-danger">Minimum 1 product</small>
                 <div class="d-flex align-items-center">
                     <h6 class="me-3 text-secondary d-md-inline d-none">( Ctrl + Q )</h6>
                     <button class="btn btn-primary text-light bg-base-color border-0 shadow-none"
                         onclick="addNewProduct()" type="button">Add product</button>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-12 mt-3 text-secondary">
                 <h5>Amount : &#8377; <span class="totalAmount text-primary"> 0 </span></h5>
             </div>
         </div>
         <hr>
         <div class="row">
-            <h4 class="mt-2 m-0 text-base-color">Advance Payment<input  autocomplete="off"
-                    class="form-check-input ms-3 advanceDetailsCheckbox" type="checkbox" onchange="
-                    if($(this).is(':checked')){
-                        $('.advance-payment-container').removeClass('d-none');
-                        $('.advanceEntryTbody input').prop('required',true);
-                        $('.mode-of-advance-payment option:nth-child(1)').attr('value','null')
-                    }else{
-                        $('.advance-payment-container').addClass('d-none');
-                        $('.advanceEntryTbody input').prop('required',false);
-                        $('.mode-of-advance-payment option:nth-child(1)').attr('value','not selected')
-                    }">
-            </h4>
-            <small class="mb-3">Check it for any advance payments</small>
-            <div class="col-md-5 advance-payment-container d-none">
-                <select class="form-select shadow-none mode-of-advance-payment" aria-label="Default select example">
+            <h5 class="my-2 mb-4 m-0 text-base-color advance-payment-heading">Advance Payment</h5>
+            <div class="col-md-5 advance-payment-container">
+                <h6>Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span></h6>
+                <select class="form-select shadow-none mode-of-advance-payment d-none"
+                    aria-label="Default select example">
                     <option value="not selected" selected>Choose mode of payment</option>
                     <option value="bank">Bank</option>
                     <option value="cash">Cash</option>
@@ -250,27 +206,28 @@
                 <div class="mb-3">
                     <div class="form-group advance-upi-details mode-of-payment-details d-none">
                         <label for="utrNum">Enter UTR number</label>
-                        <input  autocomplete="off" type="text" class="form-control shadow-none" id="utrNum" placeholder="enter utr number">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="utrNum"
+                            placeholder="enter utr number">
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-group advance-others-details mode-of-payment-details d-none">
                         <label for="otherAdvnc">Describe</label>
-                        <textarea style="resize: none;" type="text" class="form-control shadow-none" id="otherAdvnc"
+                        <textarea readonly style="resize: none;background-color:transparent" type="text" class="form-control shadow-none" id="otherAdvnc"
                             placeholder="describe your payment method"></textarea>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 advance-payment-container offset-md-1 d-none">
+            <div class="col-md-6 advance-payment-container offset-md-1">
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col" style="word-break: keep-all;">Advance Date</th>
                             <th scope="col">Advance Amount</th>
-                            <th scope="col" style="padding: 7px;"><i class="bi bi-plus-circle display-6 cursor-pointer"
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Add more"
-                                    onclick="addMoreAdvInputs()"></i>
-                            </th>
+                            {{!-- <th scope="col" style="padding: 7px;"><i
+                                    class="bi bi-plus-circle display-6 cursor-pointer" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Add more" onclick="addMoreAdvInputs()"></i>
+                            </th> --}}
                         </tr>
                     </thead>
                     <tbody class="advanceEntryTbody">
@@ -286,22 +243,20 @@
             <h4 class="my-2 text-base-color">Dispatch Details</h4>
             <div class="col-md-5">
                 <div class="form-group">
-
-
                     <div class="my-3">
                         <label for="dispatchedBy">Dispatched By </label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="dispatchedBy"
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="dispatchedBy"
                             name="dispatchedBy" placeholder="who dispatched it ?">
                     </div>
                     <div class="my-3">
                         <label for="dispatchVehicleNum">Dispatch vehicle no. </label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="dispatchVehicleNum"
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="dispatchVehicleNum"
                             name="dispatchVehicleNum" placeholder="enter vehicle number">
                     </div>
                     <div class="my-3">
                         <label for="remark">Remark </label>
-                        <textarea required style="resize: none;" type="text" class="form-control shadow-none"
-                            name="remark" id="remark" placeholder="enter order summary"></textarea>
+                        <textarea readonly style="resize: none;background-color:transparent" type="text" class="form-control shadow-none" name="remark"
+                            id="remark" placeholder="enter order summary"></textarea>
                     </div>
                 </div>
             </div>
@@ -309,18 +264,18 @@
                 <div class="form-group">
                     <div class="my-3">
                         <label for="machineSrNum">Machine Serial No. </label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="machineSrNum"
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="machineSrNum"
                             name="machineSrNum" placeholder="enter serial number">
                     </div>
                     <div class="mb-3">
                         <label for="invoiceNum">Invoice No.</label>
-                        <input  autocomplete="off" required type="text" class="form-control shadow-none" id="invoiceNum" name="invoiceNum"
-                            placeholder="enter invoice number">
+                        <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control shadow-none" id="invoiceNum"
+                            name="invoiceNum" placeholder="enter invoice number">
                     </div>
                     <div class="mb-3">
                         <label for="invoiceDate">Invoice Date</label>
                         <div class="input-group date" data-date-format="dd/mm/yyyy">
-                            <input  autocomplete="off" type="text" required class="form-control" placeholder="dd/mm/yyyy"
+                            <input style="background-color: transparent;" readonly autocomplete="off" type="text" class="form-control" placeholder="dd/mm/yyyy"
                                 name="invoiceDate">
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-th"></span>
@@ -333,19 +288,31 @@
         <div class="submit-container d-flex justify-content-end ps-3 align-items-center"
             style="position: fixed;bottom:1em;right:1em;">
             <span class="error display-5 mx-3"></span>
-            <button style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" class="btn bg-base-color text-light"
-                type="submit">Submit</button>
+            <button onclick="closeVoucherDetails()" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" class="btn bg-base-color text-light"
+                type="button">Close</button>
         </div>
-    </form>
+    </div>
 </div>
+
+
+
+
 {{/inline}}
 {{#*inline "script"}}
+<script>
+    function ObjectId() { }
+    vouchers = [{{{ vouchers }}}]
 
+</script>
 {{!-- bootstrap date picker --}}
 <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+{{!-- underscore js --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"
+    integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{!-- my script --}}
-<script src="/js/admin/vouchers/delivery-order/create-new.js"></script>
+<script src="/js/admin/vouchers/delivery-order/view-all.js"></script>
 {{/inline}}
