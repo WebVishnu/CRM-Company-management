@@ -37,23 +37,12 @@ router.get('/vitco-impex/vouchers/delivery-order/view-all', async (req, res, nex
         const admin = await Admin.findById(adminToken.uID)
         const allDOvouchers = await DOVoucher.find()
         console.log(allDOvouchers)
-        res.render('admin/vouchers/delivery-order/view-all', {"vouchers":allDOvouchers, "admin": admin, "webHost": req.headers.host, "protocol": req.headers.host })
+        res.render('admin/vouchers/delivery-order/view-all', { "admin": admin, "webHost": req.headers.host, "protocol": req.headers.host })
     } else {
         res.redirect('/vitco-india/control/admin/not-allowed')
     }
 })
 
-
-
-
-//view vouchers  -- ADMIN -- POST
-// router.get('/vitco-impex/vouchers/view', async (req, res, next) => {
-//     if (await authorizedRoles("vouchers", req, res, next, ["view"])) {
-//         viewVouchers(req, res)
-//     } else {
-//         res.redirect('/vitco-india/control/admin/not-allowed')
-//     }
-// })
 
 
 module.exports = router

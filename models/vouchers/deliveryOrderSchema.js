@@ -113,9 +113,9 @@ const deliveryOrder = new mongoose.Schema({
             advanceAmount: {
                 type: 'string',
             },
-            paymentModeDetails: {}
         }
     ],
+    paymentModeDetails: {},
     dispatchDetails: {
         dispatchedBy: {
             type: 'string',

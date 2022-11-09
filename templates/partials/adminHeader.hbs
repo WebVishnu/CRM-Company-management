@@ -33,6 +33,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Poppins:ital,wght@0,400;0,500;0,600;1,500&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
+    .border-radius-right {
+        border-radius: 0 5px 5px 0;
+    }
+
     .bg-base-color {
         background-color: #26abe2 !important;
     }
@@ -472,7 +476,7 @@
                     {{/ifeq}}
                     {{/ifeq}}
                     {{#ifeq this.permissionName "machineSalesData"}}
-                     machine sales data
+                    machine sales data
                     <li class="menu-main-item">
                         <a class="menu-link d-flex justify-content-between" style="user-select: none"
                             data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');

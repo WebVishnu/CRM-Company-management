@@ -90,8 +90,8 @@ $('form').on('submit', (e) => {
                     mode: modeOfPayment,
                     advanceDate: tempElement[0].value,
                     advanceAmount: tempElement[1].value,
-                    paymentModeDetails,
                 })
+                data['paymentModeDetails'] = paymentModeDetails
             }
         } else {
             data["advancePaymentReceived"] = false

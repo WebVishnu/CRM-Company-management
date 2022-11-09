@@ -9,6 +9,7 @@ exports.createNewDO = async function (req, res) {
     const { adminToken } = req.cookies;
     const admin = await Admin.findById(adminToken.uID);
     allVouchers = await DOVoucher.find()
+    console.log(req.body)
     await DOVoucher.create({
       createdBy: {
         adminName: admin.adminName,
@@ -30,6 +31,7 @@ exports.createNewDO = async function (req, res) {
       products: req.body.products,
       advancePaymentReceived: req.body.advancePaymentReceived,
       advancePayment: req.body.advancePayment,
+      paymentModeDetails: req.body.paymentModeDetails,
       dispatchDetails: {
         dispatchedBy: req.body.dispatchedBy,
         dispatchVehicleNum: req.body.dispatchVehicleNum,
@@ -39,12 +41,12 @@ exports.createNewDO = async function (req, res) {
         remark: req.body.remark,
       }
     }).catch((e) => {
-      console.log(e)
       throw "error"
+    }).then(()=>{
+      res.send({
+        success: true,
+      });
     })
-    res.send({
-      success: true,
-    });
   } catch (error) {
     res.send({
       success: false,

@@ -14,6 +14,7 @@ $(window).on('scroll', () => {
     }
 })
 
+
 keyboardJS.bind('alt + a', (e) => {
     loadedReports = 0
     gotAllreports = false
@@ -25,6 +26,16 @@ keyboardJS.bind('alt + a', (e) => {
     }
 });
 
+keyboardJS.bind('up', (e) => {
+    console.log($('.move:focus'))
+    $('.move:focus').prev().focus()
+});
+
+
+keyboardJS.bind('down', (e) => {
+    console.log($('.move:focus'))
+    $('.move:focus').next().focus()
+});
 // refresh all the service reports
 keyboardJS.bind('r', () => {
     refreshAllReports()
@@ -274,7 +285,7 @@ async function updateServiceReportTable(reports) {
     data = ``
     for (var i = reports.length - 1; i >= 0; i--) {
         data += `
-        <tr class='cursor-pointer service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(reports[i])});toggleServiceReportInputs("report",true);$(".submit-changes-service-report-btn").addClass("hide");$(".change-service-report-btn").removeClass("hide")'>
+        <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(reports[i])});toggleServiceReportInputs("report",true);$(".submit-changes-service-report-btn").addClass("hide");$(".change-service-report-btn").removeClass("hide")'>
          <td class="user-select-none" data-label="Report Number" >${ShortifyString(reports[i].reportNumber)}</td>
          <td class="user-select-none" data-label="Date" >${ShortifyString(`${reports[i].date.split('/')[1]}/${reports[i].date.split('/')[0]}/${reports[i].date.split('/')[2]}`)}</td>
          <td class="user-select-none" data-label="Customer name" >${ShortifyString(reports[i].customerName)}</td>
@@ -489,7 +500,7 @@ function checkActiveFilter() {
             gotAllreports = false;
             $('#all-reports-header table').css('display', 'inline-table');
         }, 100);
-	getAllServiceReports()
+        getAllServiceReports()
     }
 }
 
