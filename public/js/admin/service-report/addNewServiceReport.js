@@ -288,14 +288,14 @@ $('.share-service-report-btn').on('click', () => {
 function addNewPartsIN() {
     $('.parts-in-inputs')
         .append(`
-        <div class=" d-flex my-2">
-            <div>
+        <div class="d-flex m-3">
+            <div class="w-100">
                 <input type="text" class="form-control shadow-none partName">
             </div>
-            <div>
+            <div class="w-100">
                 <input type="text" class="form-control shadow-none partSno">
             </div>
-            <div>
+            <div class="w-100">
                 <input type="text" class="form-control shadow-none partWTY">
             </div>
         </div>`)

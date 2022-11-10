@@ -58,18 +58,34 @@
         margin-bottom: .625em;
     }
 
-    .delivery-order-table table td {
+    .delivery-order-table table td:nth-child(2),
+    .delivery-order-table table td:nth-child(5) {
+        display: none;
+    }
+
+    .delivery-order-table table td:nth-child(1),
+    .delivery-order-table table td:nth-child(3),
+    .delivery-order-table table td:nth-child(4),
+    .delivery-order-table table td:nth-child(6) {
         border-bottom: 1px solid #ddd;
         display: block;
         font-size: .8em;
         text-align: right;
     }
 
+    /* .delivery-order-table table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    } */
+
     .delivery-order-table table td::before {
         /*
-          * aria-label has no advantage, it won't be read inside a table
+          aria-label has no advantage, it won't be read inside a table
           content: attr(aria-label);
           */
+        margin-left: 1em;
         content: attr(data-label);
         float: left;
         font-weight: bold;
@@ -93,11 +109,11 @@
 }
 
 .tb-row:hover {
-    background-color: #f4f4f4;
+    background-color: #f9f9f9;
 }
 
 .voucher-details-container {
-    height: 100vh;
+    height: 100.7vh;
     width: 100.7%;
     background-color: #fff;
     position: absolute;
@@ -113,19 +129,21 @@
     top: 1em;
     z-index: 11;
     background-color: #fff;
-    box-shadow: 15px 4px 21px -3px rgba(0,0,0,0.1);
+    box-shadow: 15px 4px 21px -3px rgba(0, 0, 0, 0.1);
     transition: all 0.1s ease-in-out;
 }
 
-.page-right-title{
+.page-right-title {
     position: absolute;
     top: 0.5em;
     right: 0;
-    z-index: 11;
+    z-index: 1;
 }
+
 .nav-link.active.bg-base-color-nav {
     background-color: #26abe2 !important;
 }
+
 .view-details-divider {
     background: #F7F9FB;
     font-size: 0.9em;

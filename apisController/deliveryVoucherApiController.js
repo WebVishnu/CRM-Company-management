@@ -9,7 +9,6 @@ exports.createNewDO = async function (req, res) {
     const { adminToken } = req.cookies;
     const admin = await Admin.findById(adminToken.uID);
     allVouchers = await DOVoucher.find()
-    console.log(req.body)
     await DOVoucher.create({
       createdBy: {
         adminName: admin.adminName,

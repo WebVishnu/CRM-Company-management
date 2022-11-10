@@ -19,15 +19,15 @@ router.get('/api/v1/vitco-impex/filter/delivery-order/:filter', async (req, res,
         try {
             const { adminToken } = req.cookies;
             const admin = await Admin.findById(adminToken.uID)
-            if (req.params.filter == "all") {
+            if (req.params.filter === "all") {
                 res.send({
                     success: true,
-                    vouchers: await DOVoucher.find().catch((e)=>{throw e})
+                    vouchers: await DOVoucher.find().catch((e) => { throw e })
                 })
-            } else if (req.params.filter == "admin") {
+            } else if (req.params.filter === "admin") {
                 res.send({
                     success: true,
-                    vouchers: await DOVoucher.find({ 'createdBy.adminID': admin._id }).catch((e)=>{throw e})
+                    vouchers: await DOVoucher.find({ 'createdBy.adminID': admin._id }).catch((e) => { throw e })
                 })
             }
         } catch (e) {

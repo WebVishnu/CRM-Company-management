@@ -13,7 +13,7 @@
     <span class="py-2 px-4 display-6 page-title border-radius-right d-md-inline d-none">Delivery Order</span>
     <span class="py-2 px-4 page-right-title border-radius-left">
         <ul class="nav nav-pills">
-            <li class="nav-item px-1 user-select-none " onclick="filterVouchers('admins')">
+            <li class="nav-item px-1 user-select-none " onclick="filterVouchers('admin')">
                 <a class="nav-link active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
                     aria-selected="true">My vouchers</a>
             </li>
@@ -28,18 +28,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" class="user-select-none"
+                        <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">
                             Voucher No.</th>
-                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">
+                        <th scope="col" class="user-select-none text-truncate"
+                            style="word-break:break-all;white-space: nowrap;">
+                            Created By</th>
+                        <th scope="col" class="user-select-none text-truncate"
+                            style="word-break:break-all;white-space: nowrap;">
                             Order Date</th>
-                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">
-                            Consignee</th>
-                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">
+                        <th scope="col" class="user-select-none text-truncate"
+                            style="word-break:break-all;white-space: nowrap">
                             Total Amt.</th>
-                        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">
+                        <th scope="col" class="user-select-none text-truncate"
+                            style="word-break:break-all;white-space: nowrap">
                             Advance</th>
-                        <th scope="col" class="user-select-none"
+                        <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">
                             Dispatched By</th>
                     </tr>
@@ -47,7 +51,12 @@
                 <tbody id="all-delivery-voucher-tbody">
                 </tbody>
             </table>
-
+            <div class="container text-center mt-5 loading-spinner hide">
+                <div class="spinner-border base-color-text" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <h5 class="mt-1">Loading please wait...</h5>
+            </div>
         </div>
     </div>
 
@@ -204,9 +213,10 @@
             </div>
         </div>
         <div class="row">
-            <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">Advance Payments</h5>
+            <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">Advance
+                Payments</h5>
             <div class="col-md-5 advance-payment-container">
-                <h6>Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span></h6>
+                <h6 class="my-3">Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span></h6>
                 <div class="advancePaymentModeDetails form-group"></div>
                 <select class="form-select shadow-none mode-of-advance-payment d-none"
                     aria-label="Default select example">
@@ -249,7 +259,7 @@
 
             </div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
             <h5 class="view-details-divider" style="background-color: #f7f8fa;">Dispatch
                 Details</h5>
 
@@ -305,6 +315,9 @@
         </div>
     </div>
 </div>
+<script>
+    $('.voucher-details-container').fadeOut(0)
+</script>
 
 
 <div class="fixed-container d-flex justify-content-end ps-3 align-items-center"

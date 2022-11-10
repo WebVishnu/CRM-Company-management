@@ -51,6 +51,12 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
 
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
+    }else if (query.includes('advWty')) {
+        reports =  await ServiceReport.find({
+            $or: [
+                { "service.warranty": { $regex: req.body.wty, $options: 'i' } },
+            ]
+        }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     } else if (query.includes('d:')) {
         query = query.replace('d: ', '').replaceAll('-', '/').replaceAll(' ', "")
         reports = await ServiceReport.find({
@@ -89,6 +95,7 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
     res.status(200).send({
         status: true,
         reports: reports,
+        query:(req.body.wty)?req.body.wty:""
     })
 })
 

@@ -9,14 +9,13 @@ const { sendTokenAdmin } = require(path.join(__dirname, "../utils/jwtToken"));
 var helpers = require('handlebars-helpers');
 
 
-helpers.contains = function (collection, value, startIndex, options) {
-  if (typeof startIndex === 'object') {
-    options = startIndex;
-    startIndex = undefined;
+
+Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+  if(v1 === v2) {
+    return options.fn(this);
   }
-  var val = utils.contains(collection, value, startIndex);
-  return util.value(val, this, options);
-};
+  return options.inverse(this);
+});
 
 
 Handlebars.registerHelper("ifeq", function (a, b, options) {

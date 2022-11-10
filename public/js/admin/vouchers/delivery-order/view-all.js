@@ -1,5 +1,5 @@
+
 $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
-$('.voucher-details-container').fadeOut(0)
 // open voucher details model
 function openVoucherDetails(voucher) {
     $('body , html').css('overflow-y', 'hidden')
@@ -55,7 +55,7 @@ function openVoucherDetails(voucher) {
             paymentData = ``
             Object.keys(modeDetails).forEach(key => {
                 paymentData += `<label class="text-capitalize">${key}</label>
-                                <input readonly type="email" value="${modeDetails[key]}" class="form-control shadow-none bg-transparent" placeholder="Enter ${modeDetails[key]}">`
+                                <input type="text" value="${modeDetails[key]}" class="form-control shadow-none bg-transparent" placeholder="Enter ${key}">`
             });
             $('.advancePaymentModeDetails').html(paymentData)
         }
@@ -83,17 +83,26 @@ filterVouchers("admin")
 function printAllVouchers(v) {
     if (v.length != 0) {
         tempData = ``
+        tempDate = ``
         for (let i = v.length - 1; i >= 0; i--) {
             const voucher = v[i];
+            if (tempDate != `${voucher.createdBy.createdOn}`) {
+                tempData += `<h5 class="view-details-divider" style="background-color: #f7f8fa;">${(voucher.createdBy.createdOn == moment().format('L'))?"latest":voucher.createdBy.createdOn}</h5>`
+                tempDate =  `${voucher.createdBy.createdOn}`
+            }
+            total = 0
+            voucher.products.forEach(products => {
+                total += parseInt(products.grossTotal)
+            });
             tempData += `
-                <tr class="tb-row" onclick='openVoucherDetails(${JSON.stringify(voucher)})'>
-                   <td>${voucher.voucherNum}</td>
-                   <td>${voucher.orderDate}</td>
-                   <td>${voucher.consignee}</td>
-                   <td>${voucher.gstInNum}</td>
-                   <td>${voucher.advancePaymentReceived}</td>
-                   <td>${voucher.dispatchDetails.dispatchedBy}</td>
-                </tr>`
+                    <tr class="tb-row" onclick='openVoucherDetails(${JSON.stringify(voucher)})'>
+                       <td data-label="Voucher number" class="text-truncate">${voucher.voucherNum}</td>
+                       <td data-label="Created by" class="text-truncate">${voucher.createdBy.adminName}</td>
+                       <td data-label="Order date" class="text-truncate">${voucher.orderDate}</td>
+                       <td data-label="Total Amt." class="text-truncate">${total}</td>
+                       <td data-label="Advance" class="text-truncate text-uppercase">${(voucher.advancePaymentReceived == "true")?`<span class="badge badge-success">${voucher.advancePaymentReceived}</span>`:`<span class="badge badge-danger">${voucher.advancePaymentReceived}</span>`}</td>
+                       <td data-label="Dispatched By" class="text-truncate">${voucher.dispatchDetails.dispatchedBy}</td>
+                    </tr>`
         }
         $('#all-delivery-voucher-tbody').html(tempData)
     } else {
@@ -103,11 +112,15 @@ function printAllVouchers(v) {
 
 // filter vouchers 
 async function filterVouchers(filter) {
+    $('.loading-spinner').removeClass('hide')
     await axios.get(`/api/v1/vitco-impex/filter/delivery-order/${filter}`)
         .then((res) => {
             if (res.data.success) {
+                $('.loading-spinner').addClass('hide')
                 printAllVouchers(res.data.vouchers)
             }
+        }).catch((e)=>{
+            $('.loading-spinner').html('We found some error')
         })
 }
 
@@ -120,5 +133,4 @@ function closeVoucherDetails() {
     $('.page-title').css('left', '-1.2em')
     $('.advance-payment-container').fadeIn(0)
     $('.advance-payment-heading').html('Advance Payments')
-    keyboardJS.unbind('esc');
 }

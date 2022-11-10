@@ -102,7 +102,8 @@
                 </div>
             </div>
         </div>
-        {{!-- <hr style="border: 0;">
+        {{!--
+        <hr style="border: 0;">
         <div class="row">
             <div class="col-lg-4 col-md-5 d-flex align-items-center">
                 <div>
@@ -186,25 +187,26 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9 col-sm-4 d-flex flex-column parts-in-inputs-container">
-                    <div class="form-group parts-in-inputs">
-                        <div class=" d-flex">
-                            <div>
+                <div class="col-md-9 col-sm-4 p-3 d-flex flex-column parts-in-inputs-container"  style="position:relative">
+                    <span class="px-2 font-weight-bold" style="position:absolute;top:0.3em;left:2em;background-color:#f5f5f9">PARTS IN</span>
+                    <div class="form-group parts-in-inputs" style="border: 1px solid rgb(194, 194, 194)!important;">
+                        <div class=" d-flex m-3">
+                            <div class="w-100">
                                 <label for="partName">Part Name</label>
                                 <input type="text" class="form-control shadow-none partName">
                             </div>
-                            <div>
+                            <div class="w-100">
                                 <label for="partSno">Part Sno.</label>
                                 <input type="text" class="form-control shadow-none partSno">
                             </div>
-                            <div>
+                            <div class="w-100">
                                 <label for="partWTY">Part Wty</label>
                                 <input type="text" class="form-control shadow-none partWTY">
                             </div>
                         </div>
                     </div>
-                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3" onclick="addNewPartsIN()">
-                        + Add more</span>
+                        <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3" onclick="addNewPartsIN()">
+                            + Add more</span>
                 </div>
                 <div class="col-md-3 col-sm-4 d-flex flex-column">
                     <div class="form-group  parts-out-inputs">

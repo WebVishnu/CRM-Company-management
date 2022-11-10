@@ -3,7 +3,8 @@ latestReportNumber = 0
 loadedReports = 0
 gotAllreports = false
 const totalSearchResults = $('.total-search-results')
-$(window).on('scroll', () => {
+$(window).on('scroll', () => { loadReportsOnScroll() })
+function loadReportsOnScroll() {
     if (!gotAllreports) {
         offset = 6
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
@@ -12,14 +13,12 @@ $(window).on('scroll', () => {
             }
         }
     }
-})
-
+}
 
 keyboardJS.bind('alt + a', (e) => {
     loadedReports = 0
     gotAllreports = false
     if (!$('.view-sale-data-details-modal').hasClass('hide')) {
-        checkActiveFilter()
         $('.view-sale-data-details-modal').addClass('hide');
         $('html').removeAttr('style');
         $('.service-machine-modal').addClass('hide');
@@ -117,6 +116,7 @@ snoFilter = $('input[data-filter-type="sno"]')
 machineNoFilter = $('input[data-filter-type="machineNo"]')
 // search keyup
 $('#search-form input').on('keyup', function (event) {
+    convertTableHead("reports")
     $('button[data-bs-toggle="pill"]').removeClass('active')
     if ($('#search-form input').val().length > 0) {
         $('.nav-item[role="presentation"]').removeClass('active')
@@ -154,6 +154,9 @@ function ShortifyString(str) {
 }
 // open service report modal
 function viewServiceReport(report) {
+    toggleServiceReportInputs("report", true);
+    $(".submit-changes-service-report-btn").addClass("hide");
+    $(".change-service-report-btn").removeClass("hide")
     $('html').css('overflow-y', 'hidden');
     $('.service-report-heading').html(`Service Report - ${report.reportNumber}`)
     $('.view-sale-data-details-modal').removeClass('hide')
@@ -285,7 +288,7 @@ async function updateServiceReportTable(reports) {
     data = ``
     for (var i = reports.length - 1; i >= 0; i--) {
         data += `
-        <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(reports[i])});toggleServiceReportInputs("report",true);$(".submit-changes-service-report-btn").addClass("hide");$(".change-service-report-btn").removeClass("hide")'>
+        <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(reports[i])});'>
          <td class="user-select-none" data-label="Report Number" >${ShortifyString(reports[i].reportNumber)}</td>
          <td class="user-select-none" data-label="Date" >${ShortifyString(`${reports[i].date.split('/')[1]}/${reports[i].date.split('/')[0]}/${reports[i].date.split('/')[2]}`)}</td>
          <td class="user-select-none" data-label="Customer name" >${ShortifyString(reports[i].customerName)}</td>
@@ -303,6 +306,7 @@ async function updateServiceReportTable(reports) {
 
 // get all service reports
 async function getAllServiceReports() {
+    $(window).on('scroll', () => { loadReportsOnScroll() })
     totalSearchResults.addClass('hide')
     $('.nav-link-all').addClass('active')
     $('.addtional-search-options').css('right', '1em')
@@ -344,7 +348,6 @@ getAllServiceReports()
 
 // search service reports
 async function searchReport(query) {
-
     $('.service-report-loading').removeClass('hide')
     totalSearchResults.removeClass('hide')
     axios.post(`/api/v1/service-report/search/${query.replaceAll('/', '-')}`)
@@ -357,6 +360,7 @@ async function searchReport(query) {
                 totalSearchResults.html(`${response.data.reports.length} results found`)
             }
             $('.service-report-loading').addClass('hide')
+            $(window).off('scroll');
             updateServiceReportTable(response.data.reports)
         })
 }
@@ -369,23 +373,86 @@ $('#advanceSearchModal').on('hidden.bs.modal', function () {
 });
 
 // advance search
-$('#advance-serach-form').on('submit', (e) => {
+$('form#advance-serach-form button[type="submit"]').on('click', (e) => {
     e.preventDefault()
-    searchInput.val('')
-    formData = $('#advance-serach-form').serializeArray()
-    axios({
-        method: "post",
-        url: "/api/v1/service-report/search/cond:",
-        data: formData,
-    })
-        .then(function (response) {
+    if (!$('.combination-adv-search-section').hasClass('opacity-3')) {
+        convertTableHead("reports")
+        searchInput.val('')
+        formData = $('#advance-serach-form').serializeArray()
+        axios({
+            method: "post",
+            url: "/api/v1/service-report/search/cond:",
+            data: formData,
+        }).then(function (response) {
             $('.modal-backdrop').remove();
             $('.totalResult').html(`${response.data.reports.length} results found`)
+            $(window).off('scroll');
             updateServiceReportTable(response.data.reports)
         })
+    } else if (!$('.wty-adv-search-section').hasClass('opacity-3')) {
+        $('.combination-adv-search-section input').prop('required', false)
+        axios({
+            method: "post",
+            url: `/api/v1/service-report/search/advWty`,
+            data: { wty: $('input[name="advWty"]:checked').val() },
+        }).then(function (response) {
+            convertTableHead("machine")
+            $('.totalResult').html(`${response.data.reports.length} results found`)
+            $('.modal-backdrop').remove();
+            $(window).off('scroll');
+            $('.nav-link').removeClass('active')
+            data = ``
+            for (var i = response.data.reports.length - 1; i >= 0; i--) {
+                response.data.reports[i].service.forEach(machine => {
+                    if (machine.warranty == response.data.query) {
+                        data += `
+                        <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(response.data.reports[i])});'>
+                         <td class="user-select-none text-truncate" data-label="Machine name" >${machine.machineName}</td>
+                         <td class="user-select-none text-truncate" data-label="Machine number" >${machine.machineNum}</td>
+                         <td class="user-select-none text-truncate" data-label="Warranty" >${machine.warranty}</td>
+                         <td class="user-select-none text-truncate" data-label="Problem" >${machine.problem}</td>
+                         <td class="user-select-none text-truncate" data-label="Action" >${machine.actionTaken}</td>
+                         <td class="user-select-none text-truncate" data-label="Parts IN" >${machine.partsIN.length}</td>
+                         <td class="user-select-none text-truncate" data-label="Parts OUT" >${machine.partsOUT.length}</td>
+                         <td class="user-select-none text-truncate" data-label="Status" >${machine.status}</td>
+                        </tr>
+                        `
+                    }
+                })
+            }
+            $('#all-service-reports-body').html(data)
+        });
+    }
 })
 
-
+// create machine report table
+function convertTableHead(cmd) {
+    if (cmd == "machine") {
+        $('.all-service-reports-table thead').html(`
+            <tr>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">M. name</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;">M. number</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Wty</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Prob.</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">Action</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">P. IN</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;">P. OUT</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Status</th>
+            </tr>`)
+    }else if(cmd == "reports"){
+        $('.all-service-reports-table thead').html(`
+            <tr>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">Date</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">C Name.</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">T. Name</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
+            </tr>`)
+    }
+}
 
 
 
@@ -489,6 +556,7 @@ function filterReports(query, base) {
 
 
 function checkActiveFilter() {
+    convertTableHead("reports")
     if ($('.nav-link-ok').hasClass('active')) {
         filterReports('OK', 'status')
     } else if ($('.nav-link-pending').hasClass('active')) {
@@ -509,6 +577,7 @@ function checkActiveFilter() {
 function refreshAllReports() {
     window.scrollTo(0, 0);
     searchInput.val('');
+    convertTableHead("reports")
     $('#all-reports-header table').css('display', 'none');
     setTimeout(() => {
         loadedReports = 0;
@@ -542,8 +611,23 @@ function addNewAdvanceSearchInput(value) {
     }
 }
 
+// close report 
+function closeReport() {
+    $('.view-sale-data-details-modal').addClass('hide');
+    $('html').css('overflow-y', 'scroll');
+}
 
 
+// advance search switch options
+function switchAdvance(option) {
+    if (option === "combination") {
+        $('.wty-adv-search-section').addClass('opacity-3')
+        $('.combination-adv-search-section').removeClass('opacity-3')
+    } else if (option === "warranty") {
+        $('.wty-adv-search-section').removeClass('opacity-3')
+        $('.combination-adv-search-section').addClass('opacity-3')
+    }
+}
 // // open filter menu
 // function openAdvanceSearch() {
 //     closeFilterMenu()

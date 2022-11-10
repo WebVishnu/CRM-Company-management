@@ -24,7 +24,9 @@
     <!-- Helpers -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {{#> css}}
     {{/css}}
 </head>
@@ -35,6 +37,14 @@
 
     .border-radius-right {
         border-radius: 0 5px 5px 0;
+    }
+
+    .opacity-3 {
+        opacity: 0.3;
+    }
+
+    .base-color-text {
+        color: #26abe2 !important;
     }
 
     .bg-base-color {
@@ -443,6 +453,12 @@
                             <div data-i18n="Basic">Vouchers</div>
                         </a>
                     </li>
+                    <li class="menu-main-item">
+                        <a href="/vitco-impex/vouchers/qr-codes" class="menu-link" data-link="qrCode">
+                            <i class="bi bi-qr-code me-3"></i>
+                            <div data-i18n="Basic">Qr codes</div>
+                        </a>
+                    </li>
                     <li class="menu-main-item d-lg-block d-none">
                         <a onclick="document.getElementsByClassName('keyboard-shortcuts-container')[0].classList.add('active');"
                             class="menu-link" data-link="shotcuts">
@@ -475,9 +491,8 @@
                     </li>
                     {{/ifeq}}
                     {{/ifeq}}
-                    {{#ifeq this.permissionName "machineSalesData"}}
-                    machine sales data
-                    <li class="menu-main-item">
+                    {{#ifCond this.permissionName 'machineSalesData'}}
+                    <li class="menu-main-item salesData">
                         <a class="menu-link d-flex justify-content-between" style="user-select: none"
                             data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
                             $('.drop-down-menu-main-machine-sales-data').removeClass('active');
@@ -491,15 +506,15 @@
                         <ul class="drop-down-menu-main-sales-data">
                             <li class="menu-main-item mt-2">
                                 <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
-                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    onclick="$('.drop-down-menu-main-machine-sales-data').toggleClass('active')">
                                     <div class="d-flex">
                                         <i class="bi bi-cpu me-3"></i>
                                         <div data-i18n="Basic">Machine</div>
                                     </div>
                                     <i class="bi bi-arrow-down-short me-1 display-6"></i>
                                 </a>
-                                <ul class="drop-down-menu-main-parts-sales-data">
-                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                <ul class="drop-down-menu-main-machine-sales-data">
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/machine/all"
                                             class="menu-link menu-link-dropdown">
@@ -507,8 +522,8 @@
                                             <div data-i18n="Basic">View all</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
-                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/machine/add-new"
                                             class="menu-link menu-link-dropdown">
@@ -516,10 +531,11 @@
                                             <div data-i18n="Basic">Add new</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
+                                    {{/ifCond}}
                                 </ul>
                             </li>
-                            {{#ifeq this.permissionName "partSalesData"}}
+                            {{#each @root.admin.permissions}}
+                            {{#ifCond this.permissionName 'partSalesData'}}
                             <li class="menu-main-item mt-2">
                                 <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
                                     onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
@@ -530,7 +546,7 @@
                                     <i class="bi bi-arrow-down-short me-1 display-6"></i>
                                 </a>
                                 <ul class="drop-down-menu-main-parts-sales-data">
-                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/parts/all"
                                             class="menu-link menu-link-dropdown">
@@ -538,8 +554,8 @@
                                             <div data-i18n="Basic">View all</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
-                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/parts/add-new"
                                             class="menu-link menu-link-dropdown">
@@ -547,15 +563,97 @@
                                             <div data-i18n="Basic">Add new</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
+                                    {{/ifCond}}
                                 </ul>
                             </li>
-                            {{/ifeq}}
+                            {{/ifCond}}
+                            {{/each}}
                         </ul>
                     </li>
                     {{else}}
-                    {{#ifeq this.permissionName "partSalesData"}}
-                    partSalesData
+                    {{#ifCond this.permissionName 'partSalesData'}}
+                    <li class="menu-main-item salesData">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
+                            $('.drop-down-menu-main-machine-sales-data').removeClass('active');
+                            $('.drop-down-menu-main-parts-sales-data').removeClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-columns-gap me-3"></i>
+                                <div data-i18n="Basic" id="sales-data-navbar-item">Sales data</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-sales-data">
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Parts</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                </ul>
+                            </li>
+                            {{#each @root.admin.permissions}}
+                            {{#ifCond this.permissionName 'machineSalesData'}}
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-machine-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Machine</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-machine-sales-data">
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                </ul>
+                            </li>
+                            {{/ifCond}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/ifCond}}
+                    {{/ifCond}}
+                    {{!-- {{#ifCond this.permissionName 'machineSalesData'}}
+                    {{this.permissionName}}
                     <li class="menu-main-item">
                         <a class="menu-link d-flex justify-content-between" style="user-select: none"
                             data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
@@ -568,7 +666,6 @@
                             <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
                         </a>
                         <ul class="drop-down-menu-main-sales-data">
-                            {{#ifeq this.permissionName "machineSalesData"}}
                             <li class="menu-main-item mt-2">
                                 <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
                                     onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
@@ -579,7 +676,7 @@
                                     <i class="bi bi-arrow-down-short me-1 display-6"></i>
                                 </a>
                                 <ul class="drop-down-menu-main-parts-sales-data">
-                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/machine/all"
                                             class="menu-link menu-link-dropdown">
@@ -587,8 +684,8 @@
                                             <div data-i18n="Basic">View all</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
-                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/machine/add-new"
                                             class="menu-link menu-link-dropdown">
@@ -596,10 +693,11 @@
                                             <div data-i18n="Basic">Add new</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
+                                    {{/ifCond}}
                                 </ul>
                             </li>
-                            {{/ifeq}}
+                            {{#each @root.admin.permissions}}
+                            {{#ifCond this.permissionName 'partSalesData'}}
                             <li class="menu-main-item mt-2">
                                 <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
                                     onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
@@ -610,7 +708,7 @@
                                     <i class="bi bi-arrow-down-short me-1 display-6"></i>
                                 </a>
                                 <ul class="drop-down-menu-main-parts-sales-data">
-                                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/parts/all"
                                             class="menu-link menu-link-dropdown">
@@ -618,8 +716,8 @@
                                             <div data-i18n="Basic">View all</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
-                                    {{#ifeq this.permissionKeys.2.keyName "create"}}
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
                                     <li class="menu-main-item mt-2">
                                         <a href="/vitco-impex/control/sales-report/parts/add-new"
                                             class="menu-link menu-link-dropdown">
@@ -627,13 +725,93 @@
                                             <div data-i18n="Basic">Add new</div>
                                         </a>
                                     </li>
-                                    {{/ifeq}}
+                                    {{/ifCond}}
                                 </ul>
                             </li>
+                            {{/ifCond}}
+                            {{/each}}
                         </ul>
                     </li>
-                    {{/ifeq}}
-                    {{/ifeq}}
+                    {{else}}
+                    <li class="menu-main-item">
+                        <a class="menu-link d-flex justify-content-between" style="user-select: none"
+                            data-link="sales-data" onclick="$('.drop-down-menu-main-sales-data').toggleClass('active');
+                            $('.drop-down-menu-main-machine-sales-data').removeClass('active');
+                            $('.drop-down-menu-main-parts-sales-data').removeClass('active');">
+                            <div class="d-flex">
+                                <i class="bi bi-columns-gap me-3"></i>
+                                <div data-i18n="Basic" id="sales-data-navbar-item">Sales data</div>
+                            </div>
+                            <i class="bi bi-arrow-down-short bi-arrow-down-short-dropdown ms-5 ps-2 display-6"></i>
+                        </a>
+                        <ul class="drop-down-menu-main-sales-data">
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Parts</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/parts/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                </ul>
+                            </li>
+                            {{#each @root.admin.permissions}}
+                            {{#ifCond this.permissionName 'partSalesData'}}
+                            <li class="menu-main-item mt-2">
+                                <a class="menu-link menu-link-dropdown menu-two-link-dropdown d-flex justify-content-between"
+                                    onclick="$('.drop-down-menu-main-parts-sales-data').toggleClass('active')">
+                                    <div class="d-flex">
+                                        <i class="bi bi-cpu me-3"></i>
+                                        <div data-i18n="Basic">Machine</div>
+                                    </div>
+                                    <i class="bi bi-arrow-down-short me-1 display-6"></i>
+                                </a>
+                                <ul class="drop-down-menu-main-parts-sales-data">
+                                    {{#ifCond this.permissionKeys.0.keyName 'view'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/all"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-eye-fill me-3"></i>
+                                            <div data-i18n="Basic">View all</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                    {{#ifCond this.permissionKeys.2.keyName 'create'}}
+                                    <li class="menu-main-item mt-2">
+                                        <a href="/vitco-impex/control/sales-report/machine/add-new"
+                                            class="menu-link menu-link-dropdown">
+                                            <i class="bi bi-plus-lg me-3"></i>
+                                            <div data-i18n="Basic">Add new</div>
+                                        </a>
+                                    </li>
+                                    {{/ifCond}}
+                                </ul>
+                            </li>
+                            {{/ifCond}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/ifCond}} --}}
                     {{#ifeq this.permissionName "serviceReport"}}
                     <li class="menu-main-item">
                         <a class="menu-link" style="user-select: none" data-link="service-reports"
@@ -665,6 +843,11 @@
                     </li>
                     {{/ifeq}}
                     {{/each}}
+                    <script>
+                        if($('.salesData').length > 0){
+                            $('.salesData')[1].remove()
+                        }
+                    </script>
                     <li class="menu-main-item d-lg-block d-none">
                         <a onclick="document.getElementsByClassName('keyboard-shortcuts-container')[0].classList.add('active');"
                             class="menu-link" data-link="shotcuts">
@@ -780,9 +963,8 @@
             </div> --}}
             <!-- Core JS -->
             <!-- build:js assets/vendor/js/core.js -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-                integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://momentjs.com/downloads/moment.js"></script>
+
             <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js"
                 integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -826,9 +1008,6 @@
             event.preventDefault();
             searchInput[0].blur()
         });
-    })
-    searchInput.on('focusout', (e) => {
-        keyboardJS.unbind('esc');
     })
     // focus on search box
     keyboardJS.bind('ctrl + /', (e) => {
