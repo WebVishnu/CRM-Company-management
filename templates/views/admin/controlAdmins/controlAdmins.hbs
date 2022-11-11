@@ -322,6 +322,20 @@
                                                                 value="delete-serviceReport" name="permissionName"
                                                                 onclick="return false"></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td scope="row" data-toggle="tooltip" data-placement="top" title="Delivery voucher">DO</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="deliveryOrderVoucher">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-deliveryOrderVoucher" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -459,6 +473,20 @@
                                                                 value="delete-serviceReport" name="permissionName"
                                                                 onclick="return false"></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td scope="row" data-toggle="tooltip" data-placement="top" title="Delivery voucher">DO</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="deliveryOrderVoucher">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-deliveryOrderVoucher" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-deliveryOrderVoucher" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -492,6 +520,9 @@
 {{/inline}}
 <script>
     const webHost = `{{webHost}}`
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 <script src="/js/admin/controlAdmins/controlAdmin.js"></script>
 <script src="/js/admin/ajaxReq.js"></script>

@@ -1,5 +1,13 @@
 
 $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
+searchInput.on('keyup',(e)=>{
+    e.preventDefault();
+    if(searchInput.val() != ""){
+        filterVouchers(`query=${searchInput.val().replaceAll("/","-")}`)
+    }else{
+        checkFilters()
+    }
+})
 // open voucher details model
 function openVoucherDetails(voucher) {
     $('body , html').css('overflow-y', 'hidden')
@@ -31,16 +39,16 @@ function openVoucherDetails(voucher) {
         total += parseInt(products[i].grossTotal)
         productsData += `
         <tr>
-            <td class="p-1">${products[i].productName}</td>
-            <td class="p-1">${products[i].specification}</td>
-            <td class="p-1">${products[i].qty}</td>
-            <td class="p-1">${products[i].rate}</td>
-            <td class="p-1">${products[i].amount}</td>
-            <td class="p-1" style="position:relative;width:4.5em;">
+            <td class="px-3">${products[i].productName}</td>
+            <td class="px-3">${products[i].specification}</td>
+            <td class="px-3">${products[i].qty}</td>
+            <td class="px-3">${products[i].rate}</td>
+            <td class="px-3">${products[i].amount}</td>
+            <td class="px-3" style="position:relative;width:4.5em;">
                 ${products[i].gstRate} %
             </td>
-            <td class="p-1">${products[i].totalGst}</td>
-            <td class="p-1">${products[i].grossTotal}</td>
+            <td class="px-3">${products[i].totalGst}</td>
+            <td class="px-3">${products[i].grossTotal}</td>
         </tr>`
     }
     $('.allProductsTbody').html(productsData)
@@ -82,12 +90,14 @@ filterVouchers("admin")
 // print data to table
 function printAllVouchers(v) {
     if (v.length != 0) {
+        $('.error').addClass('hide').html("")
+        $('.delivery-order-table table').removeClass("hide")
         tempData = ``
         tempDate = ``
         for (let i = v.length - 1; i >= 0; i--) {
             const voucher = v[i];
             if (tempDate != `${voucher.createdBy.createdOn}`) {
-                tempData += `<h5 class="view-details-divider" style="background-color: #f7f8fa;">${(voucher.createdBy.createdOn == moment().format('L'))?"latest":voucher.createdBy.createdOn}</h5>`
+                tempData += `<h5 class="view-details-divider" style="background-color: #f7f8fa;">${(voucher.createdBy.createdOn == moment().format('DD/MM/YYYY'))?"latest":voucher.createdBy.createdOn}</h5>`
                 tempDate =  `${voucher.createdBy.createdOn}`
             }
             total = 0
@@ -106,7 +116,8 @@ function printAllVouchers(v) {
         }
         $('#all-delivery-voucher-tbody').html(tempData)
     } else {
-        $('.delivery-order-table table').replaceWith("<h2 class='text-secondary text-center mt-5'>No vouchers found</h2>")
+        $('.error').removeClass('hide').html("No results found")
+        $('.delivery-order-table table').addClass("hide")
     }
 }
 
@@ -123,7 +134,14 @@ async function filterVouchers(filter) {
             $('.loading-spinner').html('We found some error')
         })
 }
-
+// check if there is any filter 
+function checkFilters(){
+    if($('.my-voucher-pill').hasClass('active')){
+        filterVouchers("admin")
+    }else if($('.all-voucher-pill').hasClass('active')){
+        filterVouchers("all")
+    }
+}
 
 
 // close voucher details

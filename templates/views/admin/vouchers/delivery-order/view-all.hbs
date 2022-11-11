@@ -14,17 +14,18 @@
     <span class="py-2 px-4 page-right-title border-radius-left">
         <ul class="nav nav-pills">
             <li class="nav-item px-1 user-select-none " onclick="filterVouchers('admin')">
-                <a class="nav-link active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
+                <a class="nav-link my-voucher-pill active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
                     aria-selected="true">My vouchers</a>
             </li>
             <li class="nav-item px-1 user-select-none " onclick="filterVouchers('all')">
-                <a class="nav-link px-2 cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
+                <a class="nav-link px-2 all-voucher-pill cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
                     aria-selected="false">All vouchers</a>
             </li>
         </ul>
     </span>
     <div class="row delivery-order-table">
         <div class="col mt-5 pt-4">
+            <h2 class='text-secondary text-center mt-5 hide error'></h2>
             <table>
                 <thead>
                     <tr>
@@ -79,7 +80,7 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="adminName">Admin name</label>
+                        <label class="font-weight-bold" for="adminName">Admin name</label>
                         <div class="suggestionbox-container">
                             <input readonly autocomplete="off" type="text"
                                 class="bg-transparent form-control shadow-none" id="adminName" placeholder="admin name">
@@ -90,7 +91,7 @@
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="createdOn">Created on</label>
+                        <label class="font-weight-bold" for="createdOn">Created on</label>
                         <div class="suggestionbox-container">
                             <input readonly autocomplete="off" type="text"
                                 class="bg-transparent form-control shadow-none" id="createdOn"
@@ -107,7 +108,7 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="orderDate">Order Date </label>
+                        <label class="font-weight-bold" for="orderDate">Order Date </label>
                         <div class="suggestionbox-container">
                             <input readonly autocomplete="off" type="text"
                                 class="bg-transparent form-control shadow-none" id="orderDate" name="orderDate"
@@ -115,7 +116,7 @@
                         </div>
                     </div>
                     <div class="my-3">
-                        <label for="partyContactPerson">Receiver Name </label>
+                        <label class="font-weight-bold" for="partyContactPerson">Receiver Name </label>
                         <div class="suggestionbox-container">
                             <input readonly autocomplete="off" type="text"
                                 class="bg-transparent form-control shadow-none" id="partyContactPerson"
@@ -124,12 +125,12 @@
                         </div>
                     </div>
                     <div class="my-3">
-                        <label for="partyName">Consignee</label>
+                        <label class="font-weight-bold" for="partyName">Consignee</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="partyName" name="consignee" placeholder="enter party name">
                     </div>
                     <div class="my-3">
-                        <label for="consigneeAddress">Consignee Address</label>
+                        <label class="font-weight-bold" for="consigneeAddress">Consignee Address</label>
                         <textarea readonly style="resize: none;background-color:transparent" type="text" rows="4"
                             class="form-control shadow-none" name="consigneeAddress" id="address"
                             placeholder="enter party address"></textarea>
@@ -139,17 +140,17 @@
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="dispatchDate">Dispatch Date </label>
+                        <label class="font-weight-bold" for="dispatchDate">Dispatch Date </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchDate" name="dispatchDate" placeholder="enter representative person">
                     </div>
                     <div class="my-3">
-                        <label for="representativePerson">Representative person </label>
+                        <label class="font-weight-bold" for="representativePerson">Representative person </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="representativePerson" name="representativeName" placeholder="dd/mm/yyyy">
                     </div>
                     <div class="my-3" style="position: relative;">
-                        <label for="mobile">Consignee Mobile </label>
+                        <label class="font-weight-bold" for="mobile">Consignee Mobile </label>
                         <input readonly autocomplete="off" style="padding-left: 40px" type="number"
                             class="form-control shadow-none bg-transparent" id="mobile" name="consigneeMobile"
                             placeholder="enter party mobile number">
@@ -163,12 +164,12 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <div class="mb-3">
-                        <label for="gstNum">GST IN NO.</label>
+                        <label class="font-weight-bold" for="gstNum">GST IN NO.</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="gstNum" name="gstInNum" placeholder="enter gst invoice number">
                     </div>
                     <div class="my-3">
-                        <label for="aadhaarNum">Aadhar no. </label>
+                        <label class="font-weight-bold" for="aadhaarNum">Aadhar no. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="aadhaarNum" name="aadharNum" placeholder="enter aadhaar number">
                     </div>
@@ -177,12 +178,12 @@
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
                     <div class="mb-3">
-                        <label for="panNum">PAN NO.</label>
+                        <label class="font-weight-bold" for="panNum">PAN NO.</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="panNum" name="panNum" placeholder="enter pan card number ">
                     </div>
                     <div class="my-3">
-                        <label for="specialIns">Special Instructions</label>
+                        <label class="font-weight-bold" for="specialIns">Special Instructions</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="specialIns" name="specialInstructions" placeholder="enter special instruments">
                     </div>
@@ -216,7 +217,8 @@
             <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">Advance
                 Payments</h5>
             <div class="col-md-5 advance-payment-container">
-                <h6 class="my-3">Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span></h6>
+                <h6 class="my-3">Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span>
+                </h6>
                 <div class="advancePaymentModeDetails form-group"></div>
                 <select class="form-select shadow-none mode-of-advance-payment d-none"
                     aria-label="Default select example">
@@ -228,14 +230,14 @@
                 </select> <br>
                 <div class="mb-3">
                     <div class="form-group advance-upi-details mode-of-payment-details d-none">
-                        <label for="utrNum">Enter UTR number</label>
+                        <label class="font-weight-bold" for="utrNum">Enter UTR number</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="utrNum" placeholder="enter utr number">
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-group advance-others-details mode-of-payment-details d-none">
-                        <label for="otherAdvnc">Describe</label>
+                        <label class="font-weight-bold" for="otherAdvnc">Describe</label>
                         <textarea readonly style="resize: none;" type="text"
                             class="form-control bg-transparent shadow-none" id="otherAdvnc"
                             placeholder="describe your payment method"></textarea>
@@ -266,17 +268,17 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="dispatchedBy">Dispatched By </label>
+                        <label class="font-weight-bold" for="dispatchedBy">Dispatched By </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchedBy" name="dispatchedBy" placeholder="who dispatched it ?">
                     </div>
                     <div class="my-3">
-                        <label for="dispatchVehicleNum">Dispatch vehicle no. </label>
+                        <label class="font-weight-bold" for="dispatchVehicleNum">Dispatch vehicle no. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchVehicleNum" name="dispatchVehicleNum" placeholder="enter vehicle number">
                     </div>
                     <div class="my-3">
-                        <label for="remark">Remark </label>
+                        <label class="font-weight-bold" for="remark">Remark </label>
                         <textarea readonly style="resize: none;background-color:transparent" type="text"
                             class="form-control shadow-none" name="remark" id="remark"
                             placeholder="enter order summary"></textarea>
@@ -286,17 +288,17 @@
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
                     <div class="my-3">
-                        <label for="machineSrNum">Machine Serial No. </label>
+                        <label class="font-weight-bold" for="machineSrNum">Machine Serial No. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="machineSrNum" name="machineSrNum" placeholder="enter serial number">
                     </div>
                     <div class="mb-3">
-                        <label for="invoiceNum">Invoice No.</label>
+                        <label class="font-weight-bold" for="invoiceNum">Invoice No.</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="invoiceNum" name="invoiceNum" placeholder="enter invoice number">
                     </div>
                     <div class="mb-3">
-                        <label for="invoiceDate">Invoice Date</label>
+                        <label class="font-weight-bold" for="invoiceDate">Invoice Date</label>
                         <div class="input-group date" data-date-format="dd/mm/yyyy">
                             <input readonly autocomplete="off" type="text" class="bg-transparent form-control"
                                 placeholder="dd/mm/yyyy" name="invoiceDate">
@@ -322,9 +324,13 @@
 
 <div class="fixed-container d-flex justify-content-end ps-3 align-items-center"
     style="position: fixed;bottom:1em;right:1em;">
+    <button class="btn bg-base-color text-light shadow-none mx-2" type="button" onclick="searchInput.val('');checkFilters()">
+        <i class="bi bi-arrow-clockwise"></i>
+    </button>
     <button class="btn bg-base-color text-light p-1 px-2 shadow-none"
         onclick="window.location.href ='/vitco-impex/vouchers/delivery-order/new'" type="button"><i
-            class="bi bi-plus display-6"></i></button>
+            class="bi bi-plus display-6"></i>
+    </button>
 </div>
 
 {{/inline}}

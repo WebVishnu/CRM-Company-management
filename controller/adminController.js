@@ -6,7 +6,6 @@ const Admin = require(path.join(__dirname, "../models/adminSchema"));
 const ServiceReport = require(path.join(__dirname, '../models/machineServiceReportSchema'))
 const bcrypt = require("bcryptjs");
 const { sendTokenAdmin } = require(path.join(__dirname, "../utils/jwtToken"));
-var helpers = require('handlebars-helpers');
 
 
 
@@ -223,8 +222,7 @@ exports.adminCreateNewAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName.trim() },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport"]
-          console.log(req.body.permissionName)
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = { permissionName: permissionNames[i], permissionKeys: [{ keyName: '' }, { keyName: '' }, { keyName: '' }, { keyName: '' }] }
@@ -271,7 +269,7 @@ exports.adminEditAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport"]
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = { permissionName: "", permissionKeys: [{ keyName: '' }, { keyName: '' }, { keyName: '' }, { keyName: '' }] }

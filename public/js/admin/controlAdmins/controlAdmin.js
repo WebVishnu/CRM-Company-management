@@ -1,36 +1,43 @@
 async function deleteAdmin(id) {
-  await sendAjaxRequest(
-    (url = "/api/v1/vitco-india/control-admins/delete"),
-    (method = "POST"),
-    (query = { AdminId: id }),
-    (sunccessFun = (result) => {
-      if (result.success) {
-        location.reload(true);
-      }
-    }),
-    (completeFun = null),
-    (showError = (e) => {
-      console.log("error: " + e.statusText);
-    })
-  );
+  await axios.post("/api/v1/vitco-india/control-admins/delete",{
+    AdminId: id
+  }).then((res)=>{
+    console.log(res)
+    if(res.data.success){
+      location.reload(true);
+    }else{
+
+    }
+  }).catch((e)=>{
+    console.log(e)
+  })
+  // await sendAjaxRequest(
+  //   (url = "/api/v1/vitco-india/control-admins/delete"),
+  //   (method = "POST"),
+  //   (query = { AdminId: id }),
+  //   (sunccessFun = (result) => {
+  //     if (result.success) {
+  //       location.reload(true);
+  //     }
+  //   }),
+  //   (completeFun = null),
+  //   (showError = (e) => {
+  //     console.log(e);
+  //   })
+  // );
 }
 
 // generate pass
 function generatePassword() {
-  var length = 8,
-    charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-    retVal = "";
-  for (var i = 0, n = charset.length; i < length; ++i) {
-    retVal += charset.charAt(Math.floor(Math.random() * n));
-  }
+  retVal = "vitco@";
+  retVal += Math.floor(Math.random() * (9999 - 1111 + 1) + 1111)
   return retVal;
 }
 
 // edit admin api req
 function getAdminDetails(id) {
   const url = `/api/v1/vitco-india/control-admins/view/${id}`;
-  axios.get(url).then((result)=>{
-    console.log(result.data.admin[0]);
+  axios.get(url).then((result) => {
     $(".edit-admin-fullName-input").val(result.data.admin[0].adminName);
     $(".edit-admin-username-input").val(result.data.admin[0].userName);
     $(".edit-admin-role-input").val(result.data.admin[0].role[0].roleName);
@@ -39,28 +46,10 @@ function getAdminDetails(id) {
     checkPermissionInput("machineSalesData", 4, result.data);
     checkPermissionInput("partSalesData", 8, result.data);
     checkPermissionInput("serviceReport", 12, result.data);
-  }).catch((e)=>{
+    checkPermissionInput("deliveryOrderVoucher", 16, result.data);
+  }).catch((e) => {
     console.log(e)
   })
-  // sendAjaxRequest(
-  //   url,
-  //   (method = "GET"),
-  //   (query = null),
-  //   (sunccessFun = (result) => {
-  //     $(".edit-admin-fullName-input").val(result.admin[0].adminName);
-  //     $(".edit-admin-username-input").val(result.admin[0].userName);
-  //     $(".edit-admin-role-input").val(result.admin[0].role[0].roleName);
-  //     $(".edit-admin-id-input").val(result.admin[0]._id);
-  //     checkPermissionInput("complaints", 0, result);
-  //     checkPermissionInput("machineSalesData", 4, result);
-  //     checkPermissionInput("partSalesData", 8, result);
-  //     checkPermissionInput("serviceReport", 12, result);
-  //   }),
-  //   (completeFun = null),
-  //   (showError = (e) => {
-  //     console.log("error: " + e.statusText);
-  //   })
-  // );
 }
 
 // checking inputs

@@ -73,6 +73,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col d-flex justify-content-center flex-wrap">
+            {{#ifeq admin.permissions.0.permissionName "all"}}
             <div class="voucher-option mx-2 my-3">
                 <div class="voucher-icon">
                     <i class="bi bi-truck"></i>
@@ -88,6 +89,38 @@
                     </span>
                 </div>
             </div>
+            {{else}}
+            {{#each admin.permissions}}
+            {{#ifeq this.permissionName "deliveryOrderVoucher"}}
+            <div class="voucher-option mx-2 my-3">
+                <div class="voucher-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="voucher-body text-center w-100 pt-4">
+                    {{#ifeq this.permissionKeys.0.keyName "view"}}
+                    <a class="text-dark" href="/vitco-impex/vouchers/delivery-order/view-all">
+                        <h5 class="m-0">Delivery order</h5>
+                    </a>
+                    {{else}}
+                    <a class="text-dark" href="javascript:void(0);">
+                        <h5 class="m-0">Delivery order</h5>
+                    </a>
+                    {{/ifeq}}
+                    <span style="color:rgb(74, 74, 74);font-size: 12px;">Total Vouchers: {{@root.DOvouchers}}</span> <br>
+                    <span style="font-size: 12px;">
+                        {{#ifeq this.permissionKeys.2.keyName "create"}}
+                        <a href="/vitco-impex/vouchers/delivery-order/new" class="mx-3">Create new </a>
+                        {{/ifeq}}
+                        {{#ifeq this.permissionKeys.0.keyName "view"}}
+                        <a href="/vitco-impex/vouchers/delivery-order/view-all" class="mx-3">View all </a>
+                        {{/ifeq}}
+
+                    </span>
+                </div>
+            </div>
+            {{/ifeq}}
+            {{/each}}
+            {{/ifeq}}
         </div>
     </div>
 </div>

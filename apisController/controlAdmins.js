@@ -18,9 +18,9 @@ exports.getAdminDetails = async function (req, res) {
 };
 
 // delete admins
-exports.deleteAdmin = async (req, res, next) => {
+exports.deleteAdmin = async (req, res) => {
   try {
-    await Admin.findByIdAndDelete(req.body.query.AdminId);
+    await Admin.findByIdAndDelete(req.body.AdminId);
     res.send({
       success: true,
     });

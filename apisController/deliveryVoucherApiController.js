@@ -13,7 +13,7 @@ exports.createNewDO = async function (req, res) {
       createdBy: {
         adminName: admin.adminName,
         adminID: admin._id,
-        createdOn: moment().format('L')
+      createdOn: moment().format('DD/MM/YYYY')
       },
       voucherNum: pad(allVouchers.length + 1, 3),
       orderDate: req.body.orderDate,

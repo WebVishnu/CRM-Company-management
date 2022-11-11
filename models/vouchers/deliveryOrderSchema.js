@@ -144,5 +144,5 @@ const deliveryOrder = new mongoose.Schema({
     }
 })
 
-
+deliveryOrder.index({ 'createdBy.adminName': 'text', voucherNum: 'text', orderDate: 'text', dispatchDate: 'text', receiverName: 'text', representativeName: 'text', consigneeMobile: 'text', consigneeAddress: 'text', gstInNum: 'text', panNum: 'text', aadharNum: 'text', specialInstructions: 'text', 'dispatchDetails.dispatchedBy': 'text','dispatchDetails.dispatchVehicleNum': 'text','dispatchDetails.machineSrNum': 'text','dispatchDetails.invoiceNum': 'text', });
 module.exports = mongoose.model("delivery-order", deliveryOrder)
