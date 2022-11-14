@@ -53,7 +53,6 @@ $('form').on('submit', (e) => {
             obj[item.name] = item.value;
             return obj;
         }, {});
-
         // products 
         data["products"] = []
         table = $('#allProductsTable tbody')
@@ -61,46 +60,36 @@ $('form').on('submit', (e) => {
             tempElement = table.children(i).children().children(`input`)
             data["products"].push({
                 productName: tempElement[0].value,
-                specification: tempElement[1].value,
+                serialNum: tempElement[1].value,
                 qty: tempElement[2].value,
-                rate: tempElement[3].value,
-                amount: tempElement[4].value,
-                gstRate: tempElement[5].value,
-                totalGst: tempElement[6].value,
-                grossTotal: tempElement[7].value,
+                unit: tempElement[3].value,
+                rate: tempElement[4].value,
+                amount: tempElement[5].value,
+                gstRate: tempElement[6].value,
+                totalGst: tempElement[7].value,
+                grossTotal: tempElement[8].value,
             })
         }
 
         // mode of payment
         data["advancePayment"] = []
-        let modeOfPayment = $('.mode-of-advance-payment').val()
-        if (modeOfPayment != "not selected") {
-            data["advancePayment"] = []
-            data["advancePaymentReceived"] = true
-            paymentModeDetails = {}
-            advanceTb = $('.advanceEntryTbody')
-            if (modeOfPayment === "upi") {
-                paymentModeDetails["utrNum"] = $('#utrNum').val()
-            } else if (modeOfPayment === "others") {
-                paymentModeDetails["others"] = $('#otherAdvnc').val()
-            }
-            for (let i = 0; i < $('.advanceEntryTbody tr').length; i++) {
-                tempElement = advanceTb.children(i).children().children(`input`)
-                data["advancePayment"].push({
-                    mode: modeOfPayment,
-                    advanceDate: tempElement[0].value,
-                    advanceAmount: tempElement[1].value,
-                })
-                data['paymentModeDetails'] = paymentModeDetails
-            }
-        } else {
-            data["advancePaymentReceived"] = false
+        data["advancePaymentReceived"] = ($('.advanceDetailsCheckbox').prop('checked')==true)?true:false
+        advanceTb = $('.advanceEntryTbody')
+        for (let i = 0; i < $('.advanceEntryTbody tr').length; i++) {
+            tempElement = advanceTb.children()[i].children
+            data["advancePayment"].push({
+                mode: tempElement[0].children[0].value,
+                advanceDate: tempElement[1].children[0].value,
+                advanceAmount: tempElement[2].children[0].value,
+                paymentDetails: getAdvancePaymentDetails(i)
+            })
         }
         submitBtn = $('button[type="submit"]')
         submitBtn.attr('type', 'button').html(`
         <div class="spinner-border spinner-border-sm" role="status">
             <span class="sr-only">Loading...</span>
         </div>`)
+        // submitting req
         axios.post('/api/v1/vitco-impex/voucher/delivery-order/new', data).then((res) => {
             if (res.data.success == true) {
                 location.reload();
@@ -113,7 +102,7 @@ $('form').on('submit', (e) => {
 })
 
 
-let advanceInputNum = 1
+let advanceInputNum = 0
 addMoreAdvInputs()
 $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
 // make advance total 
@@ -127,10 +116,38 @@ function totalAdvAmt() {
     }
     $('.totalAdvncSpan').html(total)
 }
+
+// get advance payment details
+function getAdvancePaymentDetails(index) {
+    val = $(`tr[data-advance-row="${index}"] td:nth-child(1) select`).val()
+    if (val == "others") {
+        return { others: $(`tr[data-advance-row="${index}"] td:nth-child(5) input`).val() }
+
+    } else { return {} }
+}
+
 //add more advance payment inputs
+function tempFunction(ele,advIn) {
+    if ($(ele).val() == 'others') {
+        $('.other-advance-head').removeClass('hide');
+        $(`td[data-other-inp-row=${advIn}]`).removeClass('hide');
+    }else{
+        $(`td[data-other-inp-row=${advIn}]`).addClass('hide');
+    }
+}
+
 async function addMoreAdvInputs() {
     $('.advanceEntryTbody').append(`
         <tr data-advance-row="${advanceInputNum}">
+            <td>
+                <select class="form-select shadow-none mode-of-advance-payment"
+                onchange="tempFunction($(this),${advanceInputNum})">
+                    <option value="cash" selected>Cash</option>
+                    <option value="bank" >Bank</option>
+                    <option value="upi">UPI </option>
+                    <option value="others" >Others</option>
+                </select>
+            </td>
             <td class="input-group date">
                 <input type="text" class="form-control" placeholder="dd/mm/yyyy">
                 <div class="input-group-addon">
@@ -145,10 +162,10 @@ async function addMoreAdvInputs() {
                 <button data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="button"
                     class="btn btn-danger shadow-none" onclick="deleteAdvInputs(${advanceInputNum})"><i class="bi bi-trash3-fill"></i></button>
             </td>
+            <td class="hide adv-others-input" data-other-inp-row=${advanceInputNum}> <input class="form-control others-advance-input border-0 shadow-none" type="text"></td>
         </tr>`)
     $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
     advanceInputNum++
-
 }
 // delete advance inputs
 function deleteAdvInputs(row) {
@@ -169,9 +186,9 @@ async function deleteProduct(row) {
 // total amount for single product
 function getAmountSingleProduct(row) {
     qtyInput = $(`tr[data-product-row="${row}"] td:nth-child(3) input`)
-    rateInput = $(`tr[data-product-row="${row}"] td:nth-child(4) input`)
-    amountInput = $(`tr[data-product-row="${row}"] td:nth-child(5) input`)
-    let amount, qty, rate = 1
+    rateInput = $(`tr[data-product-row="${row}"] td:nth-child(5) input`)
+    amountInput = $(`tr[data-product-row="${row}"] td:nth-child(6) input`)
+    let amount = 0
     if (qtyInput.val() != "" && rateInput.val() != "") {
         amount = parseInt(qtyInput.val()) * parseInt(rateInput.val())
         amountInput.val(amount).trigger("change")
@@ -180,10 +197,10 @@ function getAmountSingleProduct(row) {
 }
 // make total count for single product
 function getTotalSingleProduct(row) {
-    totalInput = $(`tr[data-product-row="${row}"] td:nth-child(8) input`)
+    totalInput = $(`tr[data-product-row="${row}"] td:nth-child(9) input`)
     amountInput = $(`tr[data-product-row="${row}"] td:nth-child(5) input`)
-    gstInput = $(`tr[data-product-row="${row}"] td:nth-child(6) input`)
-    gstValInput = $(`tr[data-product-row="${row}"] td:nth-child(7) input`)
+    gstInput = $(`tr[data-product-row="${row}"] td:nth-child(7) select`)
+    gstValInput = $(`tr[data-product-row="${row}"] td:nth-child(8) input`)
     if (amountInput.val() != "" && gstInput.val() != "") {
         totalGst = (parseInt(amountInput.val()) * parseInt(gstInput.val())) / 100
         gstValInput.val(totalGst)
@@ -194,8 +211,8 @@ function getTotalSingleProduct(row) {
 // make advance total 
 function printTotalAmount() {
     total = 0
-    for (var i = 0; i < $(`tr td:nth-child(8) input`).length; i++) {
-        let tempVal = parseInt($(`tr td:nth-child(8) input`)[i].value)
+    for (var i = 0; i < $(`tr td:nth-child(9) input`).length; i++) {
+        let tempVal = parseInt($(`tr td:nth-child(9) input`)[i].value)
         if (tempVal != NaN) {
             total += tempVal
         }
@@ -207,8 +224,6 @@ async function addNewProduct() {
     $('.add-product-section small').fadeOut(0)
     $('.add-product-section > .d-flex').removeClass('justify-content-between').addClass('justify-content-end')
     productCursor++
-
-
     $('.allProductsTbody').append(`
         <tr class="product-tooltip" data-product-row="${productCursor}">
                 <td class="p-1">
@@ -222,14 +237,27 @@ async function addNewProduct() {
                     <input required type="number" class="product-details-input qty w-100 form-control shadow-none" onkeyup="getAmountSingleProduct(${productCursor})">
                 </td>
                 <td class="p-1">
+                    <input required type="text" hidden value="Pcs">
+                    <select style="width: 5em!important;" onchange="$(this).parent().children('input').val($(this).val())" class="form-select w-100 border-0" aria-label="Default select example">
+                      <option selected value="Pcs">Pcs</option>
+                      <option value="Kg">Kg</option>
+                      <option value="Ltr">Ltr</option>
+                      <option value="Mtr">Mtr</option>
+                      <option value="Bundle">Bundle</option>
+                    </select>
+                </td>
+                <td class="p-1">
                     <input required type="number" class="product-details-input rate w-100 form-control shadow-none" onkeyup="getAmountSingleProduct(${productCursor})">
                 </td>
                 <td class="p-1">
                     <input required readonly type="number" class="product-details-input amount w-100 form-control shadow-none" onchange="getTotalSingleProduct(${productCursor})">
                 </td>
-                <td class="p-1" style="position:relative;width:4.5em;">
-                    <input required type="number" style="padding-right:30px;" class="product-details-input gstRate w-100 form-control shadow-none" onkeyup="getTotalSingleProduct(${productCursor})">
-                    <i class="bi bi-percent" style="position:absolute;right:10px;top:25%"></i>
+                <td class="p-1">
+                    <input required type="text" hidden value="12">
+                    <select style="width: 5em!important;" onchange="$(this).parent().children('input').val($(this).val())" class="form-select w-100 border-0 " onchange="getTotalSingleProduct(${productCursor})">
+                        <option selected value="12">12%</option>
+                        <option value="18">18%</option>
+                    </select>
                 </td>
                 <td class="p-1">
                     <input required readonly type="text" class="product-details-input totalGst w-100 form-control shadow-none">
@@ -238,5 +266,6 @@ async function addNewProduct() {
                     <input required readonly type="text" class="product-details-input total w-100 form-control shadow-none" onchange="printTotalAmount()">
                 </td>
             </tr>`)
+
 
 }

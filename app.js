@@ -38,6 +38,7 @@ const adminComplaintRoute = require(path.join(__dirname, '/router/adminComplaint
 const serviceReports = require(path.join(__dirname, '/router/adminServiceReportRoutes'))
 const salesReportsRoute = require(path.join(__dirname, '/router/adminSalesRoutes'))
 const adminVouchersRoute = require(path.join(__dirname, '/router/adminVoucherRoutes'))
+const qrCodeRoute = require(path.join(__dirname, '/router/qrCodeRoutes'))
 
 
 // file paths
@@ -52,6 +53,7 @@ const machineSalesDataApi = require(path.join(__dirname, '/apis/machineSalesData
 const partSalesDataApi = require(path.join(__dirname, '/apis/partSalesDataApi'))
 const notificationsApi = require(path.join(__dirname, '/apis/notificationsApi'))
 const deliveryOrderApi = require(path.join(__dirname, '/apis/deliveryVoucherApi'))
+const qrCodeApi = require(path.join(__dirname, '/apis/qrCodeApi'))
 
 //api use
 app.use(complaintApiRoute)
@@ -62,6 +64,7 @@ app.use(machineSalesDataApi)
 app.use(partSalesDataApi)
 app.use(notificationsApi)
 app.use(deliveryOrderApi)
+app.use(qrCodeApi)
 
 // routes use
 app.use(userRoute)
@@ -70,6 +73,7 @@ app.use(adminRoute)
 app.use(serviceReports)
 app.use(salesReportsRoute)
 app.use(adminVouchersRoute)
+app.use(qrCodeRoute)
 
 // SETTING VIEW ENGINE
 app.set('view engine', 'hbs')

@@ -13,35 +13,23 @@ exports.createNewDO = async function (req, res) {
       createdBy: {
         adminName: admin.adminName,
         adminID: admin._id,
-      createdOn: moment().format('DD/MM/YYYY')
+        createdOn: moment().format('DD/MM/YYYY')
       },
-      voucherNum: pad(allVouchers.length + 1, 3),
+      voucherNum:pad(allVouchers.length + 1 , 3),
       orderDate: req.body.orderDate,
-      dispatchDate: req.body.dispatchDate,
-      receiverName: req.body.receiverName,
-      representativeName: req.body.representativeName,
       consignee: req.body.consignee,
       consigneeMobile: req.body.consigneeMobile,
       consigneeAddress: req.body.consigneeAddress,
       gstInNum: req.body.gstInNum,
-      panNum: req.body.panNum,
-      aadharNum: req.body.aadharNum,
-      specialInstructions: req.body.specialInstructions,
-      products: req.body.products,
-      advancePaymentReceived: req.body.advancePaymentReceived,
-      advancePayment: req.body.advancePayment,
-      paymentModeDetails: req.body.paymentModeDetails,
-      dispatchDetails: {
-        dispatchedBy: req.body.dispatchedBy,
-        dispatchVehicleNum: req.body.dispatchVehicleNum,
-        machineSrNum: req.body.machineSrNum,
-        invoiceNum: req.body.invoiceNum,
-        invoiceDate: req.body.invoiceDate,
-        remark: req.body.remark,
-      }
+      panNumORaadharNum: req.body.panNumORaadharNum,
+      dispatchedBy: req.body.dispatchedBy,
+      products:req.body.products,
+      advancePayment:req.body.advancePayment,
+      advancePaymentReceived:req.body.advancePaymentReceived,
     }).catch((e) => {
+      console.log(e)
       throw "error"
-    }).then(()=>{
+    }).then(() => {
       res.send({
         success: true,
       });

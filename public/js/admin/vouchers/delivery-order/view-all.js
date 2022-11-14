@@ -97,20 +97,27 @@ function printAllVouchers(v) {
         for (let i = v.length - 1; i >= 0; i--) {
             const voucher = v[i];
             if (tempDate != `${voucher.createdBy.createdOn}`) {
-                tempData += `<h5 class="view-details-divider" style="background-color: #f7f8fa;">${(voucher.createdBy.createdOn == moment().format('DD/MM/YYYY'))?"latest":voucher.createdBy.createdOn}</h5>`
+                tempData += `<h5 class="view-details-divider" style="background-color: #f7f8fa;">${(voucher.createdBy.createdOn == moment().format('DD/MM/YYYY'))?"Today":voucher.createdBy.createdOn}</h5>`
                 tempDate =  `${voucher.createdBy.createdOn}`
             }
-            total = 0
+            totalAmount = 0;advance=0;due=0
             voucher.products.forEach(products => {
-                total += parseInt(products.grossTotal)
+                totalAmount += parseInt(products.grossTotal)
             });
+            console.log(voucher.advancePaymentReceived === "false")
+            if(voucher.advancePaymentReceived === "false"){
+                voucher.advancePayment.forEach(adv => {
+                    advance+=parseInt(adv.advanceAmount)
+                });
+            }
+            console.log(advance)
             tempData += `
                     <tr class="tb-row" onclick='openVoucherDetails(${JSON.stringify(voucher)})'>
                        <td data-label="Voucher number" class="text-truncate">${voucher.voucherNum}</td>
                        <td data-label="Created by" class="text-truncate">${voucher.createdBy.adminName}</td>
                        <td data-label="Order date" class="text-truncate">${voucher.orderDate}</td>
-                       <td data-label="Total Amt." class="text-truncate">${total}</td>
-                       <td data-label="Advance" class="text-truncate text-uppercase">${(voucher.advancePaymentReceived == "true")?`<span class="badge badge-success">${voucher.advancePaymentReceived}</span>`:`<span class="badge badge-danger">${voucher.advancePaymentReceived}</span>`}</td>
+                       <td data-label="Total Amt." class="text-truncate">${totalAmount}</td>
+                       <td data-label="Advance" class="text-truncate text-uppercase">${advance}</td>
                        <td data-label="Dispatched By" class="text-truncate">${voucher.dispatchDetails.dispatchedBy}</td>
                     </tr>`
         }

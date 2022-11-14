@@ -35,6 +35,10 @@
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Poppins:ital,wght@0,400;0,500;0,600;1,500&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
+    :root {
+        --base-color: #26abe2;
+    }
+
     .border-radius-right {
         border-radius: 0 5px 5px 0;
     }
@@ -96,7 +100,7 @@
     /* Track */
     .custom-scrollbar::-webkit-scrollbar-track {
         box-shadow: inset 0 0 5px grey;
-        border-radius: 10px;
+        border-radius: 0;
     }
 
     /* Handle */
@@ -410,9 +414,9 @@
                         </a>
                     </li>
                     <li class="menu-main-item">
-                        <a href="/vitco-impex/vouchers/qr-codes" class="menu-link" data-link="qrCode">
+                        <a href="/vitco-impex/control/qr-code/view-all" class="menu-link" data-link="qrCode">
                             <i class="bi bi-qr-code me-3"></i>
-                            <div data-i18n="Basic">Qr codes</div>
+                            <div data-i18n="Basic">Qr code layouts</div>
                         </a>
                     </li>
                     <li class="menu-main-item d-lg-block d-none">
@@ -776,6 +780,9 @@
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/keyboardjs/2.7.0/keyboard.min.js"
                 integrity="sha512-UrxaOZAJw5p38NProL/UrffryqdMdXFcEdyLt6eU89pH0N7KnmAe8G3ghNbH1qW5cDYdnaoEw1TcbHn8wuqAvw=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"
+                integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             {{#> body}}
             {{/body}}

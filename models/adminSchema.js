@@ -1,8 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const OTP = require("automatic-otp");
-const crypto = require("crypto");
 
 const adminSchema = mongoose.Schema({
   adminName: {
