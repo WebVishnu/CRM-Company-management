@@ -34,14 +34,17 @@ function openVoucherDetails(voucher) {
     // product details
     productsData = ``
     const products = voucher.products
-    total = 0
+    total = 0;advanceAmt = 0
+    voucher.advancePayment.forEach(payment => {
+        advanceAmt += parseInt(payment.advanceAmount)
+    });
     for (let i = 0; i < voucher.products.length; i++) {
         total += parseInt(products[i].grossTotal)
         productsData += `
         <tr>
             <td class="px-3">${products[i].productName}</td>
-            <td class="px-3">${products[i].specification}</td>
-            <td class="px-3">${products[i].qty}</td>
+            <td class="px-3">${products[i].serialNum}</td>
+            <td class="px-3">${products[i].qty} ${products[i].unit}</td>
             <td class="px-3">${products[i].rate}</td>
             <td class="px-3">${products[i].amount}</td>
             <td class="px-3" style="position:relative;width:4.5em;">
@@ -52,9 +55,9 @@ function openVoucherDetails(voucher) {
         </tr>`
     }
     $('.allProductsTbody').html(productsData)
-    $('.totalAmount').html(total)
+    $('.totalAmount').html(`${total} &nbsp;&nbsp;&nbsp;<span class="text-secondary"> Due : ₹ </span> ${((total - advanceAmt) >= 0)?(total - advanceAmt):"Negative"}`)
     // advance payments
-    if (voucher.advancePaymentReceived != "false") {
+if (voucher.advancePaymentReceived != "false") {
         advanceData = ``
         // mode of payment details
         modeDetails = voucher.paymentModeDetails
@@ -74,6 +77,7 @@ function openVoucherDetails(voucher) {
             total += parseInt(payment.advanceAmount)
             advanceData += `
                 <tr>
+                    <td class="text-capitalize">${payment.mode}  ${(payment.mode == "cash")?'<i class="bi bi-cash-coin mx-2 text-success"></i>':""}</td>
                     <td>${payment.advanceDate}</td>
                     <td>${payment.advanceAmount}</td>
                 </tr>`
@@ -82,7 +86,7 @@ function openVoucherDetails(voucher) {
         $('.totalAdvncSpan').html(total)
     } else {
         $('.advance-payment-container').fadeOut(0)
-        $('.advance-payment-heading').html('No advance Payment received')
+        $('.advance-payment-heading').html('No advance Payment received').addClass('my-5')
 
     }
 }
@@ -104,13 +108,11 @@ function printAllVouchers(v) {
             voucher.products.forEach(products => {
                 totalAmount += parseInt(products.grossTotal)
             });
-            console.log(voucher.advancePaymentReceived === "false")
-            if(voucher.advancePaymentReceived === "false"){
+            if(voucher.advancePaymentReceived !== "false"){
                 voucher.advancePayment.forEach(adv => {
                     advance+=parseInt(adv.advanceAmount)
                 });
             }
-            console.log(advance)
             tempData += `
                     <tr class="tb-row" onclick='openVoucherDetails(${JSON.stringify(voucher)})'>
                        <td data-label="Voucher number" class="text-truncate">${voucher.voucherNum}</td>
@@ -118,7 +120,8 @@ function printAllVouchers(v) {
                        <td data-label="Order date" class="text-truncate">${voucher.orderDate}</td>
                        <td data-label="Total Amt." class="text-truncate">${totalAmount}</td>
                        <td data-label="Advance" class="text-truncate text-uppercase">${advance}</td>
-                       <td data-label="Dispatched By" class="text-truncate">${voucher.dispatchDetails.dispatchedBy}</td>
+                       <td data-label="Due amount" class="text-truncate">${((totalAmount - advance) >= 0)?totalAmount - advance:"Negative"}</td>
+                       <td data-label="Dispatch status" class="text-truncate"><span data-dispatch-status="${voucher.dispatchDetails.dispatchStatus}">${voucher.dispatchDetails.dispatchStatus}</span></td>
                     </tr>`
         }
         $('#all-delivery-voucher-tbody').html(tempData)

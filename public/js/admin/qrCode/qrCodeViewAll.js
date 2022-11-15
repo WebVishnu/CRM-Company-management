@@ -49,7 +49,7 @@ $('.generate-new-qr-code-btn').on("click", (e) => {
         fields
     }).then((res) => {
         if (res.data.success) {
-            var typeNumber = 7;
+            var typeNumber = 8;
             var errorCorrectionLevel = 'L';
             var qr = qrcode(typeNumber, errorCorrectionLevel);
             qr.addData(`https://${webHost}/vitco-impex/qr-code/get-info/${res.data.id}`);
@@ -142,7 +142,7 @@ function downloadQrCode() {
 
 // PRINT QR CODE
 function printQrCode() {
-    $("#qrCode svg").css({ 'margin': '2em', 'height': "50px", "width": "50px" })
+    $("#qrCode svg").css({'height': "80px", "width": "80px" })
     $("#qrCode svg").print({
         globalStyles: true,
         mediaPrint: false,

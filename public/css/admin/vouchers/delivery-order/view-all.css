@@ -156,3 +156,18 @@
     padding: 0 30px;
     border-top: 1px solid #dedfdf;
 }
+
+span[data-dispatch-status="Pending"] {
+    border: 1px solid #e96d8a;
+    background-color: #fdf5f7;
+    color: #e96d8a;
+    padding: 0.3em 0.5em;
+    border-radius: 5px;
+}
+span[data-dispatch-status="Dispatched"]{
+    border: 1px solid #2fb083;
+    background-color: #ebf8f5;
+    color: #2fb083;
+    padding: 0.3em 0.5em;
+    border-radius: 5px;
+}

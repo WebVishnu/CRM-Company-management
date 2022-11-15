@@ -31,17 +31,18 @@ const deliveryOrder = new mongoose.Schema({
             mode: { type: 'string', },
             advanceDate: { type: 'string', },
             advanceAmount: { type: 'string', },
-            paymentDetails:{}
+            paymentDetails: {}
         }
     ],
     dispatchDetails: {
-        dispatchStatus:{type:"string",default:"Pending"},
+        adminDetails: {
+            adminName: { type: 'string' },
+            adminID: { type: 'string' },
+            createdOn: { type: 'string' }
+        },
+        dispatchStatus: { type: "string", default: "Pending" },
         dispatchedBy: { type: 'string' },
         dispatchVehicleNum: { type: 'string' },
-        machineSrNum: { type: 'string' },
-        invoiceNum: { type: 'string' },
-        invoiceDate: { type: 'string' },
-        remark: { type: 'string' },
     }
 })
 

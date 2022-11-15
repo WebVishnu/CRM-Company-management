@@ -14,8 +14,8 @@
     <span class="py-2 px-4 page-right-title border-radius-left">
         <ul class="nav nav-pills">
             <li class="nav-item px-1 user-select-none " onclick="filterVouchers('admin')">
-                <a class="nav-link my-voucher-pill active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
-                    aria-selected="true">My vouchers</a>
+                <a class="nav-link my-voucher-pill active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill"
+                    role="tab" aria-selected="true">My vouchers</a>
             </li>
             <li class="nav-item px-1 user-select-none " onclick="filterVouchers('all')">
                 <a class="nav-link px-2 all-voucher-pill cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
@@ -45,8 +45,11 @@
                             style="word-break:break-all;white-space: nowrap">
                             Advance</th>
                         <th scope="col" class="user-select-none text-truncate"
-                            style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">
+                            style="word-break:break-all;white-space: nowrap;">
                             Due</th>
+                        <th scope="col" class="user-select-none text-truncate"
+                            style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Dispatch Status
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="all-delivery-voucher-tbody">
@@ -115,7 +118,7 @@
                                 placeholder="dd/mm/yyyy">
                         </div>
                     </div>
-                    <div class="my-3">
+                    {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="partyContactPerson">Receiver Name </label>
                         <div class="suggestionbox-container">
                             <input readonly autocomplete="off" type="text"
@@ -123,38 +126,39 @@
                                 name="receiverName" placeholder="enter contact person name">
 
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="my-3">
                         <label class="font-weight-bold" for="partyName">Consignee</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="partyName" name="consignee" placeholder="enter party name">
                     </div>
-                    <div class="my-3">
-                        <label class="font-weight-bold" for="consigneeAddress">Consignee Address</label>
-                        <textarea readonly style="resize: none;background-color:transparent" type="text" rows="4"
-                            class="form-control shadow-none" name="consigneeAddress" id="address"
-                            placeholder="enter party address"></textarea>
-                    </div>
+
                 </div>
             </div>
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
-                    <div class="my-3">
+                    {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="dispatchDate">Dispatch Date </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchDate" name="dispatchDate" placeholder="enter representative person">
-                    </div>
-                    <div class="my-3">
+                    </div> --}}
+                    {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="representativePerson">Representative person </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="representativePerson" name="representativeName" placeholder="dd/mm/yyyy">
-                    </div>
+                    </div> --}}
                     <div class="my-3" style="position: relative;">
                         <label class="font-weight-bold" for="mobile">Consignee Mobile </label>
                         <input readonly autocomplete="off" style="padding-left: 40px" type="number"
                             class="form-control shadow-none bg-transparent" id="mobile" name="consigneeMobile"
                             placeholder="enter party mobile number">
                         <span style="position:absolute;left:5px;bottom:6px;">+91</span>
+                    </div>
+                    <div class="my-3">
+                        <label class="font-weight-bold" for="consigneeAddress">Consignee Address</label>
+                        <textarea readonly style="resize: none;background-color:transparent" type="text" rows="4"
+                            class="form-control shadow-none" name="consigneeAddress" id="address"
+                            placeholder="enter party address"></textarea>
                     </div>
                 </div>
             </div>
@@ -168,16 +172,16 @@
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="gstNum" name="gstInNum" placeholder="enter gst invoice number">
                     </div>
-                    <div class="my-3">
-                        <label class="font-weight-bold" for="aadhaarNum">Aadhar no. </label>
-                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
-                            id="aadhaarNum" name="aadharNum" placeholder="enter aadhaar number">
-                    </div>
                 </div>
             </div>
             <div class="col-md-5 offset-md-1">
                 <div class="form-group">
-                    <div class="mb-3">
+                    <div>
+                        <label class="font-weight-bold" for="aadhaarNum">Aadhar no. / PAN NO. </label>
+                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
+                            id="aadhaarNum" name="panNumORaadharNum" placeholder="enter aadhaar number">
+                    </div>
+                    {{!-- <div class="mb-3">
                         <label class="font-weight-bold" for="panNum">PAN NO.</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="panNum" name="panNum" placeholder="enter pan card number ">
@@ -186,7 +190,7 @@
                         <label class="font-weight-bold" for="specialIns">Special Instructions</label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="specialIns" name="specialInstructions" placeholder="enter special instruments">
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -195,7 +199,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Product Name</th>
-                        <th scope="col">Specification</th>
+                        <th scope="col">Serial No.</th>
                         <th scope="col">QTY</th>
                         <th scope="col">Rate</th>
                         <th scope="col">Amount</th>
@@ -216,7 +220,7 @@
         <div class="row">
             <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">Advance
                 Payments</h5>
-            <div class="col-md-5 advance-payment-container">
+            {{!-- <div class="col-md-5 advance-payment-container">
                 <h6 class="my-3">Mode of payment : <span class="badge badge-primary px-2 mode-of-payment">Bank</span>
                 </h6>
                 <div class="advancePaymentModeDetails form-group"></div>
@@ -243,11 +247,12 @@
                             placeholder="describe your payment method"></textarea>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 advance-payment-container offset-md-1">
+            </div> --}}
+            <div class="col advance-payment-container mb-5 pb-5">
                 <table class="table">
                     <thead>
                         <tr>
+                            <th scope="col" style="word-break: keep-all;">Mode</th>
                             <th scope="col" style="word-break: keep-all;">Advance Date</th>
                             <th scope="col">Advance Amount</th>
                         </tr>
@@ -261,7 +266,7 @@
 
             </div>
         </div>
-        <div class="row" style="margin-bottom: 10em;">
+        {{!-- <div class="row" style="margin-bottom: 10em;">
             <h5 class="view-details-divider" style="background-color: #f7f8fa;">Dispatch
                 Details</h5>
 
@@ -309,11 +314,43 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="submit-container d-flex justify-content-end ps-3 align-items-center"
             style="position: fixed;bottom:1em;right:1em;">
-            <button onclick="closeVoucherDetails()" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
-                class="btn bg-base-color text-light" type="button">Close</button>
+            <button data-toggle="modal" data-target="#dispatchDOmodal" class="btn text-light mx-2 shadow"
+                style="background-color:#00bc6d ;" type="button"><i class="bi bi-truck mx-2"></i>Dispatch</button>
+            <button onclick="closeVoucherDetails()" class="btn bg-base-color text-light mx-2 shadow"
+                type="button">Close</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- dispatch modal -->
+<div class="modal" id="dispatchDOmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-light" style="margin: -1px;background-color:#00bc6d ;">
+                <h5 class="modal-title" style="font-family:'poppins','Open Sans';">Dispatch your
+                    order</h5>
+                <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dispatchedBy">Dispatched by</label>
+                    <input value="{{admin.adminName}}" type="text" class="form-control shadow-none" name="dispatchedBy" id="dispatchedBy" placeholder="who dispatched it">
+                </div>
+                <div class="form-group">
+                    <label for="dispatchVehicleNum">Vehicle no.</label>
+                    <input type="text" class="form-control shadow-none" name="dispatchVehicleNum" id="dispatchVehicleNum" placeholder="enter vehicle num">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary border-0 shadow-none"
+                    style="background-color:#00bc6d ;"><i class="bi bi-truck mx-2"></i>Dispatch</button>
+            </div>
         </div>
     </div>
 </div>
@@ -324,7 +361,8 @@
 
 <div class="fixed-container d-flex justify-content-end ps-3 align-items-center"
     style="position: fixed;bottom:1em;right:1em;">
-    <button class="btn bg-base-color text-light shadow-none mx-2" type="button" onclick="searchInput.val('');checkFilters()">
+    <button class="btn bg-base-color text-light shadow-none mx-2" type="button"
+        onclick="searchInput.val('');checkFilters()">
         <i class="bi bi-arrow-clockwise"></i>
     </button>
     <button class="btn bg-base-color text-light p-1 px-2 shadow-none"
