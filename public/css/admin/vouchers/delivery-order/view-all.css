@@ -171,3 +171,8 @@ span[data-dispatch-status="Dispatched"]{
     padding: 0.3em 0.5em;
     border-radius: 5px;
 }
+
+.modal-body{
+    background-color: #fff;
+    height: 20em;
+}

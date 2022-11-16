@@ -249,50 +249,65 @@
                 </div>
             </div> --}}
             <div class="col advance-payment-container mb-5 pb-5">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" style="word-break: keep-all;">Mode</th>
-                            <th scope="col" style="word-break: keep-all;">Advance Date</th>
-                            <th scope="col">Advance Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody class="advanceEntryTbody">
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="word-break: keep-all;">Mode</th>
+                                <th scope="col" style="word-break: keep-all;">Advance Date</th>
+                                <th scope="col">Advance Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody class="advanceEntryTbody">
+                        </tbody>
+                    </table>
+                </div>
                 <h6 class="text-secondary text-end pe-5">Total advance : &#8377; <span
                         class="totalAdvncSpan text-primary">
                         0 </span></h6>
 
             </div>
         </div>
-        {{!-- <div class="row" style="margin-bottom: 10em;">
-            <h5 class="view-details-divider" style="background-color: #f7f8fa;">Dispatch
-                Details</h5>
-
+        <div class="row dispatch-details-container hide d-none" style="margin-bottom: 10em;">
+            <h5 class="view-details-divider" style="background-color: #f7f8fa;">Dispatch Details</h5>
             <div class="col-md-5">
                 <div class="form-group">
+                    <div class="my-3">
+                        <label class="font-weight-bold" for="adminName">Admin name</label>
+                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
+                            id="adminName" name="adminName">
+                    </div>
                     <div class="my-3">
                         <label class="font-weight-bold" for="dispatchedBy">Dispatched By </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchedBy" name="dispatchedBy" placeholder="who dispatched it ?">
+                    </div>
+                    {{!-- <div class="my-3">
+                        <label class="font-weight-bold" for="dispatchVehicleNum">Dispatch vehicle no. </label>
+                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
+                            id="dispatchVehicleNum" name="dispatchVehicleNum" placeholder="enter vehicle number">
+                    </div> --}}
+                    {{!-- <div class="my-3">
+                        <label class="font-weight-bold" for="remark">Remark </label>
+                        <textarea readonly style="resize: none;background-color:transparent" type="text"
+                            class="form-control shadow-none" name="remark" id="remark"
+                            placeholder="enter order summary"></textarea>
+                    </div> --}}
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1">
+                <div class="form-group">
+                    <div class="my-3">
+                        <label class="font-weight-bold" for="dispatchDate">Dispatch date </label>
+                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
+                            id="dispatchDate" name="dispatchDate" placeholder="enter vehicle number">
                     </div>
                     <div class="my-3">
                         <label class="font-weight-bold" for="dispatchVehicleNum">Dispatch vehicle no. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchVehicleNum" name="dispatchVehicleNum" placeholder="enter vehicle number">
                     </div>
-                    <div class="my-3">
-                        <label class="font-weight-bold" for="remark">Remark </label>
-                        <textarea readonly style="resize: none;background-color:transparent" type="text"
-                            class="form-control shadow-none" name="remark" id="remark"
-                            placeholder="enter order summary"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 offset-md-1">
-                <div class="form-group">
-                    <div class="my-3">
+                    {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="machineSrNum">Machine Serial No. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="machineSrNum" name="machineSrNum" placeholder="enter serial number">
@@ -311,14 +326,15 @@
                                 <span class="glyphicon glyphicon-th"></span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-        </div> --}}
+        </div>
         <div class="submit-container d-flex justify-content-end ps-3 align-items-center"
             style="position: fixed;bottom:1em;right:1em;">
-            <button data-toggle="modal" data-target="#dispatchDOmodal" class="btn text-light mx-2 shadow"
-                style="background-color:#00bc6d ;" type="button"><i class="bi bi-truck mx-2"></i>Dispatch</button>
+            <button data-toggle="modal" data-target="#dispatchDOmodal"
+                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button"><i
+                    class="bi bi-truck mx-2"></i>Dispatch</button>
             <button onclick="closeVoucherDetails()" class="btn bg-base-color text-light mx-2 shadow"
                 type="button">Close</button>
         </div>
@@ -330,6 +346,7 @@
 <div class="modal" id="dispatchDOmodal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            <input type="hidden" name="DOid">
             <div class="modal-header text-light" style="margin: -1px;background-color:#00bc6d ;">
                 <h5 class="modal-title" style="font-family:'poppins','Open Sans';">Dispatch your
                     order</h5>
@@ -337,20 +354,37 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="dispatchedBy">Dispatched by</label>
-                    <input value="{{admin.adminName}}" type="text" class="form-control shadow-none" name="dispatchedBy" id="dispatchedBy" placeholder="who dispatched it">
+            <form>
+                <div class="modal-body">
+                    {{!-- d-flex justify-content-center --}}
+                    <img src="/svg/deliveredDO.svg" class="hide h-100 w-100">
+                    <div class="form-group">
+                        <input type="hidden" name="DOid">
+                        <label for="dispatchedBy">Dispatched by</label>
+                        <input value="{{admin.adminName}}" type="text" class="form-control shadow-none"
+                            name="dispatchedBy" id="dispatchedBy" placeholder="who dispatched it" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dispatchDate">Dispatch Date</label>
+                        <div class="input-group date" data-date-format="dd/mm/yyyy">
+                            <input autocomplete="off" required type="text" class="form-control" placeholder="dd/mm/yyyy"
+                                name="dispatchDate">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dispatchVehicleNum">Vehicle no.</label>
+                        <input required type="text" class="form-control shadow-none" name="dispatchVehicleNum"
+                            id="dispatchVehicleNum" placeholder="enter vehicle num">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="dispatchVehicleNum">Vehicle no.</label>
-                    <input type="text" class="form-control shadow-none" name="dispatchVehicleNum" id="dispatchVehicleNum" placeholder="enter vehicle num">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary border-0 shadow-none"
+                        style="background-color:#00bc6d ;"><i class="bi bi-truck mx-2"></i>Dispatch</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary border-0 shadow-none"
-                    style="background-color:#00bc6d ;"><i class="bi bi-truck mx-2"></i>Dispatch</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>

@@ -42,6 +42,7 @@ const deliveryOrder = new mongoose.Schema({
         },
         dispatchStatus: { type: "string", default: "Pending" },
         dispatchedBy: { type: 'string' },
+        dispatchDate: { type: 'string' },
         dispatchVehicleNum: { type: 'string' },
     }
 })
