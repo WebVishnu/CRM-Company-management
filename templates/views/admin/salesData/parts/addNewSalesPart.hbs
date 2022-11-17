@@ -30,7 +30,8 @@
 <div class="container px-md-4 ">
     <div class="row mt-md-4 mt-3">
         <div class="col-12">
-            <h4 style="font-size:1.35em ;">Create new <span style="color:#26abe2 ;"> Parts</span> sale report - <span class="report-number"></span> </h4>
+            <h4 style="font-size:1.35em ;">Create new <span style="color:#26abe2 ;"> Parts</span> sale report - <span
+                    class="report-number"></span> </h4>
         </div>
     </div>
     <form id="add-new-part-sale-report-form">
@@ -88,17 +89,37 @@
             <div class="col-md-12">
                 <label for="invoiceDate">Add Parts info</label>
                 <div class="service-report-all-machine-info-inputs">
-                    <div class="form-group d-flex">
-                        <input type="text" class="form-control shadow-none mx-1" required name="partName"
-                            aria-describedby="helpId" placeholder="part name">
-                        <input type="text" class="form-control shadow-none mx-1" required name="partNumber"
-                            aria-describedby="helpId" placeholder="part number">
-                        <input type="text" class="form-control shadow-none mx-1" required name="password"
-                            aria-describedby="helpId" placeholder="password">
+                    <div class="table-responsive-xl">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Part_Name</th>
+                                    <th scope="col">Serial_No.</th>
+                                    <th scope="col">Wty</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col">Rate</th>
+                                    <th scope="col">GST@</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <h6 class="text-end mr-2 text-secondary mb-5 pb-5"> <span class="d-lg-inline d-none">( Ctrl + Q ) </span><span
-                        class="cursor-pointer text-primary add-new-machine-service-report"> Add
+                <h6 class="text-end mr-2 text-secondary mb-5 pb-5"> <span class="d-lg-inline d-none">( Ctrl + Q )
+                    </span><span class="cursor-pointer text-primary add-new-machine-service-report"> Add
                         new +</span></h6>
                 <input type="text" hidden class="total-machines-added" name="totalMachinesAdded">
             </div>
@@ -137,7 +158,6 @@
     integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<link rel="stylesheet" href="/css/admin/sales-data/salesData.css">
 
 {{/inline}}
 <script>

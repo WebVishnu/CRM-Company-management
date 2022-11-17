@@ -49,7 +49,6 @@ router.get('/api/v1/sales-data/get-report-number', async (req, res, next) => {
   if (await authorizedRoles("machineSalesData", req, res, next, ["create"])) { getSaleReportNumber(req, res) }
   else { res.send({ success: false, }); }
 })
-// // edit single sales data -- post
 // router.post('/api/v1/sales-data/add-to-db',(req,res,next)=>{console.log(req.body);res.send({data:req.body})})
 
 

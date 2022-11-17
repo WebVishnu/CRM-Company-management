@@ -1,0 +1,190 @@
+{{>adminHeader}}
+{{#> style}}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Hind+Siliguri&family=Mukta:wght@700&family=Open+Sans:wght@700&family=Raleway:wght@500&family=Roboto:wght@700&display=swap');
+
+    .card {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+    }
+
+    .card-img:after {
+        content: '';
+        opacity: 0;
+        height: 11em;
+        width: 100%;
+        position: absolute;
+        background-color: #03030353;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover .card-img:after {
+        opacity: 1;
+    }
+
+    .menu-link[data-link="inventory"] {
+        background-color: #26ABE2;
+        color: #fff;
+    }
+
+    .font-amaranth {
+        font-family: 'Amaranth', sans-serif;
+    }
+
+    .card-body h5 {
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 400;
+    }
+
+    .preview-warehouse-img.active {
+        height: 11em;
+        object-fit: cover;
+        object-position: 50% 50%;
+        width: 14em;
+    }
+
+    .new-warehouse-permissions {
+        z-index: 1041;
+        width: 24em;
+        height: 30em;
+        background-color: #fff;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+    }
+
+    .form-check-input {
+        position: relative !important;
+    }
+
+    @media (max-width:427px) {
+        .new-warehouse-permissions {
+            width: 100%;
+            height: 70%;
+        }
+    }
+</style>
+{{/style}}
+{{#*inline "body"}}
+<div class="container-fluid">
+    <div class="row  mt-4">
+        <div class="col">
+            <h4>Select your <span class="base-color-text font-amaranth"> Warehouse</span></h4>
+        </div>
+    </div>
+    <div class="row warehouse-container mt-3">
+        <div class="col d-flex flex-wrap justify-content-md-start justify-content-center">
+            {{#ifeq admin.permissions.0.permissionName "all"}}
+            <div class="card mx-3 my-3 cursor-pointer shadow-none rounded-0" style="width: 14rem;" data-toggle="modal"
+                data-target="#newWarehouseModal">
+                <div class="d-flex justify-content-center">
+                    <svg width="100" height="175" viewBox="0 0 166 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M83 128.833C85.5972 128.833 87.7758 127.953 89.5358 126.193C91.2897 124.439 92.1667 122.264 92.1667 119.667V92.1667H119.667C122.264 92.1667 124.439 91.2867 126.193 89.5267C127.953 87.7728 128.833 85.5972 128.833 83C128.833 80.4028 127.953 78.2242 126.193 76.4642C124.439 74.7103 122.264 73.8333 119.667 73.8333H92.1667V46.3333C92.1667 43.7361 91.2897 41.5575 89.5358 39.7975C87.7758 38.0436 85.5972 37.1667 83 37.1667C80.4028 37.1667 78.2272 38.0436 76.4733 39.7975C74.7133 41.5575 73.8333 43.7361 73.8333 46.3333V73.8333H46.3333C43.7361 73.8333 41.5575 74.7103 39.7975 76.4642C38.0436 78.2242 37.1667 80.4028 37.1667 83C37.1667 85.5972 38.0436 87.7728 39.7975 89.5267C41.5575 91.2867 43.7361 92.1667 46.3333 92.1667H73.8333V119.667C73.8333 122.264 74.7133 124.439 76.4733 126.193C78.2272 127.953 80.4028 128.833 83 128.833ZM18.8333 165.5C13.7917 165.5 9.47417 163.706 5.88083 160.119C2.29361 156.526 0.5 152.208 0.5 147.167V18.8333C0.5 13.7917 2.29361 9.47417 5.88083 5.88083C9.47417 2.29361 13.7917 0.5 18.8333 0.5H147.167C152.208 0.5 156.526 2.29361 160.119 5.88083C163.706 9.47417 165.5 13.7917 165.5 18.8333V147.167C165.5 152.208 163.706 156.526 160.119 160.119C156.526 163.706 152.208 165.5 147.167 165.5H18.8333ZM18.8333 147.167H147.167V18.8333H18.8333V147.167ZM18.8333 147.167V18.8333V147.167Z"
+                            fill="#26ABE2" />
+                    </svg>
+                </div>
+                <div class="card-body py-0">
+                    <h5 class="text-center my-3">Add new</h5>
+                </div>
+            </div>
+            {{/ifeq}}
+        </div>
+    </div>
+</div>
+
+{{!-- ADD NEW WAREHOUSE MAIN CONTAINER --}}
+<div class="modal" id="newWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <form>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add new <span
+                            class="font-amaranth base-color-text">
+                            Warehouse</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Warehouse Name</label>
+                        <input type="text" class="form-control shadow-none" required name="warehouseName">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Warehouse image</label>
+                        <div class="w-100">
+                            <img class="mb-2 preview-warehouse-img hide">
+                        </div>
+                        <input type="text" name="warehousePermissions" hidden>
+                        <input type="file" class="form-control shadow-none" accept="image/*"
+                            onchange="previewWarehouseImg(event)" required name="warehouseImg">
+
+                        <script>
+                            let warehouseImgFile;
+                            function previewWarehouseImg(event) {
+                                if (event.target.files.length > 0) {
+                                    warehouseImgSrc = URL.createObjectURL(event.target.files[0]);
+                                    warehouseImgFile = event.target.files[0]
+                                    $('.preview-warehouse-img').removeClass('hide').attr('src', `${warehouseImgSrc}`).addClass('active');
+                                }
+                            }
+                        </script>
+                        <div class="modal-warehouse-permissions">
+                            <label class=" mt-3">Warehouse Permissions</label>
+                            <button class="btn bg-text-base-color shadow-none w-100" type="button"
+                                onclick="openWarehousePermssions()">Assign Permissions</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn bg-text-base-color shadow-none">Create</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="new-warehouse-permissions p-3 hide">
+    {{!-- <div class="input-group mb-3">
+        <input type="text" class="form-control border-secondary" placeholder="Search...">
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+    </div> --}}
+    <div class="table-responsive w-100" style="height:26em;overflow:auto">
+        <table class="table">
+            <thead>
+                <tr class="bg-text-base-color">
+                    <th class="text-light" scope="col">Admin name</th>
+                    <th class="text-light" scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <button class="btn bg-text-base-color" onclick="closeWarehousePermssions()">Close</button>
+    </div>
+</div>
+
+{{/inline}}
+{{#*inline "css"}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+{{/inline}}
+<script>
+    function ObjectId() { }
+    const warehouses = [{{{ warehouses }}}]
+</script>
+<script src="/js/admin/warehouse/home.js"></script>
