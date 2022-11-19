@@ -475,7 +475,7 @@ async function toggleServiceReportInputs(form, value) {
         $('.service-report-machine-details-action').attr('readonly', value)
         $('.service-report-machine-details-parts-in').attr('readonly', value)
         $('.service-report-machine-details-parts-out').attr('readonly', value)
-        $('.service-report-machine-details-status').attr('readonly', value)
+        $('.service-report-machine-details-status').attr('disabled', value)
     }
 }
 

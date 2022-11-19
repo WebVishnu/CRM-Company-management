@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const Admin = require(path.join(__dirname, "../models/adminSchema"));
 const ServiceReport = require(path.join(__dirname, '../models/machineServiceReportSchema'))
 const catchAsyncErrors = require(path.join(__dirname, "../middlewares/catchAsyncErrors"));
-var MongoClient = require('mongodb').MongoClient;
+
 Handlebars.registerHelper("inc", function (value, options) {
     return parseInt(value) + 1;
 });

@@ -119,14 +119,16 @@
   <table class="all-service-reports-table">
     <thead>
       <tr>
-        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
+        <th scope="col" class="user-select-none"
+          style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">Date</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">C Name.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">T. Name</th>
-        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
+        <th scope="col" class="user-select-none"
+          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
       </tr>
     </thead>
     <tbody id="all-service-reports-body">
@@ -339,8 +341,12 @@
       <div class="col-md-6">
         <div class="form-group">
           <label for="">Status</label>
-          <input readonly type="text" class="form-control shadow-none service-report-machine-details-status" name=""
-            id="" aria-describedby="helpId" placeholder="enter status here">
+          <select disabled class="form-select shadow-none service-report-machine-details-status" aria-label="Default select example">
+            <option value="OK" selected> OK </option>
+            <option value="Pending"> Pending </option>
+          </select>
+          {{!-- <input readonly type="text" class="form-control shadow-none service-report-machine-details-status" name=""
+            id="" aria-describedby="helpId" placeholder="enter status here"> --}}
         </div>
       </div>
       <div class="col-md-3 d-flex flex-column mb-2">
@@ -502,13 +508,15 @@
             <h6 class="mb-2">Filter with warranty</h6>
             <div class="form-check d-flex justify-content-between">
               <div class="ps-3 user-select-none">
-                <input class="form-check-input bg-primary" value="IW" onchange="switchAdvance('warranty')" onclick="switchAdvance('warranty')" type="radio" name="advWty" id="advIW">
+                <input class="form-check-input bg-primary" value="IW" onchange="switchAdvance('warranty')"
+                  onclick="switchAdvance('warranty')" type="radio" name="advWty" id="advIW">
                 <label class="form-check-label" for="advIW">
                   In warranty
                 </label>
               </div>
               <div class="pe-3 ps-md-0 ps-3 user-select-none">
-                <input class="form-check-input bg-primary" value="OW" onchange="switchAdvance('warranty')" onclick="switchAdvance('warranty')" type="radio" name="advWty" id="advOW">
+                <input class="form-check-input bg-primary" value="OW" onchange="switchAdvance('warranty')"
+                  onclick="switchAdvance('warranty')" type="radio" name="advWty" id="advOW">
                 <label class="form-check-label" for="advOW">
                   Out of warranty
                 </label>

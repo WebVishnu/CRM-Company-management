@@ -36,7 +36,6 @@ exports.getSinglePartSalesData = async function (req, res) {
   // search sale data
   exports.getSearchedPartSaleData = async function (req, res) {
     query = `${req.params.query}`
-    console.log(query)
     try {
       const salesData = await partSData.find({
         $or: [

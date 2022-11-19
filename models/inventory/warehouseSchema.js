@@ -24,14 +24,15 @@ const wareHouse = mongoose.Schema({
                         date: { type: 'string' },
                         adminId: { type: 'string' },
                     },
+                    productName: { type: 'string' },
                     productImg: { type: 'string' },
                     dateAdded: { type: 'string' },
-                    productName: { type: 'string' },
                     description: { type: 'string' },
                     rate: { type: 'string' },
                     minimumStock: { type: 'string' },
                     maximumStock: { type: 'string' },
                     currentStock: { type: 'string' },
+                    stockHistory:[]
                 }
             ]
         }

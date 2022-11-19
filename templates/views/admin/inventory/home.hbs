@@ -8,6 +8,7 @@
     }
 
     .card:hover {
+        cursor: auto !important;
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
     }
 
@@ -21,8 +22,20 @@
         transition: all 0.3s ease-in-out;
     }
 
-    .card:hover .card-img:after {
+    .card:hover .card-img:after,
+    .card:hover i {
+        cursor: pointer;
         opacity: 1;
+    }
+
+    .card i {
+        transition: all 0.1s ease-in-out;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .card i:hover {
+        color: red;
     }
 
     .menu-link[data-link="inventory"] {
@@ -99,7 +112,7 @@
 </div>
 
 {{!-- ADD NEW WAREHOUSE MAIN CONTAINER --}}
-<div class="modal" id="newWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="newWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true" >
     <form>
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -182,9 +195,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/1.0.9/browser-image-compression.js"
+    integrity="sha512-8ZZABMxONy31dC8IlKGRbB3Dk14Ghapvgav9yvX1hXXwoSihen1WdHf6V9jDxeJNvobkMxht2iPUrvkgG1jJXg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{/inline}}
-<script>
-    function ObjectId() { }
-    const warehouses = [{{{ warehouses }}}]
-</script>
 <script src="/js/admin/warehouse/home.js"></script>

@@ -58,7 +58,6 @@ exports.filterDO = async function (req, res) {
       })
     } else if (req.params.filter.includes("query=")) {
       query = req.params.filter.replace('query=', "").replaceAll("-", "/")
-      console.log(query)
       res.send({
         success: true,
         vouchers: await DOVoucher.find({

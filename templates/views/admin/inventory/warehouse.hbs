@@ -1,8 +1,512 @@
 {{>adminHeader}}
 {{#> style}}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Hind+Siliguri&family=Montserrat:wght@500&family=Mukta:wght@700&family=Open+Sans:wght@700&family=Raleway:wght@500&family=Roboto:wght@700&display=swap');
+
+    .menu-link[data-link="inventory"] {
+        background-color: #26ABE2;
+        color: #fff;
+    }
+
+    /* TABLE */
+    table {
+        border-collapse: collapse;
+        margin: 2em 0;
+
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    table caption {
+        font-size: 1.5em;
+        margin: .5em 0 .75em;
+    }
+
+    table tr {
+        background-color: #ffffff;
+        padding: .35em;
+    }
+
+    #warehouse-table-body tr:hover {
+        background-color: #f4f4f4;
+        cursor: pointer;
+    }
+
+    table th,
+    table td {
+
+        padding: 1em 0;
+        text-align: center;
+    }
+
+    table th {
+        font-size: .85em;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        background-color: #26ABE2;
+        color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+        table {
+            border: 0;
+        }
+
+        table caption {
+            font-size: 1.3em;
+        }
+
+        table thead {
+            border: none;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+
+        table tr {
+            border-bottom: 3px solid #ddd;
+            display: block;
+            margin-bottom: .625em;
+        }
+
+        table td {
+            border-bottom: 1px solid #ddd;
+            display: block;
+            font-size: .8em;
+            text-align: right;
+        }
+
+        table td::before {
+            /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+            content: attr(data-label);
+            float: left;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        table td:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    /* ============================================================================================================================= */
+
+
+    .add-new-item-modal {
+        position: absolute;
+        width: calc(100vw - 16.5em);
+        height: auto;
+        top: 0;
+        right: 0;
+        background-color: #ffffff;
+        z-index: 11;
+
+    }
+
+    @media (max-width:1200px) {
+        .add-new-item-modal {
+            width: 100vw;
+            height: 100vh;
+        }
+    }
+
+    @media (max-width:768px) {
+        .add-new-item-modal {
+            height: auto;
+        }
+    }
+
+    .add-new-item-modal h3 {
+        font-family: 'Montserrat', sans-serif;
+        color: #353234;
+    }
+
+    .add-new-item-modal .product-img div {
+        height: 200px;
+        width: 200px;
+        border-radius: 10px;
+        color: #26ABE2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #e1f6ff;
+        border: 3px dotted #26ABE2;
+        cursor: pointer;
+    }
+
+    .add-new-item-modal .product-img div.active {
+        background-color: transparent !important;
+        background-size: cover !important;
+        border: none !important;
+    }
+
+    .add-new-item-modal .product-img div i {
+        font-size: 30px;
+    }
+
+    .add-new-item-modal .product-img div p {
+        font-size: 13px;
+        font-weight: 600;
+    }
+</style>
 {{/style}}
 {{#*inline "body"}}
+<div class="container-fluid mt-4 px-md-4">
+    <div class="row">
+        <div class="col">
+            <table class="mt-3 warehouse-table-container">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-truncate" style="border-radius:6px 0 0 0 ">Product name</th>
+                        <th scope="col" class="text-truncate">Category</th>
+                        <th scope="col" class="text-truncate">Rate</th>
+                        <th scope="col" class="text-truncate">Stock</th>
+                        <th scope="col" class="text-truncate">Min stock</th>
+                        <th scope="col" class="text-truncate" style="border-radius:0 6px 0 0">Latest</th>
+                    </tr>
+                </thead>
+                <tbody id="warehouse-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
+{{!-- ADD NEW ITEM MODAL --}}
+<div class="add-new-item-modal hide px-md-0 px-1">
+    <h4 class="font-weight-bold m-md-4 mx-md-5 mx-3 mt-4">Create new product</h4>
+    <div class="product-info container">
+        <form>
+            <div class="row">
+                <div class="col-lg-4 col-md-5 mt-5 ms-smd-5 mb-5 d-flex align-items-center flex-column">
+                    <div class="product-img m-0">
+                        <div>
+                            <i class="bi bi-image-fill"></i>
+                            <p>+ Choose product image</p>
+                            <input hidden type="file" name="new-product-img" id="new-product-img"
+                                accept="image/*,.jpg,.png,.jpeg">
+                        </div>
+                        <script>
+                            $('#new-product-img').on('change', (e) => {
+                                productImgSrc = URL.createObjectURL(event.target.files[0]);
+                                $('.add-new-item-modal .product-img div').addClass('active').attr('style', `background:url('${productImgSrc}')`);
+                                $('.add-new-item-modal .product-img div p').fadeOut(0)
+                                $('.add-new-item-modal .product-img div i').fadeOut(0)
+                                //ProductImgCmd("show",`${productImgSrc}`)
+                            })
+                        </script>
+                    </div>
+                    <p class="mb-0 mt-2 ms-2 font-weight-bold">Upload Product Image</p>
+                </div>
+                <div class="col-md-6 pb-5 pt-2" style="overflow-y: auto;">
+                    <div class="form-group">
+                        <label for="productName" class="font-weight-bold text-secondary">Product name</label>
+                        <input required type="text" class="form-control shadow-none" name="productName" id="productName"
+                            placeholder="enter your product name">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryName" class="font-weight-bold text-secondary">Category</label>
+                        <select class="form-select" name="categoryName">
+                        </select>
+                        <input type="text" class="form-control shadow-none newCategoryName" hidden
+                            placeholder="name your category">
+                        <h6 class="my-2 text-primary cursor-pointer user-select-none add-new-category-btn"
+                            onclick="addNewCategory('add')">add new categrory</h6>
+                        <script>
+                            function addNewCategory(cmd) {
+                                if (cmd == "add") {
+                                    // add new category
+                                    $('.add-new-item-modal .add-new-category-btn').html("Choose category").attr('onclick', 'addNewCategory("remove")')
+                                    $('.add-new-item-modal select[name="categoryName"]').fadeOut(10);
+                                    $('.add-new-item-modal .newCategoryName').attr({ 'hidden': false, 'required': true }).val('').attr('name', 'categoryName')
+                                } else if (cmd == "remove") {
+                                    // select category
+                                    $('.add-new-item-modal .add-new-category-btn').html("add new categrory").attr('onclick', 'addNewCategory("add")')
+                                    $('.add-new-item-modal select[name="categoryName"]').fadeIn(10);
+                                    $('.add-new-item-modal .newCategoryName').attr({ 'hidden': true, 'required': false }).val('').removeAttr('name')
+                                }
+                            }
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate" class="font-weight-bold text-secondary">Price</label>
+                        <div style="position: relative;">
+                            <input required type="number" class="form-control shadow-none ps-4" name="rate" id="rate"
+                                placeholder="enter your product price">
+                            <i class="bi bi-currency-rupee input-icon-left"></i>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="productName" class="font-weight-bold text-secondary">Stock</label>
+                        <div class="d-flex">
+                            <input required type="number" class="form-control shadow-none rounded-0" name="minimumStock"
+                                id="minimumStock" placeholder="enter minimum stock">
+                            <input required type="number" class="form-control shadow-none rounded-0" name="maximumStock"
+                                id="maximumStock" placeholder="enter maximum stock">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentStock" class="font-weight-bold text-secondary">Current stock</label>
+                        <input required type="text" class="form-control shadow-none" name="currentStock"
+                            id="currentStock" placeholder="enter current stock">
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="font-weight-bold text-secondary">Description</label>
+                        <input type="text" class="form-control shadow-none" name="description" id="description"
+                            placeholder="enter product description">
+                    </div>
+                    <div class="form-group d-flex justify-content-end mt-3 align-items-center flex-wrap">
+                        <p class="error text-danger mx-3 d-md-inline d-block m-0"></p>
+                        <button class="btn bg-text-base-color shadow-none" type="submit">Add new</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{{!-- MORE OPTION FOR INVENTARY SIDE MENU --}}
+{{!-- <header class="right-side-header" id="right-side-header">
+        <i class="bi bi-list" id="header-toggle" ></i>
+</header> --}}
+<div class="right-side-l-navbar shadow bg-light" id="nav-bar">
+    <nav class="nav">
+        <div>
+            <a href="#" class="nav_logo">
+
+            </a>
+            <div class="nav_list">
+                <a href="#" class="nav_link active">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Dashboard</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Users</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Messages</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Bookmark</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Files</span>
+                </a>
+                <a href="#" class="nav_link">
+                    <i class="bi bi-list nav_icon"></i>
+                    <span class="nav_name">Stats</span>
+                </a>
+            </div>
+        </div>
+        <a href="#" class="nav_link">
+            
+        </a>
+    </nav>
+</div>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
+    :root {
+        --header-height: 3rem;
+        --nav-width: 68px;
+        --first-color: #4723D9;
+        --first-color-light: #AFA5D9;
+        --white-color: #F7F6FB;
+        --body-font: 'Nunito', sans-serif;
+        --normal-font-size: 1rem;
+        --z-fixed: 100
+    }
+
+    *,
+    ::before,
+    ::after {
+        box-sizing: border-box
+    }
+
+    .right-side-header a {
+        text-decoration: none
+    }
+
+    .right-side-header {
+        width: 100%;
+        height: var(--header-height);
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+        background-color: var(--white-color);
+        z-index: var(--z-fixed);
+        transition: .5s
+    }
+
+    .right-side-header .header_toggle {
+        color: var(--first-color);
+        font-size: 1.5rem;
+        cursor: pointer
+    }
+
+    .right-side-header .header_img {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        overflow: hidden
+    }
+
+    .right-side-header .header_img img {
+        width: 40px
+    }
+
+    .right-side-l-navbar {
+        position: fixed;
+        bottom: 0;
+        right: -30%;
+        width: var(--nav-width);
+        height:100vh;
+        background-color: var(--first-color);
+        padding: .5rem 1rem 0 0;
+        transition: .5s;
+        z-index: var(--z-fixed)
+    }
+
+    .right-side-l-navbar .nav {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden
+    }
+
+    .right-side-l-navbar .nav_logo,
+    .right-side-l-navbar .nav_link {
+        display: grid;
+        grid-template-columns: max-content max-content;
+        align-items: center;
+        column-gap: 1rem;
+        padding: .5rem 0 .5rem 1.5rem
+    }
+
+    .right-side-l-navbar .nav_logo {
+        margin-bottom: 2rem
+    }
+
+    .right-side-l-navbar .nav_logo-icon {
+        font-size: 1.25rem;
+        color: var(--white-color)
+    }
+
+    .right-side-l-navbar .nav_logo-name {
+        color: var(--white-color);
+        font-weight: 700
+    }
+
+    .right-side-l-navbar .nav_link {
+        position: relative;
+        color: var(--first-color-light);
+        margin-bottom: 1.5rem;
+        transition: .3s
+    }
+
+    .right-side-l-navbar .nav_link:hover {
+        color: var(--white-color)
+    }
+
+    .right-side-l-navbar .nav_icon {
+        font-size: 1.25rem
+    }
+
+    .show {
+        right: 0
+    }
+
+    .body-pd {
+        padding-left: calc(var(--nav-width) + 1rem)
+    }
+
+    .right-side-l-navbar.active {
+        color: var(--white-color)
+    }
+
+    .right-side-l-navbar .active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 32px;
+        background-color: var(--white-color)
+    }
+
+    .right-side-l-navbar .height-100 {
+        height: 100vh
+    }
+
+    @media screen and (min-width: 768px) {
+
+        .right-side-header {
+            height: calc(var(--header-height) + 1rem);
+            padding: 0 2rem 0 calc(var(--nav-width) + 2rem)
+        }
+
+        .right-side-header .header_img {
+            width: 40px;
+            height: 40px
+        }
+
+        .right-side-header .header_img img {
+            width: 45px
+        }
+
+        .right-side-l-navbar {
+            right: -4em;
+            padding: 1rem 1rem 0 0
+        }
+
+        .show {
+            width: calc(var(--nav-width) + 222px)
+        }
+
+        .body-pd {
+            padding-left: calc(var(--nav-width) + 188px)
+        }
+    }
+</style>
+{{!-- BOTTOM RIGHT FIXED SECTION --}}
+<div style="position: absolute;right:1em;bottom:1em">
+    <button class="btn bg-text-base-color shadow-none" onclick="$('.right-side-l-navbar').toggleClass('show')"><i class="bi bi-list"></i></button>
+    <button class="btn bg-text-base-color shadow-none" onclick="openNewItemModal()">Add new Item</button>
+    <script>
+        function openNewItemModal() {
+            $('.add-new-item-modal').removeClass('hide')
+            $('.add-new-item-modal input').val('')
+            ProductImgCmd("hide", "")
+            $('.add-new-item-modal select[name="categoryName"]').html('')
+            addNewCategory("remove")
+            axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
+                res.data.categories.forEach(category => {
+                    $('.add-new-item-modal select[name="categoryName"]').append(`<option value="${category.categoryName}">${category.categoryName}</option>`).prop('disabled', false);
+                });
+            })
+        }
+    </script>
+</div>
 {{/inline}}
 {{#*inline "css"}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
@@ -11,3 +515,7 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
 {{/inline}}
+<script>
+    warehouseID = `{{{warehouseID}}}`
+</script>
+<script src="/js/admin/warehouse/warehouse.js"></script>

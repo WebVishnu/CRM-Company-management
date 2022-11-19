@@ -1,16 +1,21 @@
 // print all the warehouses
 addNewBtn = $('.warehouse-container .col').html()
-printWarehouses(warehouses)
+getAllWarehouses()
+function getAllWarehouses(){
+    axios.get('/api/v1/warehouse/get-all').then(res=>{
+        printWarehouses(res.data.warehouses)
+    })
+}
 function printWarehouses(warehouses) {
     data = ``
     warehouses.forEach(warehouse => {
         data += `
         <div class="card mx-3 my-3 cursor-pointer shadow-none rounded-0" style="width: 14rem;">
-            <div class="card-img"
-                style="background-image: url('/images/warehouse/base-img/${warehouse.warehouseImg}');background-size: cover;height: 11em;width: 100%;background-position: center;">
+            <div class="card-img d-sm-inline d-none"  onclick="location.href='/vitco-impex/control/inventory/warehouse/${warehouse._id}'"
+                style="background-image: url('/adminUploads/warehouse img/${warehouse.warehouseImg}');background-size: cover;height: 11em;width: 100%;background-position: center;">
             </div>
-            <div class="card-body py-0">
-                <h5 class="text-center my-3 text-capitalize">${warehouse.warehouseName}</h5>
+            <div class="card-body py-0 d-flex justify-content-between">
+                <h5 class="text-center my-3 text-capitalize cursor-pointer" onclick="location.href='/vitco-impex/control/inventory/warehouse/${warehouse._id}'">${warehouse.warehouseName}</h5><i class="bi bi-trash3-fill my-auto" onclick="axios.get('/api/v1/warehouse/delete/${warehouse._id}').then(()=>{getAllWarehouses()})"></i>
             </div>
         </div>`
     });
@@ -23,9 +28,7 @@ function printWarehouses(warehouses) {
 $('#newWarehouseModal form').on('submit', (e) => {
     e.preventDefault();
     data = _.object($("#newWarehouseModal form").serializeArray().map(function (v) { return [v.name, v.value]; }))
-    // axios.post('',{data})
     data['warehouseImgFile'] = warehouseImgFile
-    console.log(data)
     axios.post('/api/v1/warehouse/create-new', data, {
         headers: {
             'Content-Type': 'multipart/form-data'

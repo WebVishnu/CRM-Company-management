@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { resolve } = require('path');
 const User = require(path.join(__dirname, "../models/userSchema"));
 const Admin = require(path.join(__dirname, "../models/adminSchema"));
+const warehouse = require(path.join(__dirname, "../models/inventory/warehouseSchema.js"));
 
 exports.isAuthenticatedUser = async (req, res, next) => {
   const { token } = req.cookies;
@@ -49,7 +50,7 @@ exports.authorizedRoles = async (Pname, req, res, next, ...roles) => {
   isAllowed = false
   const { adminToken } = req.cookies;
   if (adminToken) {
-    result =  await jwt.verify(
+    result = await jwt.verify(
       adminToken.token,
       process.env.JWT_SECRET_ADMIN,
       async function (err, decoded) {
@@ -61,15 +62,44 @@ exports.authorizedRoles = async (Pname, req, res, next, ...roles) => {
             let permission = await searchPermissionObj(Pname, admin.permissions)
             if (permission) {
               Pkey = await searchPermissionKeyObj(roles, permission.permissionKeys)
-              if(Pkey.length > 0){
+              if (Pkey.length > 0) {
                 isAllowed = true
               }
             }
-          }else{
+          } else {
             isAllowed = true
           }
         }
         return isAllowed
+      }
+    );
+    return result
+  }
+}
+
+
+
+// authorize the admins to access pages
+exports.isAuthenticatedWarehouse = async (req, warehouseID) => {
+  const { adminToken } = req.cookies;
+  if (adminToken) {
+    result = await jwt.verify(
+      adminToken.token,
+      process.env.JWT_SECRET_ADMIN,
+      async function (err, decoded) {
+        if (err) {
+          console.log(err)
+          return { success: false }
+        } else {
+          wareHouse = await warehouse.findOne({ _id: warehouseID })
+          const admin = await Admin.findById(adminToken.uID)
+          
+          if (adminToken.role[0].roleName != "admin") { // if it it not all
+            return { success: wareHouse.permissions.includes(admin._id), admin, wareHouse }
+          } else {
+            return { success: true, admin, wareHouse }
+          }
+        }
       }
     );
     return result

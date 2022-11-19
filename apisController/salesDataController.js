@@ -38,7 +38,6 @@ exports.getSingleSalesData = async function (req, res) {
 // search sale data
 exports.getSearchedSaleData = async function (req, res) {
   query = `${req.params.query}`
-  console.log(query)
   try {
     const salesData = await SData.find({
       $or: [
