@@ -67,6 +67,25 @@ router.get('/api/v1/warehouse/delete/:id', async (req, res, next) => {
 // =================================================================
 
 // ADD NEW PRODUCT IN WAREHOUSE
+router.get('/api/v1/warehouse/:warehouseID/products/check/sku/:sku', productStorageUpload.single("productImg"), async (req, res, next) => {
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
+    await warehouse.findOne({"categories.products.SKU":req.params.sku }).then(data => {
+      res.send({
+        success: true,
+        sku: data
+      })
+    }).catch(err => {
+      console.log(err)
+      res.send({
+        success: false,
+      })
+    })
+  }   
+  else { res.send({ success: false, }); }
+})
+
+
+// ADD NEW PRODUCT IN WAREHOUSE
 router.post('/api/v1/warehouse/:warehouseID/products/add-new', productStorageUpload.single("productImg"), async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) { addNewProduct(req, res, next) }
   else { res.send({ success: false, }); }
@@ -76,12 +95,21 @@ router.post('/api/v1/warehouse/:warehouseID/products/add-new', productStorageUpl
 // GET ALL CATEGORIES IN WAREHOUSE
 router.get('/api/v1/warehouse/:warehouseID/category/all', async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
-    wHouse = await warehouse.findOne({ _id: req.params.warehouseID })
-    res.send({
-      success: true,
-      categories: wHouse.categories
+    await warehouse.findOne({ _id: req.params.warehouseID }).then(data => {
+      res.send({
+        success: true,
+        categories: data.categories
+      })
+    }).catch(err => {
+      console.log(err)
+      res.send({
+        success: false,
+      })
     })
   }
   else { res.send({ success: false, }); }
 })
+
+
+
 module.exports = router

@@ -3,6 +3,11 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Hind+Siliguri&family=Montserrat:wght@500&family=Mukta:wght@700&family=Open+Sans:wght@700&family=Raleway:wght@500&family=Roboto:wght@700&display=swap');
 
+    :root {
+        --base-dark-color: #5C8EB5;
+        --base-grey-color: #525252;
+    }
+
     .menu-link[data-link="inventory"] {
         background-color: #26ABE2;
         color: #fff;
@@ -28,8 +33,16 @@
     }
 
     #warehouse-table-body tr:hover {
-        background-color: #f4f4f4;
+        background-color: rgb(250, 250, 250);
         cursor: pointer;
+    }
+
+    table th:nth-child(1) {
+        border-radius: 6px 0 0 0
+    }
+
+    table th:last-child {
+        border-radius: 0 6px 0 0
     }
 
     table th,
@@ -39,12 +52,13 @@
         text-align: center;
     }
 
+
     table th {
         font-size: .85em;
         letter-spacing: .1em;
         text-transform: uppercase;
-        background-color: #26ABE2;
-        color: white;
+        background-color: #5C8EB5;
+        color: #fff;
     }
 
     @media screen and (max-width: 600px) {
@@ -99,10 +113,11 @@
     /* ============================================================================================================================= */
 
 
-    .add-new-item-modal {
+    .add-new-item-modal,
+    .check-in-out-modal {
         position: absolute;
         width: calc(100vw - 16.5em);
-        height: auto;
+        height: 100vh;
         top: 0;
         right: 0;
         background-color: #ffffff;
@@ -111,14 +126,18 @@
     }
 
     @media (max-width:1200px) {
-        .add-new-item-modal {
+
+        .add-new-item-modal,
+        .check-in-out-modal {
             width: 100vw;
             height: 100vh;
         }
     }
 
     @media (max-width:768px) {
-        .add-new-item-modal {
+
+        .add-new-item-modal,
+        .check-in-out-modal {
             height: auto;
         }
     }
@@ -156,21 +175,121 @@
         font-size: 13px;
         font-weight: 600;
     }
+
+    .new-design-button {
+        background-color: transparent;
+        border: 2px solid #cfcfcf;
+        padding: 0.2em 0.7em;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 13px;
+        color: var(--base-grey-color);
+    }
+
+    .new-design-button:hover {
+        color: #000;
+    }
+
+    .top-header-filter .new-design-button.active {
+        background-color: #26ABE2;
+        color: #fff;
+        border: 2px solid #26ABE2;
+    }
+
+    .stock-status-in {
+        padding: 1px 5px;
+        border-radius: 5px;
+        border: 2px solid #3eb940;
+        background-color: #d4f1d5;
+        color: #3eb940;
+    }
+
+    .stock-status-out {
+        border: 2px solid #d2382a;
+        padding: 1px 5px;
+        border-radius: 5px;
+        background-color: rgb(255 234 232);
+        color: #d2382a;
+    }
+
+    .reports-details-container {
+        height: 3em;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+
+    .reports-details-container .reports-details p {
+        font-size: 11px;
+        font-weight: bolder;
+        color: var(--base-grey-color);
+    }
+
+    .input-icon-right {
+        position: absolute;
+        right: 8px;
+        top: 4px;
+        font-size: 22px;
+    }
 </style>
 {{/style}}
 {{#*inline "body"}}
-<div class="container-fluid mt-4 px-md-4">
+<div class="container-fluid px-md-5 mt-3">
+    <div class="row">
+        <div class="col-12 py-1 d-flex justify-content-between" style="overflow:hidden;">
+            <div class="top-header-filter">
+                <span class="font-weight-bold me-2">Find </span>
+                <span class="cursor-pointer user-select-none new-design-button active" data-filter="inventory"
+                    onclick="filterProducts('inventory')">Inventory</span>
+                <span class="cursor-pointer user-select-none new-design-button " data-filter="items"
+                    onclick="filterProducts('items')">Products</span>
+                <script>
+                    function filterProducts(cmd) {
+                        $('.top-header-filter .new-design-button').removeClass('active')
+                        $(`.top-header-filter .new-design-button[data-filter="${cmd}"]`).addClass('active')
+                        if (cmd == "items") {
+                            getAllProducts()
+                        } else if (cmd == "inventory") {
+                            inventory()
+                        }
+                    }
+                </script>
+            </div>
+            <div class="top-header-middle">
+                <span class="cursor-pointer new-design-button reports">Reports<i
+                        class="bi bi-chevron-double-down ms-2"></i></span>
+
+            </div>
+            <div>
+                <span class="cursor-pointer new-design-button mx-1">Download Report <i
+                        class="bi bi-cloud-download ms-1"></i></span>
+                <span class="cursor-pointer new-design-button mx-1">Filter <i
+                        class="bi bi-chevron-down ms-1"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- <div class="container-fluid reports-details-container mt-3">
+    <div class="row">
+        <div class="col">
+            <span class="reports-details">
+                <p>Total Stock value</p>
+            </span>
+        </div>
+    </div>
+</div> --}}
+
+<div class="container-fluid px-md-4">
     <div class="row">
         <div class="col">
             <table class="mt-3 warehouse-table-container">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-truncate" style="border-radius:6px 0 0 0 ">Product name</th>
+                        <th scope="col" class="text-truncate">Product name</th>
                         <th scope="col" class="text-truncate">Category</th>
                         <th scope="col" class="text-truncate">Rate</th>
-                        <th scope="col" class="text-truncate">Stock</th>
                         <th scope="col" class="text-truncate">Min stock</th>
-                        <th scope="col" class="text-truncate" style="border-radius:0 6px 0 0">Latest</th>
+                        <th scope="col" class="text-truncate">Unit</th>
                     </tr>
                 </thead>
                 <tbody id="warehouse-table-body">
@@ -237,35 +356,56 @@
                         </script>
                     </div>
                     <div class="form-group">
-                        <label for="rate" class="font-weight-bold text-secondary">Price</label>
+                        <label for="rate" class="font-weight-bold text-secondary">Rate</label>
                         <div style="position: relative;">
                             <input required type="number" class="form-control shadow-none ps-4" name="rate" id="rate"
                                 placeholder="enter your product price">
                             <i class="bi bi-currency-rupee input-icon-left"></i>
                         </div>
                     </div>
-                    <div class="form-group ">
-                        <label for="productName" class="font-weight-bold text-secondary">Stock</label>
-                        <div class="d-flex">
+                    <div class="form-group d-flex justify-content-between flex-wrap">
+                        <div class=" w-100">
+                            <label for="minimumStock" class="font-weight-bold text-secondary">Min Stock</label>
                             <input required type="number" class="form-control shadow-none rounded-0" name="minimumStock"
                                 id="minimumStock" placeholder="enter minimum stock">
+                        </div>
+                        {{!-- <div class=" w-100 mt-md-0 mt-3">
+                            <label for="productName" class="font-weight-bold text-secondary">Unit of measurement</label>
                             <input required type="number" class="form-control shadow-none rounded-0" name="maximumStock"
                                 id="maximumStock" placeholder="enter maximum stock">
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="form-group">
+                        <label for="unit" class="font-weight-bold text-secondary">Unit of measurement</label>
+                        <select class="form-select" name="unit" id="unit">
+                            <option value="null">Select an option</option>
+                            <option value="Unit">Unit</option>
+                            <option value="Kgs">Kg</option>
+                            <option value="Bundle">Bundle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="SKU" class="font-weight-bold text-secondary">Stock keeping unit ( SKU )</label>
+                        <div style="position: relative;">
+                            <input required type="number" class="form-control shadow-none pr-5" name="SKU" id="SKU"
+                                placeholder="enter product SKU">
+                            <i class="bi bi-code-square input-icon-right cursor-pointer" data-toggle="tooltip" data-html="true" title="Generate SKU"></i>
+                        </div>
+                    </div>
+                    {{!-- <div class="form-group">
                         <label for="currentStock" class="font-weight-bold text-secondary">Current stock</label>
                         <input required type="text" class="form-control shadow-none" name="currentStock"
                             id="currentStock" placeholder="enter current stock">
-                    </div>
-                    <div class="form-group">
+                    </div> --}}
+                    {{!-- <div class="form-group">
                         <label for="description" class="font-weight-bold text-secondary">Description</label>
                         <input type="text" class="form-control shadow-none" name="description" id="description"
-                            placeholder="enter product description">
-                    </div>
-                    <div class="form-group d-flex justify-content-end mt-3 align-items-center flex-wrap">
+                            placeholder="enter product description ( optional )">
+                    </div> --}}
+                    <div class="newProductFooterSec form-group justify-content-end mt-3 align-items-center flex-wrap"
+                        style="display: flex;">
                         <p class="error text-danger mx-3 d-md-inline d-block m-0"></p>
-                        <button class="btn bg-text-base-color shadow-none" type="submit">Add new</button>
+                        <button class="btn bg-text-base-color shadow-none" type="submit">Register</button>
                     </div>
                 </div>
             </div>
@@ -274,49 +414,49 @@
 </div>
 
 
+{{!-- CHECK IN / OUT MODAL --}}
+<div class="check-in-out-modal hide">
+    <div class="form-group">
+        <div class="form-group">
+            <label for="product">Choose Product</label>
+            <select class="form-control" name="product" id="product">
+                <option>V bond</option>
+                <option>B biond</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+
 {{!-- MORE OPTION FOR INVENTARY SIDE MENU --}}
 {{!-- <header class="right-side-header" id="right-side-header">
-        <i class="bi bi-list" id="header-toggle" ></i>
+    <i class="bi bi-list" id="header-toggle"></i>
 </header> --}}
-<div class="right-side-l-navbar shadow bg-light" id="nav-bar">
+{{!-- <div class="right-side-l-navbar shadow bg-light" id="nav-bar">
     <nav class="nav">
         <div>
-            <a href="#" class="nav_logo">
-
+            <a href="javascript:void(0)" class="nav_logo" onclick="$('.right-side-l-navbar').removeClass('show')">
+                Close ( esc )
             </a>
             <div class="nav_list">
-                <a href="#" class="nav_link active">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Dashboard</span>
+                <a href="javascript:void(0)" class="nav_link">
+                    <i class="bi bi-file-earmark-plus-fill nav_icon"></i>
+                    <span class="nav_name">Check In</span>
                 </a>
-                <a href="#" class="nav_link">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Users</span>
+                <a href="javascript:void(0)" class="nav_link">
+                    <i class="bi bi-file-earmark-minus-fill nav_icon"></i>
+                    <span class="nav_name">Check Out</span>
                 </a>
-                <a href="#" class="nav_link">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Messages</span>
-                </a>
-                <a href="#" class="nav_link">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Bookmark</span>
-                </a>
-                <a href="#" class="nav_link">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Files</span>
-                </a>
-                <a href="#" class="nav_link">
-                    <i class="bi bi-list nav_icon"></i>
-                    <span class="nav_name">Stats</span>
+                <a href="javascript:void(0)" class="nav_link">
+                    <i class="bi bi-graph-up nav_icon"></i>
+                    <span class="nav_name">Reports</span>
                 </a>
             </div>
         </div>
-        <a href="#" class="nav_link">
-            
-        </a>
     </nav>
-</div>
-
+</div> --}}
+{{!--
 <style>
     @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
@@ -356,31 +496,13 @@
         transition: .5s
     }
 
-    .right-side-header .header_toggle {
-        color: var(--first-color);
-        font-size: 1.5rem;
-        cursor: pointer
-    }
-
-    .right-side-header .header_img {
-        width: 35px;
-        height: 35px;
-        display: flex;
-        justify-content: center;
-        border-radius: 50%;
-        overflow: hidden
-    }
-
-    .right-side-header .header_img img {
-        width: 40px
-    }
 
     .right-side-l-navbar {
         position: fixed;
         bottom: 0;
         right: -30%;
         width: var(--nav-width);
-        height:100vh;
+        height: 100vh;
         background-color: var(--first-color);
         padding: .5rem 1rem 0 0;
         transition: .5s;
@@ -405,28 +527,19 @@
     }
 
     .right-side-l-navbar .nav_logo {
-        margin-bottom: 2rem
-    }
-
-    .right-side-l-navbar .nav_logo-icon {
-        font-size: 1.25rem;
-        color: var(--white-color)
-    }
-
-    .right-side-l-navbar .nav_logo-name {
-        color: var(--white-color);
-        font-weight: 700
+        margin-bottom: 2rem;
     }
 
     .right-side-l-navbar .nav_link {
         position: relative;
-        color: var(--first-color-light);
-        margin-bottom: 1.5rem;
+        color: #888888;
+        margin-bottom: 0.5rem;
         transition: .3s
     }
 
     .right-side-l-navbar .nav_link:hover {
-        color: var(--white-color)
+        background-color: #26ABE2;
+        color: white;
     }
 
     .right-side-l-navbar .nav_icon {
@@ -475,7 +588,7 @@
         }
 
         .right-side-l-navbar {
-            right: -4em;
+            right: -6.3em;
             padding: 1rem 1rem 0 0
         }
 
@@ -487,25 +600,12 @@
             padding-left: calc(var(--nav-width) + 188px)
         }
     }
-</style>
+</style> --}}
 {{!-- BOTTOM RIGHT FIXED SECTION --}}
-<div style="position: absolute;right:1em;bottom:1em">
-    <button class="btn bg-text-base-color shadow-none" onclick="$('.right-side-l-navbar').toggleClass('show')"><i class="bi bi-list"></i></button>
-    <button class="btn bg-text-base-color shadow-none" onclick="openNewItemModal()">Add new Item</button>
-    <script>
-        function openNewItemModal() {
-            $('.add-new-item-modal').removeClass('hide')
-            $('.add-new-item-modal input').val('')
-            ProductImgCmd("hide", "")
-            $('.add-new-item-modal select[name="categoryName"]').html('')
-            addNewCategory("remove")
-            axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
-                res.data.categories.forEach(category => {
-                    $('.add-new-item-modal select[name="categoryName"]').append(`<option value="${category.categoryName}">${category.categoryName}</option>`).prop('disabled', false);
-                });
-            })
-        }
-    </script>
+<div style="position: absolute;right:1em;bottom:1em" class="bottom-right-section">
+    {{!-- <button class="btn bg-text-base-color shadow-none" onclick="$('.right-side-l-navbar').toggleClass('show')"><i
+            class="bi bi-list"></i></button> --}}
+    <button class="btn bg-text-base-color shadow-none" onclick="openNewItemModal()">Register Item</button>
 </div>
 {{/inline}}
 {{#*inline "css"}}
