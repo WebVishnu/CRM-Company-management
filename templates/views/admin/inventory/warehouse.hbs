@@ -48,7 +48,7 @@
     table th,
     table td {
 
-        padding: 1em 0;
+        padding: 1em 10px;
         text-align: center;
     }
 
@@ -258,7 +258,6 @@
             <div class="top-header-middle">
                 <span class="cursor-pointer new-design-button reports">Reports<i
                         class="bi bi-chevron-double-down ms-2"></i></span>
-
             </div>
             <div>
                 <span class="cursor-pointer new-design-button mx-1">Download Report <i
@@ -285,7 +284,7 @@
             <table class="mt-3 warehouse-table-container">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-truncate">Product name</th>
+                        <th scope="col px-2" class="text-truncate">Product name</th>
                         <th scope="col" class="text-truncate">Category</th>
                         <th scope="col" class="text-truncate">Rate</th>
                         <th scope="col" class="text-truncate">Min stock</th>
@@ -366,7 +365,7 @@
                     <div class="form-group d-flex justify-content-between flex-wrap">
                         <div class=" w-100">
                             <label for="minimumStock" class="font-weight-bold text-secondary">Min Stock</label>
-                            <input required type="number" class="form-control shadow-none rounded-0" name="minimumStock"
+                            <input required type="number" class="form-control shadow-none" name="minimumStock"
                                 id="minimumStock" placeholder="enter minimum stock">
                         </div>
                         {{!-- <div class=" w-100 mt-md-0 mt-3">
@@ -384,12 +383,14 @@
                             <option value="Bundle">Bundle</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group sku-input">
                         <label for="SKU" class="font-weight-bold text-secondary">Stock keeping unit ( SKU )</label>
                         <div style="position: relative;">
-                            <input required type="number" class="form-control shadow-none pr-5" name="SKU" id="SKU"
+                            <input required type="text" class="form-control shadow-none pr-5" name="SKU" id="SKU"
                                 placeholder="enter product SKU">
-                            <i class="bi bi-code-square input-icon-right cursor-pointer" data-toggle="tooltip" data-html="true" title="Generate SKU"></i>
+                            <i class="bi bi-code-square input-icon-right cursor-pointer"
+                                onclick="$(this).parent().children('input').val(generateSKU($('.add-new-item-modal form')))"
+                                data-toggle="tooltip" data-html="true" title="Generate SKU"></i>
                         </div>
                     </div>
                     {{!-- <div class="form-group">
@@ -415,17 +416,82 @@
 
 
 {{!-- CHECK IN / OUT MODAL --}}
-<div class="check-in-out-modal hide">
-    <div class="form-group">
-        <div class="form-group">
-            <label for="product">Choose Product</label>
-            <select class="form-control" name="product" id="product">
-                <option>V bond</option>
-                <option>B biond</option>
-            </select>
+<div class="modal checkInModal" id="checkInModal" tabindex="-1" role="dialog" aria-labelledby="checkInModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Check In ( Add stock)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Date</label>
+                        <input required type="text" class="form-control shadow-none" name="date"
+                            placeholder="enter date">
+                    </div>
+                    <div class="form-group">
+                        <label for="productName">Product name / SKU</label>
+                        <div class="productName-cont" style="position: relative;">
+                            <input required type="text" class="form-control shadow-none" id="productName"
+                                onkeyup="printPNsuggestions('.product-name-suggestions','.checkInModal #productName')"
+                                autocomplete="off" onblur="verifyProductName();" placeholder="enter product name">
+                            <ul class="product-name-suggestions">
+                            </ul>
+                            <input type="text" class="productID" hidden>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Quantity</label>
+                        <input required type="number" class="form-control shadow-none" name="quantity"
+                            placeholder="enter product quantity">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn bg-text-base-color shadow-none">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<script>
+    // print product name suggestions
+    //function printPNsuggestions(){
+    //    axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
+    //    $('.bottom-right-section').html(bottomRightSectionHtml)
+    //    if (res.data.success) {
+    //        $('.top-header-middle .reports').fadeOut(0)
+    //        tableHead.html(tableHeadHtml)
+    //        printProducts(res.data.categories)
+    //    }
+    //})
+    //}
+</script>
+<style>
+    .checkInModal .product-name-suggestions {
+        list-style: none;
+        position: absolute;
+        left: 0em;
+        width: 100%;
+        top: 2.4em;
+        background-color: #fff;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .checkInModal .product-name-suggestions li {
+        padding: 0.5em 0 0.5em 23px;
+        cursor: pointer;
+        border-bottom: 1px solid #f2f2f2;
+    }
+
+    .checkInModal .product-name-suggestions li:hover {
+        background-color: #fafafa;
+    }
+</style>
 
 
 

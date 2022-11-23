@@ -48,7 +48,7 @@
 <div class="container got-all-reports d-none" style="position: relative;bottom:3em">
     <div class="row">
         <div class="col-12 text-center">
-           <h4> <i class="bi bi-check-circle-fill text-success mx-3"></i>You got all reports</h4>
+            <h4> <i class="bi bi-check-circle-fill text-success mx-3"></i>You got all reports</h4>
         </div>
     </div>
 </div>
@@ -189,15 +189,16 @@
                 <button
                     class="btn text-light bg-base-color shadow-none mt-3  mx-2 change-sales-report-machine-details-btn"
                     onclick="$('.submit-changes-sales-report-machine-details-btn').removeClass('hide');
-                    $(this).addClass('hide').css('position','absolute')">
+        $(this).addClass('hide').css('position','absolute');toggleSalesEditInputRead(false)">
                     <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
-                <button class='btn btn-info shadow-none mt-3  mx-2 submit-changes-sales-report-machine-details-btn hide'
+                <button class='btn btn-info shadow-none mt-3 mx-2 submit-changes-sales-report-machine-details-btn hide'
                     onclick='editSaleData()'>Apply Changes</button>
                 {{/ifeq}}
                 {{/each}}
                 {{/ifeq}}
                 {{/each}}
             </div>
+            
         </div>
     </div>
 </div>

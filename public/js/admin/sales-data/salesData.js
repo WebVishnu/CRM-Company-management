@@ -219,7 +219,7 @@ function closeEditMenu() {
     $('.sale-details-status-input').val(("Loading..."))
 }
 // submit edited sale data
-async function editSaleData() {
+function editSaleData() {
     const id = $('.sale-details-id-input').val();
     machines = []
     tempArr = $('input[name="machineName"]').map((i, e) => e.value).get()

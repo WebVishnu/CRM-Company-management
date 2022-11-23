@@ -69,7 +69,7 @@ router.get('/api/v1/warehouse/delete/:id', async (req, res, next) => {
 // ADD NEW PRODUCT IN WAREHOUSE
 router.get('/api/v1/warehouse/:warehouseID/products/check/sku/:sku', productStorageUpload.single("productImg"), async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
-    await warehouse.findOne({"categories.products.SKU":req.params.sku }).then(data => {
+    await warehouse.findOne({ "categories.products.SKU": req.params.sku }).then(data => {
       res.send({
         success: true,
         sku: data
@@ -80,7 +80,7 @@ router.get('/api/v1/warehouse/:warehouseID/products/check/sku/:sku', productStor
         success: false,
       })
     })
-  }   
+  }
   else { res.send({ success: false, }); }
 })
 
@@ -95,7 +95,7 @@ router.post('/api/v1/warehouse/:warehouseID/products/add-new', productStorageUpl
 // GET ALL CATEGORIES IN WAREHOUSE
 router.get('/api/v1/warehouse/:warehouseID/category/all', async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
-    await warehouse.findOne({ _id: req.params.warehouseID }).then(data => {
+    await warehouse.findOne({ '_id': req.params.warehouseID }).then(data => {
       res.send({
         success: true,
         categories: data.categories
@@ -110,6 +110,30 @@ router.get('/api/v1/warehouse/:warehouseID/category/all', async (req, res, next)
   else { res.send({ success: false, }); }
 })
 
-
+// SEARCH PRODUCTS
+router.get('/api/v1/warehouse/:warehouseID/products/find/:query', async (req, res, next) => {
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
+    await warehouse.aggregate([
+      { $match: { $or: [{ 'categories.products.productName': { $regex: req.params.query, $options: 'i' } },{ 'categories.products.SKU': { $regex: req.params.query, $options: 'i' } }] } },
+      { $group: { '_id': "$_id", "products": { "$first": "$categories.products" } } },
+      {
+        $project: {
+          products: {
+            $reduce: {
+              input: "$products",
+              initialValue: [],
+              in: {
+                $concatArrays: ["$$this", "$$value"]
+              }
+            }
+          }
+        }
+      },
+    ]).then(data => {
+      res.send({ success: true, data: data, query: req.params.query });
+    })
+  }
+  else { res.send({ success: false, }); }
+})
 
 module.exports = router

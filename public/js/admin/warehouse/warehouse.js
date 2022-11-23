@@ -3,6 +3,7 @@ const tableHead = $('.warehouse-table-container thead')
 const tableHeadHtml = $('.warehouse-table-container thead').html()
 const bottomRightSectionHtml = $('.bottom-right-section').html()
 const productUnitHtml = $(`.add-new-item-modal select[name="unit"]`).html()
+const formError = $('.add-new-item-modal .error')
 // get all products
 function getAllProducts() {
     axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
@@ -14,6 +15,8 @@ function getAllProducts() {
         }
     })
 }
+
+
 inventory()
 // PRINT INVENTORY 
 function inventory() {
@@ -21,7 +24,7 @@ function inventory() {
     axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
         if (res.data.success) {
             $('.bottom-right-section').html(`
-            <button class="btn bg-text-base-color shadow-none">Check In</button>
+            <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkInModal">Check In</button>
             <button class="btn bg-text-base-color shadow-none">Check Out</button>`)
             tableHead.html(`
                 <th scope="col" class="text-truncate">Name</th>
@@ -35,7 +38,7 @@ function inventory() {
             tableBody.html('')
             res.data.categories.forEach(category => {
                 category.products.forEach(product => {
-                    if(parseInt(product.currentStock) != 0){
+                    if (parseInt(product.currentStock) != 0) {
                         tableBody.append(`
                             <tr>
                                 <td class="text-truncate px-3">${product.productName}</td>
@@ -52,6 +55,8 @@ function inventory() {
             });
             $('[data-toggle="tooltip"]').tooltip()
         }
+    }).catch(err => {
+        console.log(err)
     })
 
 }
@@ -84,7 +89,7 @@ function openNewItemModal() {
     ProductImgCmd("hide", "")
     $('.add-new-item-modal select[name="categoryName"]').html('')
     $(`.add-new-item-modal select[name="unit"]`).html(productUnitHtml).prop('disabled', false);
-    $('.add-new-item-modal .error').html('')
+    formError.html('')
     addNewCategory("remove")
     axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
         if (res.data.success) {
@@ -96,7 +101,7 @@ function openNewItemModal() {
                 $('.add-new-item-modal select[name="categoryName"]').append(`<option value="null">Please add new category</option>`).prop('disabled', false);;
             }
         } else {
-            $('.add-new-item-modal .error').html('We found some error')
+            formError.html('We found some error')
         }
     })
 }
@@ -114,6 +119,7 @@ function ProductImgCmd(cmd, url) {
         $('.add-new-item-modal h4').html('Product Details')
         $('.add-new-category-btn').fadeOut(0)
         $('.add-new-item-modal .newProductFooterSec').fadeOut(0)
+        $('.add-new-item-modal .sku-input i').fadeOut(0)
         addNewCategory("remove")
     } else if (cmd == "hide") {
         // SHOW BACKGROUND OF PRODUCT IMG
@@ -128,7 +134,7 @@ function ProductImgCmd(cmd, url) {
         $('.add-new-category-btn').fadeIn(0)
         $('.add-new-item-modal h4').html('Create new product')
         $('.add-new-item-modal .newProductFooterSec').fadeIn(0)
-
+        $('.add-new-item-modal .sku-input i').fadeIn(0)
     }
 }
 
@@ -149,11 +155,11 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
     data = _.object($('.add-new-item-modal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
     data['productImg'] = $("#new-product-img")[0].files[0]
     if (data['productImg'] == undefined) {
-        $('.add-new-item-modal .error').html('Please select product image')
+        formError.html('Please select product image')
     } else if (($('.add-new-item-modal select[name="categoryName"]').val() == "null" && $('.add-new-item-modal .newCategoryName').prop('hidden')) || $('.add-new-item-modal select[name="unit"]').val() == "null") {
         console.log($('.add-new-item-modal select[name="unit"]').val())
         console.log($('.add-new-item-modal select[name="categoryName"]').val())
-        $('.add-new-item-modal .error').html('Please fill the form correctly')
+        formError.html('Please fill the form correctly')
     } else {
         axios.post(`/api/v1/warehouse/${warehouseID}/products/add-new`, data, {
             headers: {
@@ -169,6 +175,66 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
         })
     }
 })
+
+// GENERATE stock keeping unit ( SKU )
+function generateSKU(form) {
+    formError.html('')
+    data = _.object(form.serializeArray().map(function (v) { return [v.name, v.value]; }))
+    if (data.productName == "") {
+        formError.html('Enter product name')
+        return ""
+    } else {
+        sku = ''
+        productName = data.productName.split(" ").filter(element => element)
+        sku += `${productName[0][0].toUpperCase()}${(productName[1]) ? productName[1][0].toUpperCase() : "2"}`
+        sku += `${String(new Date().getFullYear())[2]}${String(new Date().getFullYear())[3]}`
+        sku += `${Math.floor(Math.random() * (9999999 - 1111111 + 1) + 1111111)}`
+        return sku
+    }
+}
+
+// suggest products 
+function printPNsuggestions(showEleSelector, inputSelector) {
+    $(showEleSelector).html('')
+    axios.get(`/api/v1/warehouse/${warehouseID}/products/find/${$('.checkInModal .productName-cont input').val()}`).then(res => {
+        if (res.data.success) {
+            data = res.data.data[0]
+            query = res.data.query.toLowerCase()
+            if (data) {
+                product = data.products.find((product, index) => {
+                    if (product.productName.toLowerCase().includes(query) || product.SKU.toLowerCase() == query) {
+                        $(showEleSelector).append(`<li onclick="$('${inputSelector}').val('${data.products[index].productName}');$('${showEleSelector}').html('');$('.checkInModal .productID').val('${product._id}')">${data.products[index].productName}</li>`)
+                    }
+                })
+
+            }
+        }
+    })
+}
+
+
+$(".productName-cont #productName").focusout(verifyProductName());
+
+// verify suggested box
+function verifyProductName() {
+    axios.get(`/api/v1/warehouse/${warehouseID}/products/find/${$('.checkInModal .productName-cont input').val()}`).then(res => {
+        if (res.data.success) {
+            data = res.data.data[0]
+            query = res.data.query.toLowerCase()
+            if (data != undefined) {
+                product = data.products.find((product, index) => {
+                    if (product.productName.toLowerCase() != query && product.SKU.toLowerCase() != query) {
+                        $('.checkInModal .productName-cont input').val('')
+                        $('.checkInModal .productName-cont ul li:nth-child(0)').trigger('click')
+                        $('.product-name-suggestions').html('')
+                    }
+                })
+            } else {
+                $('.checkInModal .productName-cont input').val('')
+            }
+        }
+    })
+}
 
 
 // shortcuts
