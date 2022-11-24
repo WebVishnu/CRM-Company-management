@@ -53,7 +53,7 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
                     rate: req.body.rate,
                     minimumStock: req.body.minimumStock,
                     unit: req.body.unit,
-                    SKU:req.body.SKU
+                    SKU: req.body.SKU
                 }
             }
         }).then(() => {
@@ -88,7 +88,7 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
                             rate: req.body.rate,
                             minimumStock: req.body.minimumStock,
                             unit: req.body.unit,
-                            SKU:req.body.SKU
+                            SKU: req.body.SKU
                         }
                     ]
                 }
@@ -104,4 +104,86 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
             })
         })
     }
+})
+
+
+
+
+// ADD STOCK
+exports.addStock = catchAsyncErrors(async (req, res, next) => {
+    const { adminToken } = req.cookies;
+    const admin = await Admin.findById(adminToken.uID)
+    temp = req.body.product.split(" >> ")
+    cStock = `categories.${temp[3]}.products.${temp[2]}.currentStock`
+    sHistory = `categories.${temp[3]}.products.${temp[2]}.stockHistory`
+    await warehouse.updateOne({ _id: req.params.warehouseID }, {
+        $inc: { [cStock]: req.body.quantity },
+        $push: {
+            [sHistory]: {
+                createdBy: {
+                    adminName: admin.adminName,
+                    date: moment().format('DD/MM/YYYY'),
+                    adminId: admin._id,
+                },
+                cmd: "+",
+                quantity: req.body.quantity,
+                productName: temp[0],
+                unit: temp[4],
+                description: req.body.description,
+                productID: temp[1],
+            }
+        }
+    }).then(() => {
+        res.send({
+            success: true,
+        })
+    }).catch(e => {
+        console.log(e)
+        res.send({
+            success: false,
+        })
+    })
+})
+
+
+
+// REMOVE STOCK
+exports.removeStock = catchAsyncErrors(async (req, res, next) => {
+    const { adminToken } = req.cookies;
+    const admin = await Admin.findById(adminToken.uID)
+    temp = req.body.product.split(" >> ")
+    cStock = `categories.${temp[3]}.products.${temp[2]}.currentStock`
+    sHistory = `categories.${temp[3]}.products.${temp[2]}.stockHistory`
+    wh = await warehouse.updateOne({ _id: req.params.warehouseID, [cStock]: { $gte: req.body.quantity } }, {
+        $inc: { [cStock]: -req.body.quantity },
+        $push: {
+            [sHistory]: {
+                createdBy: {
+                    adminName: admin.adminName,
+                    date: moment().format('DD/MM/YYYY'),
+                    adminId: admin._id,
+                },
+                cmd: "-",
+                quantity: req.body.quantity,
+                productName: temp[0],
+                unit: temp[4],
+                description: req.body.description,
+                productID: temp[1],
+            }
+        }
+    }).then(data => {
+        if (data.modifiedCount == 0) {
+            throw "error"
+        } else {
+            res.send({
+                success: true,
+            })
+        }
+
+    }).catch(e => {
+        console.log(e)
+        res.send({
+            success: false,
+        })
+    })
 })

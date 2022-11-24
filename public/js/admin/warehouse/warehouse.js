@@ -4,11 +4,15 @@ const tableHeadHtml = $('.warehouse-table-container thead').html()
 const bottomRightSectionHtml = $('.bottom-right-section').html()
 const productUnitHtml = $(`.add-new-item-modal select[name="unit"]`).html()
 const formError = $('.add-new-item-modal .error')
+$('.input-group.date').datepicker({
+    format: 'mm/dd/yyyy'
+})
 // get all products
 function getAllProducts() {
     axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
         $('.bottom-right-section').html(bottomRightSectionHtml)
         if (res.data.success) {
+
             $('.top-header-middle .reports').fadeOut(0)
             tableHead.html(tableHeadHtml)
             printProducts(res.data.categories)
@@ -24,8 +28,8 @@ function inventory() {
     axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
         if (res.data.success) {
             $('.bottom-right-section').html(`
-            <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkInModal">Check In</button>
-            <button class="btn bg-text-base-color shadow-none">Check Out</button>`)
+            <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkInModal"> <span class="d-md-inline d-none" style="color:#003153;"> ( F1 )</span> Check In</button>
+            <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkOutModal"> <span class="d-md-inline d-none" style="color:#003153;"> ( F2 )</span> Check Out</button>`)
             tableHead.html(`
                 <th scope="col" class="text-truncate">Name</th>
                 <th scope="col" class="text-truncate">Category</th>
@@ -61,7 +65,28 @@ function inventory() {
 
 }
 
-// check 
+printProductsCheckinOut()
+// print all prodcuts in check in 
+async function printProductsCheckinOut() {
+    productSelCheckIn = $(`.checkInModal #selProductName`)
+    productSelCheckOut = $(`.checkOutModal #selProductName`)
+    productSelCheckIn.html(`<option value='null'>Choose product</option>`)
+    productSelCheckOut.html(`<option value='null'>Choose product</option>`)
+    await axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
+        if (res.data.success) {
+            res.data.categories.forEach((category, ci) => {
+                category.products.forEach((product, pi) => {
+                    productSelCheckIn.append(`<option value='${product.productName} >> ${product._id} >> ${pi} >> ${ci} >> ${product.unit}'>${product.productName}</option>`)
+                    productSelCheckOut.append(`<option value='${product.productName} >> ${product._id} >> ${pi} >> ${ci} >> ${product.unit}'>${product.productName}</option>`)
+                });
+            });
+            productSelCheckIn.searchableSelect();
+            productSelCheckOut.searchableSelect();
+            return true
+        }
+    })
+
+}
 
 
 // print products
@@ -138,6 +163,7 @@ function ProductImgCmd(cmd, url) {
     }
 }
 
+// product description
 function openProductDesc(product, category) {
     ProductImgCmd("show", `/adminUploads/products/img/${product.productImg}`)
     productFields = Object.keys(product)
@@ -157,8 +183,6 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
     if (data['productImg'] == undefined) {
         formError.html('Please select product image')
     } else if (($('.add-new-item-modal select[name="categoryName"]').val() == "null" && $('.add-new-item-modal .newCategoryName').prop('hidden')) || $('.add-new-item-modal select[name="unit"]').val() == "null") {
-        console.log($('.add-new-item-modal select[name="unit"]').val())
-        console.log($('.add-new-item-modal select[name="categoryName"]').val())
         formError.html('Please fill the form correctly')
     } else {
         axios.post(`/api/v1/warehouse/${warehouseID}/products/add-new`, data, {
@@ -169,6 +193,7 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
             if (res.data.success) {
                 getAllProducts()
                 $('.add-new-item-modal').addClass('hide')
+
             } else {
                 console.log("error")
             }
@@ -177,7 +202,8 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
 })
 
 // GENERATE stock keeping unit ( SKU )
-function generateSKU(form) {
+
+async function generateSKU(form) {
     formError.html('')
     data = _.object(form.serializeArray().map(function (v) { return [v.name, v.value]; }))
     if (data.productName == "") {
@@ -189,56 +215,122 @@ function generateSKU(form) {
         sku += `${productName[0][0].toUpperCase()}${(productName[1]) ? productName[1][0].toUpperCase() : "2"}`
         sku += `${String(new Date().getFullYear())[2]}${String(new Date().getFullYear())[3]}`
         sku += `${Math.floor(Math.random() * (9999999 - 1111111 + 1) + 1111111)}`
-        return sku
+        isSku = await axios.get(`/api/v1/warehouse/${warehouseID}/products/check/sku/${sku}`).then(res => {
+            if (res.data.sku) {
+                return true
+            } else {
+                return false
+            }
+        })
+        if (!isSku) {
+            return sku
+        } else {
+            generateSKU(form)
+        }
+
     }
 }
 
-// suggest products 
-function printPNsuggestions(showEleSelector, inputSelector) {
-    $(showEleSelector).html('')
-    axios.get(`/api/v1/warehouse/${warehouseID}/products/find/${$('.checkInModal .productName-cont input').val()}`).then(res => {
-        if (res.data.success) {
-            data = res.data.data[0]
-            query = res.data.query.toLowerCase()
-            if (data) {
-                product = data.products.find((product, index) => {
-                    if (product.productName.toLowerCase().includes(query) || product.SKU.toLowerCase() == query) {
-                        $(showEleSelector).append(`<li onclick="$('${inputSelector}').val('${data.products[index].productName}');$('${showEleSelector}').html('');$('.checkInModal .productID').val('${product._id}')">${data.products[index].productName}</li>`)
-                    }
-                })
-
-            }
-        }
-    })
-}
 
 
-$(".productName-cont #productName").focusout(verifyProductName());
-
-// verify suggested box
-function verifyProductName() {
-    axios.get(`/api/v1/warehouse/${warehouseID}/products/find/${$('.checkInModal .productName-cont input').val()}`).then(res => {
-        if (res.data.success) {
-            data = res.data.data[0]
-            query = res.data.query.toLowerCase()
-            if (data != undefined) {
-                product = data.products.find((product, index) => {
-                    if (product.productName.toLowerCase() != query && product.SKU.toLowerCase() != query) {
-                        $('.checkInModal .productName-cont input').val('')
-                        $('.checkInModal .productName-cont ul li:nth-child(0)').trigger('click')
-                        $('.product-name-suggestions').html('')
-                    }
-                })
+//add new stock
+$('#checkInModal form').on('submit', (e) => {
+    e.preventDefault()
+    data = _.object($('.checkInModal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
+    if(data.quantity == "0"){
+        $("#checkInModal .error").html("Quantity must be greater than 0")
+    }else if (data.product) {
+        axios.post(`/api/v1/warehouse/${warehouseID}/products/stock/add`, data).then(res => {
+            if (res.data.success) {
+                $('#checkInModal button.close').click()
+                $("#checkInModal").modal('hide')
+                inventory()
             } else {
-                $('.checkInModal .productName-cont input').val('')
+                $('#checkInModal button.close').click()
+                console.log(res.data.success)
             }
-        }
-    })
-}
+        })
+    } else {
+        $("#checkInModal .error").html("Please choose a product")
+    }
+})
 
+//add new stock
+$('#checkOutModal form').on('submit', (e) => {
+    e.preventDefault()
+    data = _.object($('.checkOutModal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
+    if(data.quantity == "0"){
+        $("#checkOutModal .error").html("Quantity must be greater than 0")
+    }else if (data.product) {
+        axios.post(`/api/v1/warehouse/${warehouseID}/products/stock/remove`, data).then(res => {
+            if (res.data.success) {
+                $('#checkOutModal button.close').click()
+                $("#checkOutModal").modal('hide')
+                inventory()
+            } else {
+                console.log("error")
+                throw "There is not enough stock to check out"
+            }
+        }).catch(err=>{
+            $("#checkOutModal .error").html(`${err}`)
+            console.log(err)
+        })
+    } else {
+        $("#checkOutModal .error").html("Please choose a product")
+    }
+})
+
+// WHEN CHECK IN MODAL OPENS
+$("#checkInModal").on('shown.bs.modal', () => {
+    $('#checkInModal .searchable-select').remove()
+    $('#checkInModal input').val('')
+    $('#checkInModal textarea').val('')
+    $('#checkInModal .error').html('')
+    $('.checkInModal input[name="date"]').val(moment().format('DD/MM/YYYY'))
+    $('.checkInModal input[name="quantity"]').focus()
+    printProductsCheckinOut()
+});
+
+// WHEN CHECK OUT MODAL OPENS
+$("#checkOutModal").on('shown.bs.modal', () => {
+    $('#checkOutModal .searchable-select').remove()
+    $('#checkOutModal input').val('')
+    $('#checkOutModal textarea').val('')
+    $('#checkOutModal .error').html('')
+    $('#checkOutModal input[name="date"]').val(moment().format('DD/MM/YYYY'))
+    $('#checkOutModal input[name="quantity"]').focus()
+    printProductsCheckinOut()
+});
 
 // shortcuts
 keyboardJS.bind('esc', (e) => {
     $('.add-new-item-modal').addClass('hide')
     $('.right-side-l-navbar').removeClass('show')
+});
+
+keyboardJS.bind('f1', (e) => {
+    e.preventDefault()
+    $('#checkInModal').modal('show');
+    $('#checkOutModal button.close').click()
+    $("#checkOutModal").modal('hide')
+    inventoryHeader = $(`.top-header-filter .new-design-button[data-filter="inventory"]`)
+    if(!inventoryHeader.hasClass('active')){
+        $('.top-header-filter .new-design-button').removeClass('active')
+        inventoryHeader.addClass('active')
+        inventory()
+    }
+
+});
+
+keyboardJS.bind('f2', (e) => {
+    e.preventDefault()
+    $('#checkOutModal').modal('show');
+    $('#checkInModal button.close').click()
+    $("#checkInModal").modal('hide')
+    inventoryHeader = $(`.top-header-filter .new-design-button[data-filter="inventory"]`)
+    if(!inventoryHeader.hasClass('active')){
+        $('.top-header-filter .new-design-button').removeClass('active')
+        inventoryHeader.addClass('active')
+        inventory()
+    }
 });

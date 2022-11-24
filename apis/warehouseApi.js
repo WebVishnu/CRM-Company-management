@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { createNewWarehouse, addNewProduct } = require(path.join(__dirname, '../apisController/warehouseController'));
+const { createNewWarehouse, addNewProduct ,addStock , removeStock} = require(path.join(__dirname, '../apisController/warehouseController'));
 const { authorizedRoles, isAuthenticatedWarehouse } = require(path.join(__dirname, "../middlewares/auth"));
 const multer = require('multer')
 const warehouse = require(path.join(__dirname, "../models/inventory/warehouseSchema.js"));
@@ -67,7 +67,7 @@ router.get('/api/v1/warehouse/delete/:id', async (req, res, next) => {
 // =================================================================
 
 // ADD NEW PRODUCT IN WAREHOUSE
-router.get('/api/v1/warehouse/:warehouseID/products/check/sku/:sku', productStorageUpload.single("productImg"), async (req, res, next) => {
+router.get('/api/v1/warehouse/:warehouseID/products/check/sku/:sku', async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
     await warehouse.findOne({ "categories.products.SKU": req.params.sku }).then(data => {
       res.send({
@@ -133,6 +133,18 @@ router.get('/api/v1/warehouse/:warehouseID/products/find/:query', async (req, re
       res.send({ success: true, data: data, query: req.params.query });
     })
   }
+  else { res.send({ success: false, }); }
+})
+
+// ADD STOCK
+router.post('/api/v1/warehouse/:warehouseID/products/stock/add', async (req, res, next) => {
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {addStock(req, res, next)}
+  else { res.send({ success: false, }); }
+})
+
+// REMOVE STOCK
+router.post('/api/v1/warehouse/:warehouseID/products/stock/remove', async (req, res, next) => {
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {removeStock(req, res, next)}
   else { res.send({ success: false, }); }
 })
 

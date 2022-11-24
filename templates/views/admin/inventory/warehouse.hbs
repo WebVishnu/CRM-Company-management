@@ -231,6 +231,10 @@
         top: 4px;
         font-size: 22px;
     }
+
+    .searchable-select {
+        width: 100%;
+    }
 </style>
 {{/style}}
 {{#*inline "body"}}
@@ -389,7 +393,7 @@
                             <input required type="text" class="form-control shadow-none pr-5" name="SKU" id="SKU"
                                 placeholder="enter product SKU">
                             <i class="bi bi-code-square input-icon-right cursor-pointer"
-                                onclick="$(this).parent().children('input').val(generateSKU($('.add-new-item-modal form')))"
+                                onclick="generateSKU($('.add-new-item-modal form')).then(res=>{$(this).parent().children('input').val(res)})"
                                 data-toggle="tooltip" data-html="true" title="Generate SKU"></i>
                         </div>
                     </div>
@@ -415,13 +419,61 @@
 </div>
 
 
-{{!-- CHECK IN / OUT MODAL --}}
+{{!-- CHECK IN MODAL --}}
 <div class="modal checkInModal" id="checkInModal" tabindex="-1" role="dialog" aria-labelledby="checkInModal"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Check In ( Add stock)</h5>
+            <div class="modal-header" style="background-color: #cbfbfe;">
+                <h5 class="modal-title" id="exampleModalLongTitle">Check In <span style="color:#509194 ;"> ( Add stock )</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input id="date" autocomplete="off" required type="text" class="form-control shadow-none"
+                            placeholder="dd/mm/yyyy" name="date">
+                        <script>
+                            $('.checkInModal input[name="date"]').val(moment().format('DD/MM/YYYY'))
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input id="quantity" required type="number" class="form-control shadow-none" name="quantity"
+                            placeholder="enter product quantity">
+                    </div>
+                    <div class="form-group">
+                        <label for="selProductName">Product name</label>
+                        <select id='selProductName' style="display:block ;" class="form-control" name="product">
+                            <option value='null'>Choose product</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <textarea class="form-control shadow-none" id="desc" rows="2" style="resize: none;"
+                            name="description" spellcheck="false"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="error"></span>
+                    <button type="submit" class="btn shadow-none"  style="background-color: #a1f8fe;color:#00686e ;">CHECK IN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{!-- CHECK OUT MODAL --}}
+<div class="modal checkOutModal" id="checkOutModal" tabindex="-1" role="dialog" aria-labelledby="checkOutModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #ff6a6a;color:white ">
+                <h5 class="modal-title" id="exampleModalLongTitle">Check Out<span style="color:#7c0909 ;">  ( Dispatch stock ) </span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -430,46 +482,40 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="">Date</label>
-                        <input required type="text" class="form-control shadow-none" name="date"
-                            placeholder="enter date">
-                    </div>
-                    <div class="form-group">
-                        <label for="productName">Product name / SKU</label>
-                        <div class="productName-cont" style="position: relative;">
-                            <input required type="text" class="form-control shadow-none" id="productName"
-                                onkeyup="printPNsuggestions('.product-name-suggestions','.checkInModal #productName')"
-                                autocomplete="off" onblur="verifyProductName();" placeholder="enter product name">
-                            <ul class="product-name-suggestions">
-                            </ul>
-                            <input type="text" class="productID" hidden>
-                        </div>
+                        <input autocomplete="off" required type="text" class="form-control shadow-none"
+                            placeholder="dd/mm/yyyy" name="date">
+                        <script>
+                            $('.checkOutModal input[name="date"]').val(moment().format('DD/MM/YYYY'))
+                        </script>
                     </div>
                     <div class="form-group">
                         <label for="">Quantity</label>
                         <input required type="number" class="form-control shadow-none" name="quantity"
                             placeholder="enter product quantity">
                     </div>
+                    <div class="form-group">
+                        <label for="productName">Product name</label>
+                        <select id='selProductName' style="display:block;" class="form-control" name="product">
+                            <option value='null'>Choose product</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <textarea class="form-control shadow-none" id="desc" rows="2" style="resize: none;"
+                            name="description" spellcheck="false"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn bg-text-base-color shadow-none">Save changes</button>
+                    <span class="error"></span>
+                    <button type="submit" class="btn shadow-none"  style="background-color: #ff9090;color:#7c0909 ;">CHECK OUT</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script>
-    // print product name suggestions
-    //function printPNsuggestions(){
-    //    axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
-    //    $('.bottom-right-section').html(bottomRightSectionHtml)
-    //    if (res.data.success) {
-    //        $('.top-header-middle .reports').fadeOut(0)
-    //        tableHead.html(tableHeadHtml)
-    //        printProducts(res.data.categories)
-    //    }
-    //})
-    //}
-</script>
+
+
+
 <style>
     .checkInModal .product-name-suggestions {
         list-style: none;
@@ -493,180 +539,6 @@
     }
 </style>
 
-
-
-{{!-- MORE OPTION FOR INVENTARY SIDE MENU --}}
-{{!-- <header class="right-side-header" id="right-side-header">
-    <i class="bi bi-list" id="header-toggle"></i>
-</header> --}}
-{{!-- <div class="right-side-l-navbar shadow bg-light" id="nav-bar">
-    <nav class="nav">
-        <div>
-            <a href="javascript:void(0)" class="nav_logo" onclick="$('.right-side-l-navbar').removeClass('show')">
-                Close ( esc )
-            </a>
-            <div class="nav_list">
-                <a href="javascript:void(0)" class="nav_link">
-                    <i class="bi bi-file-earmark-plus-fill nav_icon"></i>
-                    <span class="nav_name">Check In</span>
-                </a>
-                <a href="javascript:void(0)" class="nav_link">
-                    <i class="bi bi-file-earmark-minus-fill nav_icon"></i>
-                    <span class="nav_name">Check Out</span>
-                </a>
-                <a href="javascript:void(0)" class="nav_link">
-                    <i class="bi bi-graph-up nav_icon"></i>
-                    <span class="nav_name">Reports</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</div> --}}
-{{!--
-<style>
-    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
-
-    :root {
-        --header-height: 3rem;
-        --nav-width: 68px;
-        --first-color: #4723D9;
-        --first-color-light: #AFA5D9;
-        --white-color: #F7F6FB;
-        --body-font: 'Nunito', sans-serif;
-        --normal-font-size: 1rem;
-        --z-fixed: 100
-    }
-
-    *,
-    ::before,
-    ::after {
-        box-sizing: border-box
-    }
-
-    .right-side-header a {
-        text-decoration: none
-    }
-
-    .right-side-header {
-        width: 100%;
-        height: var(--header-height);
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1rem;
-        background-color: var(--white-color);
-        z-index: var(--z-fixed);
-        transition: .5s
-    }
-
-
-    .right-side-l-navbar {
-        position: fixed;
-        bottom: 0;
-        right: -30%;
-        width: var(--nav-width);
-        height: 100vh;
-        background-color: var(--first-color);
-        padding: .5rem 1rem 0 0;
-        transition: .5s;
-        z-index: var(--z-fixed)
-    }
-
-    .right-side-l-navbar .nav {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden
-    }
-
-    .right-side-l-navbar .nav_logo,
-    .right-side-l-navbar .nav_link {
-        display: grid;
-        grid-template-columns: max-content max-content;
-        align-items: center;
-        column-gap: 1rem;
-        padding: .5rem 0 .5rem 1.5rem
-    }
-
-    .right-side-l-navbar .nav_logo {
-        margin-bottom: 2rem;
-    }
-
-    .right-side-l-navbar .nav_link {
-        position: relative;
-        color: #888888;
-        margin-bottom: 0.5rem;
-        transition: .3s
-    }
-
-    .right-side-l-navbar .nav_link:hover {
-        background-color: #26ABE2;
-        color: white;
-    }
-
-    .right-side-l-navbar .nav_icon {
-        font-size: 1.25rem
-    }
-
-    .show {
-        right: 0
-    }
-
-    .body-pd {
-        padding-left: calc(var(--nav-width) + 1rem)
-    }
-
-    .right-side-l-navbar.active {
-        color: var(--white-color)
-    }
-
-    .right-side-l-navbar .active::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        width: 2px;
-        height: 32px;
-        background-color: var(--white-color)
-    }
-
-    .right-side-l-navbar .height-100 {
-        height: 100vh
-    }
-
-    @media screen and (min-width: 768px) {
-
-        .right-side-header {
-            height: calc(var(--header-height) + 1rem);
-            padding: 0 2rem 0 calc(var(--nav-width) + 2rem)
-        }
-
-        .right-side-header .header_img {
-            width: 40px;
-            height: 40px
-        }
-
-        .right-side-header .header_img img {
-            width: 45px
-        }
-
-        .right-side-l-navbar {
-            right: -6.3em;
-            padding: 1rem 1rem 0 0
-        }
-
-        .show {
-            width: calc(var(--nav-width) + 222px)
-        }
-
-        .body-pd {
-            padding-left: calc(var(--nav-width) + 188px)
-        }
-    }
-</style> --}}
 {{!-- BOTTOM RIGHT FIXED SECTION --}}
 <div style="position: absolute;right:1em;bottom:1em" class="bottom-right-section">
     {{!-- <button class="btn bg-text-base-color shadow-none" onclick="$('.right-side-l-navbar').toggleClass('show')"><i
@@ -680,8 +552,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://jquery.app/jqueryscripttop.css">
+<link rel="stylesheet"
+    href="https://www.jqueryscript.net/demo/Easy-Searchable-Filterable-Select-List-with-jQuery/jquery.searchableSelect.css">
+<script
+    src="https://www.jqueryscript.net/demo/Easy-Searchable-Filterable-Select-List-with-jQuery/jquery.searchableSelect.js"></script>
+
 {{/inline}}
+{{#*inline "script"}}
 <script>
     warehouseID = `{{{warehouseID}}}`
 </script>
 <script src="/js/admin/warehouse/warehouse.js"></script>
+{{/inline}}

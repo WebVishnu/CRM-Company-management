@@ -31,9 +31,22 @@ const wareHouse = mongoose.Schema({
                     rate: { type: 'string' },
                     minimumStock: { type: 'string' },
                     // maximumStock: { type: 'string' },
-                    currentStock: { type: 'string',default:"0" },
+                    currentStock: { type: 'number', default: 0, min: 0 },
                     SKU: { type: 'string' },
-                    stockHistory:[]
+                    stockHistory: [
+                        {
+                            createdBy: {
+                                adminName: { type: 'string' },
+                                date: { type: 'string' },
+                                adminId: { type: 'string' },
+                            },
+                            cmd: { type: 'string' },
+                            quantity: { type: 'number' },
+                            productName: { type: 'string' },
+                            description: { type: 'string' },
+                            productID: { type: 'string' },
+                        }
+                    ]
                 }
             ]
         }
