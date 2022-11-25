@@ -213,6 +213,36 @@
             top: 0em;
         }
     }
+
+    .details-container {
+        height: 100vh;
+        width: calc(100vw - 16.5em);
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 999;
+        padding: 2em;
+        overflow-x: hidden;
+    }
+    @media (max-width: 1200px) {
+        .details-container{
+            width: 100vw;
+        }
+    }
+    /*@media (max-width: 600px) {
+        .details-container{
+            padding: 1em 0;
+            top: 0;
+            
+        }
+    }
+     @media (max-width: 368px) {
+        .details-container{
+            top: -11.11em;
+        }
+    }*/
+
 </style>
 
 <body>

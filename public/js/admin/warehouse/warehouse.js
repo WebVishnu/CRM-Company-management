@@ -21,6 +21,9 @@ function getAllProducts() {
 }
 
 
+
+
+
 inventory()
 // PRINT INVENTORY 
 function inventory() {
@@ -44,7 +47,7 @@ function inventory() {
                 category.products.forEach(product => {
                     if (parseInt(product.currentStock) != 0) {
                         tableBody.append(`
-                            <tr>
+                            <tr onclick='openInventoryProductDesc(${JSON.stringify(product)},${JSON.stringify(category.categoryName)})'>
                                 <td class="text-truncate px-3">${product.productName}</td>
                                 <td class="text-truncate px-3">${category.categoryName}</td>
                                 <td class="text-truncate px-3">₹ ${product.rate}</td>
@@ -134,10 +137,11 @@ function openNewItemModal() {
 // PRODUCT IMG CMD
 function ProductImgCmd(cmd, url) {
     if (cmd == "show") {
-        // HIDE BACKGROUND OF PRODUCT IMG
+        // ADD NEW BACKGROUND IMAGE TO PRODUCT IMAGE
         $('.add-new-item-modal .product-img div').addClass('active').attr('style', `background:url('${url}')`);
         $('.add-new-item-modal .product-img div p').fadeOut(0)
         $('.add-new-item-modal .product-img div i').fadeOut(0)
+        $('.add-new-item-modal .stockHistory').fadeIn(0)
         $('.add-new-item-modal .product-img div').off("click").css('cursor', 'auto');
         $('.add-new-item-modal .product-img').parent().children('.font-weight-bold').fadeOut(0)
         $('.add-new-item-modal input').prop('readonly', true)
@@ -147,7 +151,7 @@ function ProductImgCmd(cmd, url) {
         $('.add-new-item-modal .sku-input i').fadeOut(0)
         addNewCategory("remove")
     } else if (cmd == "hide") {
-        // SHOW BACKGROUND OF PRODUCT IMG
+        // SET DEFAULT STYLE TO PRODUCT IMAGE
         $('.add-new-item-modal .product-img div').removeClass('active').attr('style', `background:url("")`);
         $('.add-new-item-modal .product-img div p').fadeIn(0)
         $('.add-new-item-modal .product-img div i').fadeIn(0)
@@ -160,7 +164,35 @@ function ProductImgCmd(cmd, url) {
         $('.add-new-item-modal h4').html('Create new product')
         $('.add-new-item-modal .newProductFooterSec').fadeIn(0)
         $('.add-new-item-modal .sku-input i').fadeIn(0)
+        $('.add-new-item-modal .stockHistory').fadeOut(0)
     }
+}
+
+// product description
+function openInventoryProductDesc(product, category) {
+    productFields = Object.keys(product)
+    $(`.inventary-product-details`).fadeIn(0)
+    $(`.inventary-product-details h5[data-info="category"]`).html(category).attr({ "data-bs-original-title": category })
+    $(`.inventary-product-details .heading span`).html(product.productName)
+    $('.inventary-product-details .filterStockHistory').val("all").change();
+    $('.inventary-product-details .filterStockHistory').attr('onclick', `filterStockHistory(${JSON.stringify(product.stockHistory)})`)
+    $(`.inventary-product-details .heading img`).attr("src", `/adminUploads/products/img/${product.productImg}`)
+    productFields.forEach(field => {
+        $(`.inventary-product-details h5[data-info="${field}"]`).html(product[field])
+    });
+    $(`.inventary-product-details .stock-history`).html('')
+    product.stockHistory.forEach(info => {
+        $(`.inventary-product-details .stock-history`).append(`
+        <a href="javascript:void(0)" class="list-group-item my-2 list-group-item-action flex-column align-items-start ${(info.cmd == "-") ? "danger" : "success"}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">${info.createdBy.adminName}</h5>
+                <small>${info.createdBy.date}</small>
+            </div>
+            <h6>Quantity : ${info.quantity}</h6>
+            <p class="mb-1">${info.description}</p>
+        </a>`)
+    });
+
 }
 
 // product description
@@ -172,6 +204,8 @@ function openProductDesc(product, category) {
         $(`.add-new-item-modal input[name="${field}"]`).val(product[field])
         $(`.add-new-item-modal select[name="${field}"]`).html(`<option value="${product[field]}">${product[field]}</option>`).prop('disabled', true);
     });
+    $('.add-new-item-modal .stockHistory .list-group').html('')
+    printStockHistory(product.stockHistory , ".add-new-item-modal .stockHistory .list-group")
     $('.add-new-item-modal').removeClass('hide')
 }
 
@@ -237,9 +271,9 @@ async function generateSKU(form) {
 $('#checkInModal form').on('submit', (e) => {
     e.preventDefault()
     data = _.object($('.checkInModal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
-    if(data.quantity == "0"){
+    if (data.quantity == "0") {
         $("#checkInModal .error").html("Quantity must be greater than 0")
-    }else if (data.product) {
+    } else if (data.product) {
         axios.post(`/api/v1/warehouse/${warehouseID}/products/stock/add`, data).then(res => {
             if (res.data.success) {
                 $('#checkInModal button.close').click()
@@ -247,7 +281,6 @@ $('#checkInModal form').on('submit', (e) => {
                 inventory()
             } else {
                 $('#checkInModal button.close').click()
-                console.log(res.data.success)
             }
         })
     } else {
@@ -259,9 +292,9 @@ $('#checkInModal form').on('submit', (e) => {
 $('#checkOutModal form').on('submit', (e) => {
     e.preventDefault()
     data = _.object($('.checkOutModal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
-    if(data.quantity == "0"){
+    if (data.quantity == "0") {
         $("#checkOutModal .error").html("Quantity must be greater than 0")
-    }else if (data.product) {
+    } else if (data.product) {
         axios.post(`/api/v1/warehouse/${warehouseID}/products/stock/remove`, data).then(res => {
             if (res.data.success) {
                 $('#checkOutModal button.close').click()
@@ -271,7 +304,7 @@ $('#checkOutModal form').on('submit', (e) => {
                 console.log("error")
                 throw "There is not enough stock to check out"
             }
-        }).catch(err=>{
+        }).catch(err => {
             $("#checkOutModal .error").html(`${err}`)
             console.log(err)
         })
@@ -306,6 +339,8 @@ $("#checkOutModal").on('shown.bs.modal', () => {
 keyboardJS.bind('esc', (e) => {
     $('.add-new-item-modal').addClass('hide')
     $('.right-side-l-navbar').removeClass('show')
+    $(`.inventary-product-details`).fadeOut(10)
+    $('#viewProductStockHistory').fadeOut(100)
 });
 
 keyboardJS.bind('f1', (e) => {
@@ -314,7 +349,7 @@ keyboardJS.bind('f1', (e) => {
     $('#checkOutModal button.close').click()
     $("#checkOutModal").modal('hide')
     inventoryHeader = $(`.top-header-filter .new-design-button[data-filter="inventory"]`)
-    if(!inventoryHeader.hasClass('active')){
+    if (!inventoryHeader.hasClass('active')) {
         $('.top-header-filter .new-design-button').removeClass('active')
         inventoryHeader.addClass('active')
         inventory()
@@ -328,9 +363,45 @@ keyboardJS.bind('f2', (e) => {
     $('#checkInModal button.close').click()
     $("#checkInModal").modal('hide')
     inventoryHeader = $(`.top-header-filter .new-design-button[data-filter="inventory"]`)
-    if(!inventoryHeader.hasClass('active')){
+    if (!inventoryHeader.hasClass('active')) {
         $('.top-header-filter .new-design-button').removeClass('active')
         inventoryHeader.addClass('active')
         inventory()
     }
 });
+
+
+// FILTER ARRAY OF OBJECT
+function filterArrDate(from, to, arr) {
+    var fmt = days => {
+        var dat = new Date((new Date()).getTime() + days * 86400000);
+        var dd = String(dat.getDate()).padStart(2, '0'),
+            mm = String(dat.getMonth() + 1).padStart(2, '0'),
+            yyyy = dat.getFullYear();
+        return yyyy + '-' + mm + '-' + dd;
+    }
+    var d1 = fmt(from), d2 = fmt(to);
+    var filteredArr = arr.filter(({ createdBy }) => {
+        dateArr = createdBy.date.split('/')
+        date = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
+        return date >= d1 && date <= d2
+    })
+
+    return filteredArr
+}
+
+// PRINT STOCK HISTORY ARRAY 
+function printStockHistory(arr , eleClass) {
+    arr.forEach(info => {
+        $(`${eleClass}`).html('')
+        $(`${eleClass}`).append(`
+        <a href="javascript:void(0)" class="list-group-item my-2 list-group-item-action flex-column align-items-start ${(info.cmd == "-") ? "danger" : "success"}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">${info.createdBy.adminName}</h5>
+                <small>${info.createdBy.date}</small>
+            </div>
+            <h6>Quantity : ${info.quantity}</h6>
+            <p class="mb-1">${info.description}</p>
+        </a>`)
+    })
+}

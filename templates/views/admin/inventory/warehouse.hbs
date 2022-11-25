@@ -1,7 +1,11 @@
 {{>adminHeader}}
 {{#> style}}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Hind+Siliguri&family=Montserrat:wght@500&family=Mukta:wght@700&family=Open+Sans:wght@700&family=Raleway:wght@500&family=Roboto:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Amaranth:ital@1&family=Hind+Siliguri&family=Montserrat:wght@500&family=Mukta:wght@700&family=Open+Sans:wght@700&family=Raleway:wght@500&family=Roboto:wght@400;700&display=swap');
+
+    * {
+        word-break: break-word;
+    }
 
     :root {
         --base-dark-color: #5C8EB5;
@@ -235,6 +239,86 @@
     .searchable-select {
         width: 100%;
     }
+
+    .inventary-product-details .heading {
+        font-family: 'Roboto', sans-serif;
+        border-bottom: 1px solid #e7e7e7;
+        padding-bottom: 1em;
+    }
+
+    .inventary-product-details .product-info {
+        border-right: 1px solid #e7e7e7;
+    }
+
+    @media (max-width:768px) {
+        .inventary-product-details .product-info {
+            border-right: none;
+            border-bottom: 1px solid #f2f2f2
+        }
+    }
+
+    .inventary-product-details .product-info h6 {
+        color: #5b5b5b;
+    }
+
+    .inventary-product-details .stock-history .success {
+        background-color: #3eb940 !important;
+        color: white !important;
+    }
+
+    .inventary-product-details .stock-history .danger {
+        background-color: #d2382a;
+        color: white !important;
+    }
+
+    /*  VIEW PRODUCT HSITORY DIALOG BOX  */
+    .viewProductStockHistory {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+    }
+
+    .viewProductStockHistory .heading {
+        font-size: 22px;
+        font-weight: 500;
+        text-align: center;
+        margin: 1em;
+    }
+
+    .viewProductStockHistory .body {
+        height: 37em;
+        width: 30em;
+        overflow: auto;
+        margin: 1em 1em 0 1em;
+    }
+
+    .viewProductStockHistory .stock-history .success {
+        background-color: #3eb940 !important;
+        color: white !important;
+    }
+
+    .viewProductStockHistory .stock-history .danger {
+        background-color: #d2382a;
+        color: white !important;
+    }
+
+    @media (max-width:817px) {
+        .viewProductStockHistory {
+            width: 100%;
+        }
+
+        .viewProductStockHistory {
+            margin: 0;
+            height: 100vh;
+        }
+
+        .viewProductStockHistory .body {
+            height: 89%;
+            width: 100%;
+        }
+    }
 </style>
 {{/style}}
 {{#*inline "body"}}
@@ -271,21 +355,13 @@
             </div>
         </div>
     </div>
-</div>
-{{!-- <div class="container-fluid reports-details-container mt-3">
-    <div class="row">
-        <div class="col">
-            <span class="reports-details">
-                <p>Total Stock value</p>
-            </span>
-        </div>
-    </div>
-</div> --}}
 
-<div class="container-fluid px-md-4">
-    <div class="row">
+</div>
+
+<div class="container-fluid px-md-4 mb-5 pb-5" style="position: relative;">
+    <div class="row warehouse-table-container">
         <div class="col">
-            <table class="mt-3 warehouse-table-container">
+            <table class="mt-3">
                 <thead>
                     <tr>
                         <th scope="col px-2" class="text-truncate">Product name</th>
@@ -298,6 +374,71 @@
                 <tbody id="warehouse-table-body">
                 </tbody>
             </table>
+        </div>
+    </div>
+    {{!-- INVENTORY PRODUCT DETAILS --}}
+    <div class="details-container inventary-product-details ps-md-5 ps-4" style="display: none;">
+        <div class="row">
+            <div class="col">
+                <h2 class="heading d-flex align-items-center"><img src="/images/admin1.jpg" class="rounded-circle me-4"
+                        style="height: 1.5em;width:1.5em;object-fit:cover;object-position:center"> <span> V Bond</span>
+                </h2>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6>Category</h6>
+                <h5 data-info="category" data-toggle="tooltip" data-placement="top" class="text-truncate">Finished
+                    products</h5>
+            </div>
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6>Stock</h6>
+                <h5 data-info="currentStock">200</h5>
+            </div>
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6>Unit</h6>
+                <h5 data-info="unit">Bundle</h5>
+            </div>
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6>Rate</h6>
+                <h5 data-info="rate">20000</h5>
+            </div>
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6>Min. Stock</h6>
+                <h5 data-info="minimumStock">20000</h5>
+            </div>
+            <div class="col-md-2 py-2 product-info pe-2">
+                <h6> <span data-toggle="tooltip" data-placement="top" title="Stock Keeping Unit"> SKU</span></h6>
+                <h5 data-info="SKU">20000</h5>
+            </div>
+        </div>
+        <div class="row mb-5 pb-5">
+            <div class="col-12 py-4" style="border-top: 1px solid #cccccc;">
+                <h5 class="d-flex justify-content-between align-items-center">
+                    <span> Stock history</span>
+                    <select class="form-select filterStockHistory" style="width: 10em;">
+                        <option value="all">All</option>
+                        <option value="last-month">Last Month</option>
+                    </select>
+                    <script>
+                        function filterStockHistory(arr) {
+                            select = $('.inventary-product-details .filterStockHistory').val()
+                            if (select != "all") {
+                                filteredArr = filterArrDate(-30, 0, arr)
+
+                            } else {
+                                filteredArr = arr
+                            }
+                            $('.inventary-product-details .stock-history.list-group').html('')
+                            printStockHistory(filteredArr, ".inventary-product-details .stock-history.list-group")
+                        }
+                    </script>
+                </h5>
+            </div>
+            <div class="col-12">
+                <div class="list-group stock-history">
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -397,6 +538,25 @@
                                 data-toggle="tooltip" data-html="true" title="Generate SKU"></i>
                         </div>
                     </div>
+                    {{!-- VIEW STOCK HISTORY ADD NEW PRODUCT SECTION --}}
+                    <div class="form-group stockHistory">
+                        <button type="button" class="btn bg-success text-light w-100 shadow-none"
+                            onclick=" $('#viewProductStockHistory').fadeIn(100)">
+                            View Stock History
+                        </button>
+
+                        <div class="viewProductStockHistory shadow" id="viewProductStockHistory" style="display: none;">
+                            <div class="heading ">
+                                <span class="cursor-pointer" onclick="$('#viewProductStockHistory').fadeOut(100)">
+                                    Close
+                                </span>
+                            </div>
+                            <div class="body">
+                                <div class="list-group stock-history">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {{!-- <div class="form-group">
                         <label for="currentStock" class="font-weight-bold text-secondary">Current stock</label>
                         <input required type="text" class="form-control shadow-none" name="currentStock"
@@ -419,13 +579,17 @@
 </div>
 
 
+
+
+
 {{!-- CHECK IN MODAL --}}
 <div class="modal checkInModal" id="checkInModal" tabindex="-1" role="dialog" aria-labelledby="checkInModal"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #cbfbfe;">
-                <h5 class="modal-title" id="exampleModalLongTitle">Check In <span style="color:#509194 ;"> ( Add stock )</span></h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Check In <span style="color:#509194 ;"> ( Add stock
+                        )</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -459,7 +623,8 @@
                 </div>
                 <div class="modal-footer">
                     <span class="error"></span>
-                    <button type="submit" class="btn shadow-none"  style="background-color: #a1f8fe;color:#00686e ;">CHECK IN</button>
+                    <button type="submit" class="btn shadow-none"
+                        style="background-color: #a1f8fe;color:#00686e ;">CHECK IN</button>
                 </div>
             </form>
         </div>
@@ -473,7 +638,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #ff6a6a;color:white ">
-                <h5 class="modal-title" id="exampleModalLongTitle">Check Out<span style="color:#7c0909 ;">  ( Dispatch stock ) </span></h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Check Out<span style="color:#7c0909 ;"> ( Dispatch
+                        stock ) </span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -507,40 +673,16 @@
                 </div>
                 <div class="modal-footer">
                     <span class="error"></span>
-                    <button type="submit" class="btn shadow-none"  style="background-color: #ff9090;color:#7c0909 ;">CHECK OUT</button>
+                    <button type="submit" class="btn shadow-none"
+                        style="background-color: #ff9090;color:#7c0909 ;">CHECK OUT</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
-
-<style>
-    .checkInModal .product-name-suggestions {
-        list-style: none;
-        position: absolute;
-        left: 0em;
-        width: 100%;
-        top: 2.4em;
-        background-color: #fff;
-        padding: 0;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    }
-
-    .checkInModal .product-name-suggestions li {
-        padding: 0.5em 0 0.5em 23px;
-        cursor: pointer;
-        border-bottom: 1px solid #f2f2f2;
-    }
-
-    .checkInModal .product-name-suggestions li:hover {
-        background-color: #fafafa;
-    }
-</style>
-
 {{!-- BOTTOM RIGHT FIXED SECTION --}}
-<div style="position: absolute;right:1em;bottom:1em" class="bottom-right-section">
+<div style="position: fixed;right:1em;bottom:1em" class="bottom-right-section">
     {{!-- <button class="btn bg-text-base-color shadow-none" onclick="$('.right-side-l-navbar').toggleClass('show')"><i
             class="bi bi-list"></i></button> --}}
     <button class="btn bg-text-base-color shadow-none" onclick="openNewItemModal()">Register Item</button>
