@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { createNewWarehouse, addNewProduct ,addStock , removeStock} = require(path.join(__dirname, '../apisController/warehouseController'));
+const { createNewWarehouse, addNewProduct, addStock, removeStock } = require(path.join(__dirname, '../apisController/warehouseController'));
 const { authorizedRoles, isAuthenticatedWarehouse } = require(path.join(__dirname, "../middlewares/auth"));
 const multer = require('multer')
 const warehouse = require(path.join(__dirname, "../models/inventory/warehouseSchema.js"));
@@ -91,21 +91,54 @@ router.post('/api/v1/warehouse/:warehouseID/products/add-new', productStorageUpl
   else { res.send({ success: false, }); }
 })
 
-
-// GET ALL CATEGORIES IN WAREHOUSE
+// GET ALL CATEGORY IN WAREHOUSE
 router.get('/api/v1/warehouse/:warehouseID/category/all', async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
-    await warehouse.findOne({ '_id': req.params.warehouseID }).then(data => {
-      res.send({
-        success: true,
-        categories: data.categories
+      await warehouse.findOne({_id:req.params.warehouseID}).then(data => {
+        res.send({
+          success: true,
+          categories: data.categories
+        })
+      }).catch(err => {
+        console.log(err)
+        res.send({
+          success: false,
+        })
       })
-    }).catch(err => {
-      console.log(err)
-      res.send({
-        success: false,
+  }
+  else { res.send({ success: false, }); }
+})
+
+// GET ALL PRODUCTS IN WAREHOUSE
+router.get('/api/v1/warehouse/:warehouseID/products/all', async (req, res, next) => {
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
+    temp =
+      await warehouse.aggregate([
+        { $group: { '_id': "$_id", "products": { "$first": "$categories.products" } } },
+        {
+          $project: {
+            products: {
+              $reduce: {
+                input: "$products",
+                initialValue: [],
+                in: {
+                  $concatArrays: ["$$this", "$$value"]
+                }
+              }
+            }
+          }
+        },
+      ]).then(data => {
+        res.send({
+          success: true,
+          products: data[0].products
+        })
+      }).catch(err => {
+        console.log(err)
+        res.send({
+          success: false,
+        })
       })
-    })
   }
   else { res.send({ success: false, }); }
 })
@@ -114,7 +147,7 @@ router.get('/api/v1/warehouse/:warehouseID/category/all', async (req, res, next)
 router.get('/api/v1/warehouse/:warehouseID/products/find/:query', async (req, res, next) => {
   if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {
     await warehouse.aggregate([
-      { $match: { $or: [{ 'categories.products.productName': { $regex: req.params.query, $options: 'i' } },{ 'categories.products.SKU': { $regex: req.params.query, $options: 'i' } }] } },
+      { $match: { $or: [{ 'categories.products.productName': { $regex: req.params.query, $options: 'i' } }, { 'categories.products.SKU': { $regex: req.params.query, $options: 'i' } }] } },
       { $group: { '_id': "$_id", "products": { "$first": "$categories.products" } } },
       {
         $project: {
@@ -138,13 +171,13 @@ router.get('/api/v1/warehouse/:warehouseID/products/find/:query', async (req, re
 
 // ADD STOCK
 router.post('/api/v1/warehouse/:warehouseID/products/stock/add', async (req, res, next) => {
-  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {addStock(req, res, next)}
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) { addStock(req, res, next) }
   else { res.send({ success: false, }); }
 })
 
 // REMOVE STOCK
 router.post('/api/v1/warehouse/:warehouseID/products/stock/remove', async (req, res, next) => {
-  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) {removeStock(req, res, next)}
+  if (await isAuthenticatedWarehouse(req, req.params.warehouseID)) { removeStock(req, res, next) }
   else { res.send({ success: false, }); }
 })
 

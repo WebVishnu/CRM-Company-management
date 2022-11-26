@@ -4,23 +4,22 @@ const tableHeadHtml = $('.warehouse-table-container thead').html()
 const bottomRightSectionHtml = $('.bottom-right-section').html()
 const productUnitHtml = $(`.add-new-item-modal select[name="unit"]`).html()
 const formError = $('.add-new-item-modal .error')
-$('.input-group.date').datepicker({
-    format: 'mm/dd/yyyy'
-})
 // get all products
 function getAllProducts() {
-    axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
+    axios.get(`/api/v1/warehouse/${warehouseID}/products/all`).then(res => {
         $('.bottom-right-section').html(bottomRightSectionHtml)
         if (res.data.success) {
-
             $('.top-header-middle .reports').fadeOut(0)
-            tableHead.html(tableHeadHtml)
-            printProducts(res.data.categories)
+            tableHead.html(`
+                <th scope="col" class="text-truncate">Name</th>
+                <th scope="col" class="text-truncate">Category</th>
+                <th scope="col" class="text-truncate">Rate</th>
+                <th scope="col" class="text-truncate">Min stock</th>
+                <th scope="col" class="text-truncate">Unit</th>`)
+            printProducts(res.data.products)
         }
     })
 }
-
-
 
 
 
@@ -28,8 +27,22 @@ inventory()
 // PRINT INVENTORY 
 function inventory() {
     $('.top-header-middle .reports').fadeIn(0)
-    axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
+    axios.get(`/api/v1/warehouse/${warehouseID}/products/all`).then(res => {
         if (res.data.success) {
+            var totalStockValue = 0
+            var totalOS = 0 //  total out of stock
+            var totalIS = 0 // total in stock
+            res.data.products.forEach(product => {
+                totalStockValue += parseInt(product.rate) * parseInt(product.currentStock)
+                if (product.currentStock < parseInt(product.minimumStock)) {
+                    totalOS += 1
+                } else if (product.currentStock > parseInt(product.minimumStock)) {
+                    totalIS += 1
+                }
+            });
+            $('.reports .total-stock-value h2').html("₹" + totalStockValue)
+            $('.reports .total-out-of-stock h2').html(totalOS)
+            $('.reports .total-in-stock h2').html(totalIS)
             $('.bottom-right-section').html(`
             <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkInModal"> <span class="d-md-inline d-none" style="color:#003153;"> ( F1 )</span> Check In</button>
             <button class="btn bg-text-base-color shadow-none" data-toggle="modal" data-target="#checkOutModal"> <span class="d-md-inline d-none" style="color:#003153;"> ( F2 )</span> Check Out</button>`)
@@ -43,13 +56,12 @@ function inventory() {
                 <th scope="col" class="text-truncate">Status</th>
                 <th scope="col" class="text-truncate">Value</th>`)
             tableBody.html('')
-            res.data.categories.forEach(category => {
-                category.products.forEach(product => {
-                    if (parseInt(product.currentStock) != 0) {
-                        tableBody.append(`
-                            <tr onclick='openInventoryProductDesc(${JSON.stringify(product)},${JSON.stringify(category.categoryName)})'>
+            res.data.products.forEach(product => {
+                if (parseInt(product.currentStock) != 0) {
+                    tableBody.append(`
+                            <tr onclick='openInventoryProductDesc(${JSON.stringify(product)},${JSON.stringify(product.productCategory)})'>
                                 <td class="text-truncate px-3">${product.productName}</td>
-                                <td class="text-truncate px-3">${category.categoryName}</td>
+                                <td class="text-truncate px-3">${product.productCategory}</td>
                                 <td class="text-truncate px-3">₹ ${product.rate}</td>
                                 <td class="text-truncate px-3">${product.currentStock}</td>
                                 <td class="text-truncate px-3">${product.minimumStock}</td>
@@ -57,8 +69,7 @@ function inventory() {
                                 <td class="text-truncate px-3"">${parseInt(product.currentStock) > parseInt(product.minimumStock) ? `<span class="stock-status-in" data-toggle="tooltip" data-placement="top" title="In stock"><i class="bi bi-check2-circle"></i></span>` : `<span class="stock-status-out" data-toggle="tooltip" data-placement="top" title="Out of stock"><i class="bi bi-x-circle"></i></span>`}</td>
                                 <td class="text-truncate px-3">₹ ${parseInt(product.rate) * parseInt(product.currentStock)}</td>
                             </tr>`)
-                    }
-                });
+                }
             });
             $('[data-toggle="tooltip"]').tooltip()
         }
@@ -70,15 +81,15 @@ function inventory() {
 
 printProductsCheckinOut()
 // print all prodcuts in check in 
-async function printProductsCheckinOut() {
+async function printProductsCheckinOut() { // check in and check out
     productSelCheckIn = $(`.checkInModal #selProductName`)
     productSelCheckOut = $(`.checkOutModal #selProductName`)
     productSelCheckIn.html(`<option value='null'>Choose product</option>`)
     productSelCheckOut.html(`<option value='null'>Choose product</option>`)
     await axios.get(`/api/v1/warehouse/${warehouseID}/category/all`).then(res => {
         if (res.data.success) {
-            res.data.categories.forEach((category, ci) => {
-                category.products.forEach((product, pi) => {
+            res.data.categories.forEach((category, ci) => { // ci == category index
+                category.products.forEach((product, pi) => { // pi == product index
                     productSelCheckIn.append(`<option value='${product.productName} >> ${product._id} >> ${pi} >> ${ci} >> ${product.unit}'>${product.productName}</option>`)
                     productSelCheckOut.append(`<option value='${product.productName} >> ${product._id} >> ${pi} >> ${ci} >> ${product.unit}'>${product.productName}</option>`)
                 });
@@ -93,19 +104,17 @@ async function printProductsCheckinOut() {
 
 
 // print products
-function printProducts(categories) {
+function printProducts(products) {
     tableBody.html('')
-    categories.forEach(category => {
-        category.products.forEach(product => {
-            tableBody.append(`
-            <tr onclick='openProductDesc(${JSON.stringify(product)},"${category.categoryName}")'>
-                <td class="text-truncate px-3">${product.productName}</td>
-                <td class="text-truncate px-3">${category.categoryName}</td>
-                <td class="text-truncate px-3">₹ ${product.rate}</td>
-                <td class="text-truncate px-3">${product.minimumStock}</td>
-                <td class="text-truncate px-3">${product.unit}</td>
-            </tr>`)
-        });
+    products.forEach(product => {
+        tableBody.append(`
+        <tr onclick='openProductDesc(${JSON.stringify(product)},"${product.productCategory}")'>
+            <td class="text-truncate px-3">${product.productName}</td>
+            <td class="text-truncate px-3">${product.productCategory}</td>
+            <td class="text-truncate px-3">₹ ${product.rate}</td>
+            <td class="text-truncate px-3">${product.minimumStock}</td>
+            <td class="text-truncate px-3">${product.unit}</td>
+        </tr>`)
     });
 }
 
@@ -124,7 +133,7 @@ function openNewItemModal() {
             if (res.data.categories.length > 0) {
                 res.data.categories.forEach(category => {
                     $('.add-new-item-modal select[name="categoryName"]').append(`<option value="${category.categoryName}">${category.categoryName}</option>`).prop('disabled', false);
-                });
+                })
             } else {
                 $('.add-new-item-modal select[name="categoryName"]').append(`<option value="null">Please add new category</option>`).prop('disabled', false);;
             }
@@ -205,7 +214,7 @@ function openProductDesc(product, category) {
         $(`.add-new-item-modal select[name="${field}"]`).html(`<option value="${product[field]}">${product[field]}</option>`).prop('disabled', true);
     });
     $('.add-new-item-modal .stockHistory .list-group').html('')
-    printStockHistory(product.stockHistory , ".add-new-item-modal .stockHistory .list-group")
+    printStockHistory(product.stockHistory, ".add-new-item-modal .stockHistory .list-group")
     $('.add-new-item-modal').removeClass('hide')
 }
 
@@ -236,7 +245,6 @@ $('.add-new-item-modal .product-info form').on('submit', (e) => {
 })
 
 // GENERATE stock keeping unit ( SKU )
-
 async function generateSKU(form) {
     formError.html('')
     data = _.object(form.serializeArray().map(function (v) { return [v.name, v.value]; }))
@@ -372,29 +380,29 @@ keyboardJS.bind('f2', (e) => {
 
 
 // FILTER ARRAY OF OBJECT
+// =================================================================
+// filter date
 function filterArrDate(from, to, arr) {
-    var fmt = days => {
-        var dat = new Date((new Date()).getTime() + days * 86400000);
-        var dd = String(dat.getDate()).padStart(2, '0'),
-            mm = String(dat.getMonth() + 1).padStart(2, '0'),
-            yyyy = dat.getFullYear();
-        return yyyy + '-' + mm + '-' + dd;
-    }
-    var d1 = fmt(from), d2 = fmt(to);
     var filteredArr = arr.filter(({ createdBy }) => {
         dateArr = createdBy.date.split('/')
         date = `${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`
-        return date >= d1 && date <= d2
+        return date >= from && date <= to
     })
 
     return filteredArr
 }
 
+//SORT INVENTORY
+function sortInventory(cmd, arr) {
+    if (cmd == "status") {
+    }
+}
+
 // PRINT STOCK HISTORY ARRAY 
-function printStockHistory(arr , eleClass) {
+function printStockHistory(arr, eleSelector) {
+    $(`${eleSelector}`).html('')
     arr.forEach(info => {
-        $(`${eleClass}`).html('')
-        $(`${eleClass}`).append(`
+        $(`${eleSelector}`).append(`
         <a href="javascript:void(0)" class="list-group-item my-2 list-group-item-action flex-column align-items-start ${(info.cmd == "-") ? "danger" : "success"}">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">${info.createdBy.adminName}</h5>

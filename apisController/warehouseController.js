@@ -38,7 +38,6 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
     const { adminToken } = req.cookies;
     const admin = await Admin.findById(adminToken.uID)
     const category = await warehouse.findOne({ 'categories.categoryName': req.body.categoryName })
-    console.log(req.body)
     if (category != null) {
         await warehouse.findOneAndUpdate({ 'categories.categoryName': req.body.categoryName }, {
             $push: {
@@ -49,6 +48,7 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
                         adminId: admin._id,
                     },
                     productName: req.body.productName,
+                    productCategory:req.body.categoryName,
                     productImg: req.file.filename,
                     rate: req.body.rate,
                     minimumStock: req.body.minimumStock,
@@ -83,6 +83,7 @@ exports.addNewProduct = catchAsyncErrors(async (req, res, next) => {
                                 date: moment().format('DD/MM/YYYY'),
                                 adminId: admin._id,
                             },
+                            productCategory:req.body.categoryName,
                             productName: req.body.productName,
                             productImg: req.file.filename,
                             rate: req.body.rate,

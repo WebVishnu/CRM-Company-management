@@ -24,6 +24,7 @@ const wareHouse = mongoose.Schema({
                         date: { type: 'string' },
                         adminId: { type: 'string' },
                     },
+                    productCategory: { type: 'string' },
                     productName: { type: 'string' },
                     productImg: { type: 'string' },
                     unit: { type: 'string' },
