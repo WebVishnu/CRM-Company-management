@@ -57,8 +57,7 @@ function inventory() {
                 <th scope="col" class="text-truncate">Value</th>`)
             tableBody.html('')
             res.data.products.forEach(product => {
-                if (parseInt(product.currentStock) != 0) {
-                    tableBody.append(`
+                tableBody.append(`
                             <tr onclick='openInventoryProductDesc(${JSON.stringify(product)},${JSON.stringify(product.productCategory)})'>
                                 <td class="text-truncate px-3">${product.productName}</td>
                                 <td class="text-truncate px-3">${product.productCategory}</td>
@@ -66,10 +65,9 @@ function inventory() {
                                 <td class="text-truncate px-3">${product.currentStock}</td>
                                 <td class="text-truncate px-3">${product.minimumStock}</td>
                                 <td class="text-truncate px-3">${product.unit}</td>
-                                <td class="text-truncate px-3"">${parseInt(product.currentStock) > parseInt(product.minimumStock) ? `<span class="stock-status-in" data-toggle="tooltip" data-placement="top" title="In stock"><i class="bi bi-check2-circle"></i></span>` : `<span class="stock-status-out" data-toggle="tooltip" data-placement="top" title="Out of stock"><i class="bi bi-x-circle"></i></span>`}</td>
+                                <td class="text-truncate px-3"">${parseInt(product.currentStock) >= parseInt(product.minimumStock) ? `<span class="stock-status-in" data-toggle="tooltip" data-placement="top" title="In stock"><i class="bi bi-check2-circle"></i></span>` : `<span class="stock-status-out" data-toggle="tooltip" data-placement="top" title="Out of stock"><i class="bi bi-x-circle"></i></span>`}</td>
                                 <td class="text-truncate px-3">₹ ${parseInt(product.rate) * parseInt(product.currentStock)}</td>
                             </tr>`)
-                }
             });
             $('[data-toggle="tooltip"]').tooltip()
         }

@@ -204,7 +204,7 @@
         position: absolute;
         transform: translate3d(-90px, 28px, 0px);
         top: 0px;
-        left: -42px!important;
+        left: -42px !important;
         will-change: transform;
     }
 
@@ -360,8 +360,8 @@
         color: #dd7288;
     }
 
-    @media (max-width:768px){
-        .reports .report{
+    @media (max-width:768px) {
+        .reports .report {
             width: 100%;
         }
     }
@@ -404,10 +404,9 @@
                     }
                 }
             </script>
-            <div class="d-md-flex top-header-end d-none">
+            {{!-- <div class="d-md-flex top-header-end d-none">
                 <span class="cursor-pointer new-design-button mx-1">Download Report <i
                         class="bi bi-cloud-download ms-1"></i></span>
-                {{!-- <span class="cursor-pointer  mx-1 ">Filter <i class="bi bi-chevron-down ms-1"></i></span> --}}
                 <div class="dropdown filter" style="position: relative;">
                     <button class="btn new-design-button mx-1 shadow-none" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -422,7 +421,7 @@
                         <a class="dropdown-item" href="javascript:void(0)">Value</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -504,7 +503,6 @@
                     <select class="form-select filterStockHistory" style="width: 10em;">
                         <option value="all">All</option>
                         <option value="last-month">Last Month</option>
-                        <option value="custom">custom</option>
                     </select>
                     <script>
                         function filterStockHistory(arr) {
@@ -513,6 +511,7 @@
                             if (select != "all") {
                                 temp = moment().subtract(30, 'days').calendar().split('/')
                                 from = `${temp[2]}-${temp[0]}-${temp[1]}`;
+                                console.log(from)
                                 to = moment().format('YYYY-MM-DD')
                                 filteredArr = filterArrDate(from, to, arr)
                             }
@@ -781,6 +780,8 @@
     href="https://www.jqueryscript.net/demo/Easy-Searchable-Filterable-Select-List-with-jQuery/jquery.searchableSelect.css">
 <script
     src="https://www.jqueryscript.net/demo/Easy-Searchable-Filterable-Select-List-with-jQuery/jquery.searchableSelect.js"></script>
+
+    {{!-- auto complete     --}}
 {{/inline}}
 {{#*inline "script"}}
 <script>
