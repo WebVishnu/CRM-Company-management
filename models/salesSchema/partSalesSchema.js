@@ -2,12 +2,12 @@ const { default: mongoose } = require("mongoose");
 
 const PartsalesSchema = mongoose.Schema({
     createdBy: {
-        adminName:{
+        adminName: {
             type: 'string',
             required: true,
             default: "No data"
         },
-        adminID:{
+        adminID: {
             type: 'string',
             required: true,
             default: "No data"
@@ -55,9 +55,19 @@ const PartsalesSchema = mongoose.Schema({
                 type: "string",
                 default: "null"
             },
+            warranty: {
+                from: {
+                    type: "string",
+                    default: "0"
+                },
+                to: {
+                    type: "string",
+                    default: "0"
+                }
+            },
         }
     ]
-    
+
 })
 
 

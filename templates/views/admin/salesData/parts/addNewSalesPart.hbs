@@ -79,40 +79,64 @@
                         aria-describedby="helpId" placeholder="enter bar code">
                 </div>
             </div> --}}
-            <div class="col-md-6">
+            {{!-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Warranty</label>
                     <input type="text" class="form-control shadow-none" required name="warranty" id=""
                         aria-describedby="helpId" placeholder="enter warranty">
                 </div>
-            </div>
+            </div> --}}
             <div class="col-md-12">
-                <label for="invoiceDate">Add Parts info</label>
-                <div class="service-report-all-machine-info-inputs">
+                {{!-- <label for="invoiceDate">Add Parts info</label> --}}
+                <div class="service-report-all-parts-info-inputs">
                     <div class="table-responsive-xl">
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th scope="col">Part_Name</th>
                                     <th scope="col">Serial_No.</th>
-                                    <th scope="col">Wty</th>
-                                    <th scope="col">Unit</th>
-                                    <th scope="col">Qty</th>
-                                    <th scope="col">Rate</th>
-                                    <th scope="col">GST@</th>
-                                    <th scope="col">Total</th>
+                                    <th scope="col">Wty From</th>
+                                    <th scope="col">Period</th>
+                                    <th scope="col">type</th>
+                                    <th scope="col">Wty till</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
-                                    <th scope="row"><input type="text" class="form-control shadow-none"></th>
+                                <tr class="row-1">
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
+                                            required name="machineName" aria-describedby="helpId"
+                                            placeholder="part name">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
+                                            required name="machineNum" aria-describedby="helpId" placeholder="part sno">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1 datepicker warranty-input"
+                                            required name="warrantyFrom" onkeyup="updateWarrantyDate(1)" onchange="updateWarrantyDate(1)"
+                                            aria-describedby="helpId" placeholder="warranty from">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1 warranty-input"
+                                            required name="warrantyPeriod" onkeyup="updateWarrantyDate(1)"
+                                            aria-describedby="helpId" value="1" style="width:2.5em;">
+                                    </td>
+                                    <td>
+                                        <select class="form-select warranty-select" style="width:7em ;" onchange="updateWarrantyDate(1)"
+                                            name="warrantyType">
+                                            <option value="years" selected>years</option>
+                                            <option value="months">months</option>
+                                            <option value="weeks">weeks</option>
+                                            <option value="days">days</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" readonly type="text"
+                                            class="form-control shadow-none mx-1 warranty-input" required name="warrantyTo"
+                                            onkeyup="updateWarrantyDate(1)" aria-describedby="helpId"
+                                            placeholder="warranty to">
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
