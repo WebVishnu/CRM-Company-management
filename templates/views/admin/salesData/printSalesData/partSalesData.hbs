@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Service Report #{{report.0.reportNumber}}</title>
+    <link rel="icon" type="image/x-icon" href="/images/vitco-logo.ico" />
+    <meta name="description" content="" />
+
+    <link rel="stylesheet" href="/css/admin/serviceReport/printServiceReport.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    td {
+        padding: 0 !important;
+
+    }
+
+    textarea {
+        overflow: hidden !important;
+    }
+
+    td,
+    th {
+        border: 1px solid grey;
+    }
+
+    .frame-div5 {
+        top: 102px;
+    }
+
+    .a4-1,
+    .frame-div3 {
+        height: 184px;
+    }
+
+    .div2 {
+        left: 47.5px;
+    }
+
+    .div {
+        left: 58px;
+    }
+
+    .div1 {
+        left: 48px;
+    }
+
+    .customer-mobile {
+        top: 23px;
+    }
+
+    .frame-div1 {
+        top: 127px;
+    }
+
+    .invoice-info {
+        position: absolute;
+        top: 84px;
+    }
+
+    .invoice-date {
+        left: 79px;
+    }
+
+    .invoice-num {
+        left: 79px;
+    }
+
+    table {
+        left: 0;
+        width: 88% !important;
+    }
+</style>
+
+<body id="page">
+    <script>
+        // const Machineslength = {{{ length }}}
+        function ObjectId(id) { }
+        let report = {{{ report }}}
+        let option = `{{{ option }}}`
+        let allParts;
+        if(option == "parts"){
+            allParts = [{{{ report.0.parts }}}]
+        }else if(option == "machine"){
+            allParts = [{{{ report.0.machines }}}]
+        }
+        // reportID = `{{reportID}}`
+    </script>
+    <div class="a4-1 d-none">
+
+        <div class="frame-div">
+            <img class="rectangle-icon" alt="" src="/svg/rectangle-783.svg" />
+            <div class="report-no-4545">SALE REPORT NO : #{{report.0.reportNumber}}</div>
+            <img class="group-icon" alt="" src="/svg/VitcoLogo.svg" />
+        </div>
+        <div class="frame-div1">
+            <div class="group-div">
+                <div class="mobile-number">Address :</div>
+                <div class="div">{{report.0.address}}</div>
+            </div>
+            {{!-- <div class="group-div1">
+                <div class="mobile-number"></div>
+                <div class="fgsdgsdfffffffffffffffff-div">
+
+                </div>
+            </div> --}}
+            {{!-- <div class="group-div2">
+                <div class="mobile-number">Created by :</div>
+                <div class="div1">{{report.0.createdBy.adminName}}</div>
+            </div> --}}
+            <div class="frame-div2"></div>
+        </div>
+        <div class="frame-div3">
+            <img class="group-icon1" alt="" src="/svg/printSaleReport.svg" /><img class="group-icon2" alt=""
+                src="/svg/group-66.svg" />
+            <div class="frame-div5">
+                <div class="group-div5">
+                    <div class="customer-name-div">Customer Name:</div>
+                    <div class="ram-prasad-chaurasiya">{{report.0.customerName}}</div>
+                    <div class="frame-div6"></div>
+                </div>
+                <div class="group-div6 customer-mobile">
+                    <div class="mobile-number">Mobile :</div>
+                    <div class="div2">{{report.0.mobileNum}}</div>
+                </div>
+            </div>
+            <div class="invoice-info">
+                <div class="group-div5">
+                    <div class="customer-name-div">Invoice Num :</div>
+                    <div class="invoice-date ram-prasad-chaurasiya">{{report.0.invoiceNum}}</div>
+                    <div class="frame-div6"></div>
+                </div>
+                <div class="group-div6" style="top: 10px;">
+                    <div class="mobile-number">Invoice Date :</div>
+                    <div class="invoice-num div2">{{report.0.invoiceDate}} </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="position:fixed;right:1em;bottom:1em;display:flex;z-index:99">
+        {{!-- <button class="btn mx-1 btn-primary shadow-none download-file-btn print-button "
+            onclick="downloadFile()"><i class="bi bi-download"></i></button> --}}
+        <button class="btn mx-1 btn-primary shadow-none print-button " onclick="printDiv()"><i
+                class="bi bi-printer-fill"></i></button>
+    </div>
+
+
+
+
+    <script src="/js/admin/overflowing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+        integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/admin/sales-data/printPartSaleData/printPartSaleData.js"></script>
+
+</body>
+
+</html>

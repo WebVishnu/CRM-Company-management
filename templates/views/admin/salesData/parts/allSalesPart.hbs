@@ -1,16 +1,52 @@
 {{>adminHeader}}
 {{#*inline "style"}}
 <style>
-    .menu-link[ data-link="sales-data" ] {
+    .menu-link[ data-link="sales-data"] {
         background-color: #26ABE2;
         color: #fff !important;
+    }
+
+    .all-sale-data-row:hover {
+        background-color: #d7f3ff !important;
+    }
+
+    .filter-result-menu {
+        height: 0;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+    }
+
+    .filter-result-menu.active {
+        height: auto;
+        position: relative;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    #print-results-table.active {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        
+    }
+
+    #print-results-table table,
+    #print-results-table td,
+    #print-results-table th {
+        border: 1px solid #595959;
+        border-collapse: collapse;
+    }
+
+    #print-results-table td,
+    #print-results-table th {
+        padding: 0.5em 1em;
     }
 </style>
 {{/inline}}
 
 {{#*inline "body"}}
 <script>
-    
     window.scrollTo(0, 0)
 </script>
 
@@ -22,39 +58,77 @@
 <div class="fixed-bottom-right">
     {{#each admin.permissions}}
     {{#ifeq this.permissionName "all"}}
-    <a href="/vitco-impex/control/sales-report/parts/add-new" class="btn shadow-none bg-text-base-color">
+    <a href="/vitco-impex/control/sales-report/parts/add-new" data-bs-toggle="tooltip" data-bs-placement="top"
+        title="Add new" class="btn shadow-none bg-text-base-color">
         <i class="bi bi-plus-square"></i>
     </a>
     {{/ifeq}}
     {{#ifeq this.permissionName "partSalesData"}}
     {{#each this.permissionKeys}}
     {{#ifeq this.keyName "create"}}
-    <a href="/vitco-impex/control/sales-report/parts/add-new" class="btn shadow-none bg-text-base-color">
+    <a href="/vitco-impex/control/sales-report/parts/add-new" data-bs-toggle="tooltip" data-bs-placement="top"
+        title="Add new" class="btn shadow-none bg-text-base-color">
         <i class="bi bi-plus-square"></i>
     </a>
     {{/ifeq}}
     {{/each}}
     {{/ifeq}}
     {{/each}}
-    <button class="btn shadow-none bg-text-base-color" onclick="refreshAllReports()">
-        <i class="bi bi-arrow-clockwise me-1"></i>Refresh all
+    <button class="btn shadow-none bg-text-base-color" onclick="printReports()" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Print Data">
+        <i class="bi bi-printer"></i>
+    </button>
+    <button class="btn shadow-none bg-text-base-color filter-results-btn"
+        onclick="$('.filter-result-menu').toggleClass('active')" data-bs-toggle="tooltip" data-bs-placement="top"
+        title="Date filter">
+        <i class="bi bi-calendar-date"></i>
+    </button>
+    {{!-- FITER RESULTS --}}
+
+    {{!-- ========================================= --}}
+    <button class="btn shadow-none bg-text-base-color" onclick="refreshAllReports()" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Refresh all">
+        <i class="bi bi-arrow-clockwise"></i>
     </button>
 </div>
-
-
-<input type="hidden" class="sales-length-input">
+<div class="filter-result-menu mt-4">
+    <div class="container-fluid px-md-4">
+        <div class="row">
+            <div class="col-1 d-flex align-items-center justify-content-end">
+                Range
+            </div>
+            <div class="col-4 d-flex">
+                <input type="text" name="daterange" id="daterange"
+                    class="form-control shadow-none me-3 date-filter-input">
+                <button class="btn bg-text-base-color shadow-none" onclick="filterByDate()">Filter</button>
+                <button class="btn btn-danger shadow-none mx-2"
+                    onclick="$('.filter-result-menu').removeClass('active')"><i class="bi bi-x-lg"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="print-results-table" id="print-results-table" style="display: none;">
+    <table border="1" cellpadding="3" cellspacing="0">
+        <thead>
+            <th>Sno.</th>
+            <th>Invoice date</th>
+            <th>Invoice Num</th>
+            <th>Customer Name</th>
+            <th colspan="4">Parts</th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
 <div style="width:100%;display:flex;justify-content:center;align-items:center;position:
-    relative;" id="all-complaints-main-body" class=" mb-5">
-    <table style="margin-top: 2em;" class="sales-data-table-container">
+    relative;" id="sale-data-main-body" class=" mb-5">
+    <table class="sales-data-table-container">
         <thead>
             <tr>
                 <th scope="col" style="word-break:break-all;border-radius:6px 0 0 0 ">SR</th>
+                <th scope="col" style="word-break:break-all;">Created by</th>
                 <th scope="col" style="word-break:break-all;">Invo. Date</th>
-                <th scope="col" style="word-break:break-all;">P. Name</th>
-                <th scope="col" style="word-break:break-all;">P No.</th>
-                <th scope="col" style="word-break:break-all;">P Pass</th>
                 <th scope="col" style="word-break:break-all;">Cus. Name</th>
-                <th scope="col" style="word-break:break-all;">Address</th>
                 <th scope="col" style="word-break:break-all;border-radius:0 6px 0 0">Mobile</th>
             </tr>
         </thead>
@@ -78,7 +152,7 @@
 <div class="container got-all-reports d-none" style="position: relative;bottom:3em">
     <div class="row">
         <div class="col-12 text-center">
-           <h4> <i class="bi bi-check-circle-fill text-success mx-3"></i>You got all reports</h4>
+            <h4> <i class="bi bi-check-circle-fill text-success mx-3"></i>You got all reports</h4>
         </div>
     </div>
 </div>
@@ -90,11 +164,8 @@
                 <h3>Sale Entry Details</h3>
             </div>
             <div class="col-md-4 col-2 my-4 d-flex justify-content-end">
-                <span class="text-muted d-md-block d-none ">
-                    <img src="/images/letters/alt.png" alt="" height="30em" width="53em"
-                        class="mx-2 d-lg-inline d-none">
-                    <i class="bi bi-plus-lg d-lg-inline d-none"></i>
-                    <img src="/images/letters/a.png" alt="" height="30em" width="30em" class="mx-2 d-lg-inline d-none">
+                <span class="text-muted d-md-flex d-none align-items-center mx-md-2">
+                    ( ESC )
                 </span>
                 <i class="bi bi-x-circle cursor-pointer" style="font-size:1.5em" onclick="closeEditMenu()"></i>
             </div>
@@ -120,14 +191,15 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Invoice Number</label>
-                    <input readonly type="text" class="form-control shadow-none sale-details-invoice-number-input"
+                    <input readonly type="text"
+                        class="form-control shadow-none sale-details-invoice-number-input toggle-input"
                         name="invoiceNum" id="" aria-describedby="helpId" placeholder="enter invoice number">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Customer Name</label>
-                    <input readonly type="text" class="form-control shadow-none sale-details-CName-input"
+                    <input readonly type="text" class="form-control shadow-none sale-details-CName-input toggle-input"
                         name="customerName" aria-describedby="helpId" placeholder="enter customer name">
                 </div>
             </div>
@@ -135,55 +207,70 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Address</label>
-                    <input readonly type="text" class="form-control shadow-none sale-details-Address-input"
+                    <input readonly type="text" class="form-control shadow-none sale-details-Address-input toggle-input"
                         name="address" id="" aria-describedby="helpId" placeholder="enter address">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Mobile Number</label>
-                    <input readonly type="text" class="form-control shadow-none sale-details-Number-input" id=""
-                        name="mobileNum" aria-describedby="helpId" placeholder="enter mobile number">
+                    <input readonly type="text" class="form-control shadow-none sale-details-Number-input toggle-input"
+                        id="" name="mobileNum" aria-describedby="helpId" placeholder="enter mobile number">
                 </div>
             </div>
-            <div class="col-12 d-flex justify-content-around">
+            {{!-- <div class="col-12 d-flex justify-content-around">
                 <label class="w-100">Part Name</label>
                 <label class="w-100">Part Sno.</label>
                 <label class="w-100">Password</label>
-            </div>
+            </div> --}}
             <div class="col-12">
-                <div class="form-group d-flex all-parts-sales-info flex-column">
+                <div class="table-responsive-xl all-parts-sales-info">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Part_Name</th>
+                                <th scope="col">Serial_No.</th>
+                                <th scope="col">From</th>
+                                <th scope="col">Till</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="d-flex align-items-center sales-report-actions"
                 style="position: fixed;bottom:0.5em;right:0.5em;width:fit-content">
                 <button class="btn btn-secondary shadow-none mt-3" onclick="closeEditMenu()">Close</button>
+
                 {{#each admin.permissions}}
                 {{#ifeq this.permissionName "all"}}
                 <button
                     class="btn text-light bg-base-color shadow-none mt-3  mx-2 change-sales-report-machine-details-btn"
-                    onclick="$('.submit-changes-sales-report-machine-details-btn').removeClass('hide').css('position','relative');
-                             $(this).addClass('hide').css('position','absolute');toggleSalesEditInputRead(false)">
+                    onclick="switchEditMode('ON')">
                     <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
                 <button style="position:absolute ;"
                     class='btn btn-info shadow-none mt-3 mx-2 submit-changes-sales-report-machine-details-btn hide'
-                    onclick='editSaleData()'>Apply Changes</button>
+                    onclick='applyChangeSaleData()'>Apply Changes</button>
                 {{/ifeq}}
                 {{#ifeq this.permissionName "salesData"}}
                 {{#each this.permissionKeys}}
                 {{#ifeq this.keyName "edit"}}
                 <button
                     class="btn text-light bg-base-color shadow-none mt-3  mx-2 change-sales-report-machine-details-btn"
-                    onclick="$('.submit-changes-sales-report-machine-details-btn').removeClass('hide').css('position','relative');
-                             $(this).addClass('hide').css('position','absolute')">
+                    onclick="switchEditMode('ON')">
                     <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
                 <button style="position:absolute ;"
                     class='btn btn-info shadow-none mt-3  mx-2 submit-changes-sales-report-machine-details-btn hide'
-                    onclick='editSaleData()'>Apply Changes</button>
+                    onclick='applyChangeSaleData()'>Apply Changes</button>
                 {{/ifeq}}
                 {{/each}}
                 {{/ifeq}}
                 {{/each}}
+                <a class="print-sale-report-btn" target="_blank">
+                    <button class="btn bg-text-base-color shadow-none mt-3"><i class="fa fa-print mx-1"
+                            aria-hidden="true"></i>Print</button>
+                </a>
             </div>
         </div>
     </div>

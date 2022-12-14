@@ -2,7 +2,27 @@ let loadDataNum = 20
 var latestReport = 20
 let gotAllreports = false
 let totalReports = 0
+var results = []
 const searchTotalResultDiv = $('.total-search-results')
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+axios.get(`/api/v1/sales-data/macnine/all/0`)
+    .then((response) => {
+        results = response.data.salesData
+    })
+    .catch(err => { console.log(err); })
+
+    
+// date range picker
+$('input[name="daterange"]').daterangepicker({
+    locale: {
+        format: 'DD/MM/YYYY'
+    }
+});
+
 $(window).on('scroll', () => {
     if (!gotAllreports) {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
@@ -16,7 +36,7 @@ $(window).on('scroll', () => {
                     $(".sales-data-loader").removeClass("d-none");
                     getAllSalesDataAjaxCall(0)
                     $(".got-all-reports").removeClass("d-none");
-                    
+
 
                 }
             }
@@ -72,7 +92,7 @@ keyboardJS.bind('alt + =', (e) => {
     e.preventDefault()
     window.location.replace("/vitco-impex/control/sales-report/machine/add-new")
 });
-keyboardJS.bind('alt + a', () => { closeEditMenu() });
+keyboardJS.bind('esc', () => { closeEditMenu() });
 // =========================================================================
 // AJAX QUERIES
 // =========================================================================
@@ -81,7 +101,7 @@ keyboardJS.bind('alt + a', () => { closeEditMenu() });
 function getAllSalesDataAjaxCall(limit) {
     try {
         searchTotalResultDiv.addClass('hide')
-        axios.get(`/api/v1/sales-data/all/${limit}`)
+        axios.get(`/api/v1/sales-data/machine/all/${limit}`)
             .then(async (response) => {
                 totalReports = response.data.totalReports
                 $(".sales-data-loader").addClass("d-none");
@@ -97,6 +117,7 @@ function getAllSalesDataAjaxCall(limit) {
 async function getsearchedSalesDataAjaxCall(query) {
     $(".sales-data-loader").removeClass("d-none");
     try {
+        query = query.replaceAll("/", "-")
         await axios.get(`/api/v1/sales-data/search/${query}`)
             .then(response => {
                 if (response.data.salesData.length == 0) {
@@ -148,20 +169,32 @@ async function printSaleReport(result) {
     $('.sale-details-Address-input').val(result.address)
     $('.sale-details-Number-input').val(result.mobileNum)
     $('.sale-details-warranty-input').val(result.warranty)
+    $('.print-sale-report-btn').attr({ 'href': `/vitco-impex/control/sales-report/machine/print/${result._id}` })
     data = ``
-    result.machines.forEach(element => {
+    result.machines.forEach((machine, i) => {
         data += `
-        <div class="d-flex">
-        <input value="${element.machineName}" readonly type="text" class="form-control shadow-none sale-details-part-name-input toggle-input"
-           name="machineName" aria-describedby="helpId" placeholder="enter part name">
-        <input value="${element.machineNum}" readonly type="text" class="form-control shadow-none sale-details-part-number-input toggle-input"
-           name="machineNum" aria-describedby="helpId" placeholder="enter part number">
-        <input value="${element.password}" readonly type="text" class="form-control shadow-none sale-details-warranty-input toggle-input"
-           name="password" aria-describedby="helpId" placeholder="enter password">
-            </div>
-        `
-    });
-    $('.all-machines-container').html(data)
+            <tr class="row-${i}">
+                <td>
+                    <input readonly autocomplete="off" type="text" class="form-control shadow-none mx-1 toggle-input"
+                        required name="machineName" aria-describedby="helpId" placeholder="part name" value="${machine.machineName}">
+                </td>
+                <td>
+                    <input readonly autocomplete="off" type="text" class="form-control shadow-none mx-1 toggle-input"
+                        required name="machineNum" aria-describedby="helpId" placeholder="part sno" value="${machine.machineNum}">
+                </td>
+                <td>
+                    <input readonly autocomplete="off" type="text"
+                        class="form-control shadow-none mx-1 datepicker warranty-input toggle-input" required
+                        name="warrantyFrom"  aria-describedby="helpId"
+                        placeholder="warranty from" required value="${machine.warranty.from}">
+                </td>
+                <td>
+                    <input readonly autocomplete="off" readonly type="text"
+                        class="form-control shadow-none datepicker mx-1 warranty-input toggle-input" name="warrantyTo" aria-describedby="helpId"
+                        placeholder="warranty till" value="${(machine.warranty.to == 0) ? result.warranty : machine.warranty.to}">
+                </td>
+            </tr>`});
+    $('.all-machines-container table tbody').html(data)
     $('.sale-details-id-input').val((result._id))
 }
 
@@ -178,19 +211,16 @@ async function showAllSalesData(result) {
         for (let i = 0; i < result.salesData.length; i++) {
             tableData += `
                     <tr style="word-break: break-word;" class="all-sale-data-row" onclick='
-                        toggleSalesEditInputRead(true);
+                        $(".toggle-input").attr("readonly",true);
                         $(".view-sale-data-details-modal").addClass("active");
                         printSaleReport(${JSON.stringify(result.salesData[i])});
                         $(".submit-changes-sales-report-machine-details-btn").addClass("hide");
                         $(".change-sales-report-machine-details-btn").removeClass("hide").css("position", "relative")'>
-                    <td style="word-break: break-word;" data-label="Serial Num">${ShortifyString(result.salesData[i].reportNumber)}</td>  
-                    <td style="word-break: break-word;" data-label="Invoice Date">${ShortifyString(result.salesData[i].invoiceDate)}</td>  
-                    <td style="word-break: break-word;" data-label="Machine Name">${ShortifyString(result.salesData[i].machines[0].machineName)}</td>  
-                    <td style="word-break: break-word;" data-label="Machine Number">${ShortifyString(result.salesData[i].machines[0].machineNum)}</td>  
-                    <td style="word-break: break-word;" data-label="Customer Name">${ShortifyString(result.salesData[i].customerName)}</td>  
-                    <td style="word-break: break-word;" data-label="Address">${ShortifyString(result.salesData[i].address)}</td>  
-                    <td style="word-break: break-word;" data-label="Mobile">${ShortifyString(result.salesData[i].mobileNum)}</td>  
-                    <td style="word-break: break-word;" data-label="Warranty">${ShortifyString(result.salesData[i].warranty)}</td>  </tr> `
+                    <td class="text-truncate" data-label="Serial Num">${result.salesData[i].reportNumber}</td>  
+                    <td class="text-truncate" data-label="Address">${result.salesData[i].createdBy.adminName}</td>  
+                    <td class="text-truncate" data-label="Invoice Date">${result.salesData[i].invoiceDate}</td>   
+                    <td class="text-truncate" data-label="Customer Name">${result.salesData[i].customerName}</td>  
+                    <td class="text-truncate" data-label="Mobile">${result.salesData[i].mobileNum}</td> </tr> `
         }
         // <td style="word-break: break-word;" data-label="Bar Code">${ShortifyString(result.salesData[i].barCode)}</td>  
         $("#sales-data-table-body").html(tableData)
@@ -199,37 +229,40 @@ async function showAllSalesData(result) {
         console.error("Error in fetching data")
     }
 }
-
-// toggle inputs to readonly
-function toggleSalesEditInputRead(state) {
-    $('.toggle-input').prop('readonly', state);
+// switch report edit mode 
+function switchEditMode(cmd) {
+    if (cmd == "ON") {
+        $('.submit-changes-sales-report-machine-details-btn').removeClass('hide');
+        $(".change-sales-report-machine-details-btn").addClass('hide').css('position', 'absolute');
+        $('.toggle-input').prop('readonly', false);
+        $('.datepicker').datepicker({ format: 'dd/mm/yyyy' });
+    } else if (cmd == "OFF") {
+        $('.submit-changes-sales-report-machine-details-btn').addClass('hide');
+        $(".change-sales-report-machine-details-btn").removeClass('hide').css('position', 'relative');
+        $('.toggle-input').prop('readonly', true);
+    }
 }
 
 // close edit menu sale data
 function closeEditMenu() {
     $("html").css({ "overflow": "auto" });
     $('.view-sale-data-details-modal').removeClass('active');
-    $('.sale-details-invoice-Date-input').val("Loading...")
-    $('.sale-details-Nname-input').val("Loading...")
-    $('.sale-details-Mnumber-input').val("Loading...")
-    $('.sale-details-Code-input').val("Loading...")
-    $('.sale-details-CName-input').val("Loading...")
-    $('.sale-details-Address-input').val("Loading...")
-    $('.sale-details-Number-input').val(("Loading..."))
-    $('.sale-details-status-input').val(("Loading..."))
 }
 // submit edited sale data
-function editSaleData() {
+function applyChangeSaleData() {
     const id = $('.sale-details-id-input').val();
     machines = []
     tempArr = $('input[name="machineName"]').map((i, e) => e.value).get()
     tempArr.forEach((element, i) => {
         machines.push({
-            machineName: element,
-            machineNum: $('input[name="machineNum"]')[i].value,
-            password: $('input[name="password"]')[i].value,
+            machineName: element.replaceAll('"', ''),
+            machineNum: $('input[name="machineNum"]')[i].value.replaceAll('"', ''),
+            warranty: {
+                from: $(`input[name="warrantyFrom"]`).val(),
+                to: $(`input[name="warrantyTo"]`).val()
+            },
         })
-    })
+    });
     const newSalesData = {
         invoiceNum: $('input[name="invoiceNumber"]').val(),
         customerName: $('input[name="customerName"]').val(),
@@ -238,14 +271,9 @@ function editSaleData() {
         warranty: $('input[name="warranty"]').val(),
         machines: machines
     }
-    $('#search-form input').val("")
-    $('.submit-changes-sales-report-machine-details-btn').addClass('hide');
-    $('.change-sales-report-machine-details-btn').removeClass('hide').css('position', 'relative')
-    axios.post(`/api/v1/sales-data/edit/${id}`, newSalesData)
+    axios.post(`/api/v1/sales-data/machine/edit/${id}`, newSalesData)
         .then((response) => {
-            loadDataNum = 20
-            getAllSalesDataAjaxCall(20)
-            toggleSalesEditInputRead(true)
+            switchEditMode("OFF")
             printSaleReport(response.data.report)
         })
     // await editSaleDataAdminAjaxCall(id, newSalesData)
@@ -324,3 +352,34 @@ function refreshAllReports() {
     }, 100);
 }
 
+// print results 
+function printReports() {
+    $('.print-results-table').fadeIn(0).addClass("active")
+    printJS('print-results-table', 'html')
+    $('.print-results-table').fadeOut(0).removeClass("active")
+}
+
+// string to date converter
+function toDate(dateStr) {
+    var parts = dateStr.split("/")
+    return new Date(parts[2], parts[1] - 1, parts[0])
+}
+// filter by DATE
+function filterByDate() {
+    console.log(results)
+    from = toDate($(".date-filter-input").val().split("-")[0])
+    to = toDate($(".date-filter-input").val().split("-")[1])
+    filteredData = results.filter(data => {
+        invoiceDate = toDate(data.invoiceDate)
+        if (invoiceDate >= from && invoiceDate <= to) {
+            return data
+        }
+    })
+    $('.container got-all-reports').fadeOut(0)
+    gotAllreports = true
+    results = filteredData
+    // showAllSalesData({
+    //     success: true,
+    //     salesData: filteredData
+    // })
+}

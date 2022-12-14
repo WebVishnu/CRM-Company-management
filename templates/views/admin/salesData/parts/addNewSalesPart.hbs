@@ -1,6 +1,9 @@
 {{>adminHeader}}
 {{#*inline "style"}}
 <style>
+    #search-box{
+        display: none;
+    }
     .menu-link[data-link="sales-data"] {
         background-color: #26ABE2;
         color: #fff !important;
@@ -23,6 +26,12 @@
         display: none;
         visibility: hidden;
         opacity: 0;
+    }
+    .new-part td.position-relative button{
+        visibility: hidden;
+    }
+    .new-part:hover td.position-relative button{
+        visibility: visible;
     }
 </style>
 {{/inline}}
@@ -95,32 +104,27 @@
                                 <tr>
                                     <th scope="col">Part_Name</th>
                                     <th scope="col">Serial_No.</th>
-                                    <th scope="col">Wty From</th>
-                                    <th scope="col">Period</th>
-                                    <th scope="col">type</th>
-                                    <th scope="col">Wty till</th>
+                                    <th scope="col">Wty</th>
+                                    <th scope="col"></th>
+                                    <th scope="col">From</th>
+                                    <th scope="col">Till</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="row-1">
+                                <tr class="row-1 position-relative">
                                     <td>
                                         <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
-                                            required name="machineName" aria-describedby="helpId"
+                                            required name="partName" aria-describedby="helpId"
                                             placeholder="part name">
                                     </td>
                                     <td>
                                         <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
-                                            required name="machineNum" aria-describedby="helpId" placeholder="part sno">
+                                            required name="partNumber" aria-describedby="helpId" placeholder="part sno">
                                     </td>
                                     <td>
-                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1 datepicker warranty-input"
-                                            required name="warrantyFrom" onkeyup="updateWarrantyDate(1)" onchange="updateWarrantyDate(1)"
-                                            aria-describedby="helpId" placeholder="warranty from">
-                                    </td>
-                                    <td>
-                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1 warranty-input"
+                                        <input autocomplete="off" type="number" class="form-control shadow-none mx-1 warranty-input"
                                             required name="warrantyPeriod" onkeyup="updateWarrantyDate(1)"
-                                            aria-describedby="helpId" value="1" style="width:2.5em;">
+                                            aria-describedby="helpId" style="width:2.8em;" required placeholder="0">
                                     </td>
                                     <td>
                                         <select class="form-select warranty-select" style="width:7em ;" onchange="updateWarrantyDate(1)"
@@ -132,10 +136,15 @@
                                         </select>
                                     </td>
                                     <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1 datepicker warranty-input"
+                                            required name="warrantyFrom" onkeyup="updateWarrantyDate(1)" onchange="updateWarrantyDate(1)"
+                                            aria-describedby="helpId" placeholder="warranty from" required>
+                                    </td>
+                                    <td>
                                         <input autocomplete="off" readonly type="text"
-                                            class="form-control shadow-none mx-1 warranty-input" required name="warrantyTo"
+                                            class="form-control shadow-none mx-1 warranty-input"  name="warrantyTo"
                                             onkeyup="updateWarrantyDate(1)" aria-describedby="helpId"
-                                            placeholder="warranty to">
+                                            placeholder="warranty till">
                                     </td>
                                 </tr>
                             </tbody>

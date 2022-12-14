@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { editSalesDataAdmin } = require('../apisController/salesDataController');
-const { getAllSalesData, getSingleSalesData, getSearchedSaleData, addBulkSalesDataAdmin,getSaleReportNumber } = require(path.join(__dirname, '../apisController/salesDataController'));
+const { getAllSalesData, getSingleSalesData, getSearchedSaleData, addBulkSalesDataAdmin,editSalesDataAdmin, getSaleReportNumber , createNewSaleData} = require(path.join(__dirname, '../apisController/salesDataController'));
 const multer = require('multer')
 const { authorizedRoles } = require(path.join(__dirname, "../middlewares/auth"));
 
@@ -18,12 +17,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+
+// add new sale data
+router.post('/api/v1/sales-data/machine/add-new', async (req, res, next) => {
+  if (await authorizedRoles("machineSalesData", req, res, next, ["create"])) { createNewSaleData(req, res) }
+  else { res.send({ success: false, }); }
+})
+
 // get all sales data -- get
-router.get('/api/v1/sales-data/all/:limit', async (req, res, next) => {
+router.get('/api/v1/sales-data/machine/all/:limit', async (req, res, next) => {
   if (await authorizedRoles("machineSalesData", req, res, next, ["view"])) { getAllSalesData(req, res) }
   else { res.send({ success: false, }); }
 })
-// get all sales data -- get
+// get single data -- get
 router.get('/api/v1/sales-data/get-single-data/:id', async (req, res, next) => {
   if (await authorizedRoles("machineSalesData", req, res, next, ["view"])) { getSingleSalesData(req, res) }
   else { res.send({ success: false, }); }
@@ -35,7 +41,7 @@ router.get('/api/v1/sales-data/search/:query', async (req, res, next) => {
   else { res.send({ success: false, }); }
 })
 // edit single sales data -- post
-router.post('/api/v1/sales-data/edit/:id', async (req, res, next) => {
+router.post('/api/v1/sales-data/machine/edit/:id', async (req, res, next) => {
   if (await authorizedRoles("all", req, res, next, ["view", "edit", "create", "delete"])) { editSalesDataAdmin(req, res) }
   else { res.send({ success: false, }); }
 })

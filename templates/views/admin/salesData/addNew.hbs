@@ -24,13 +24,22 @@
         visibility: hidden;
         opacity: 0;
     }
+
+    .new-part td.position-relative button {
+        visibility: hidden;
+    }
+
+    .new-part:hover td.position-relative button {
+        visibility: visible;
+    }
 </style>
 {{/inline}}
 
 <div class="container px-md-4 ">
     <div class="row mt-md-4 mt-3">
         <div class="col-12">
-            <h4 style="font-size:1.25em ;">Create new <span style="color:#26abe2 ;"> Machine</span> sale report - <span class="report-number"></span> </h4>
+            <h4 style="font-size:1.25em ;">Create new <span style="color:#26abe2 ;"> Machine</span> sale report - <span
+                    class="report-number"></span> </h4>
         </div>
     </div>
     <form id="new-machine-sale-report-form">
@@ -39,8 +48,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Invoice Date</label>
-                    <input type="text" class="form-control shadow-none" required name="invoiceDate"
-                        aria-describedby="helpId" placeholder="enter invoice date">
+                    <input type="text" class="form-control shadow-none datepicker" autocapitalize="off" required
+                        name="invoiceDate" placeholder="enter invoice date">
                 </div>
             </div>
             <div class="col-md-6">
@@ -53,52 +62,98 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Customer Name</label>
-                    <input type="text" class="form-control shadow-none" required name="customerName" id=""
+                    <input type="text" class="form-control shadow-none" required name="customerName"
                         aria-describedby="helpId" placeholder="enter customer name">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Address</label>
-                    <input type="text" class="form-control shadow-none" required name="address" id=""
+                    <input type="text" class="form-control shadow-none" required name="address"
                         aria-describedby="helpId" placeholder="enter address">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Mobile Number</label>
-                    <input type="text" class="form-control shadow-none" required name="mobileNum" id=""
+                    <input type="text" class="form-control shadow-none" required name="mobileNum"
                         aria-describedby="helpId" placeholder="enter mobile number">
                 </div>
             </div>
             {{!-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Barcode</label>
-                    <input type="text" class="form-control shadow-none" required name="barCode" id=""
+                    <input type="text" class="form-control shadow-none" required name="barCode"
                         aria-describedby="helpId" placeholder="enter bar code">
                 </div>
             </div> --}}
-            <div class="col-md-6">
+            {{!-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="invoiceDate">Warranty</label>
-                    <input type="text" class="form-control shadow-none" required name="warranty" id=""
+                    <input type="text" class="form-control shadow-none" required name="warranty"
                         aria-describedby="helpId" placeholder="enter warranty">
                 </div>
-            </div>
+            </div> --}}
             <div class="col-md-12">
-                <label for="invoiceDate">Add machine info</label>
                 <div class="service-report-all-machine-info-inputs">
-                    <div class="form-group d-flex">
-                        <input type="text" class="form-control shadow-none mx-1" required name="machineName" id=""
-                            aria-describedby="helpId" placeholder="name">
-                        <input type="text" class="form-control shadow-none mx-1" required name="machineNum" id=""
-                            aria-describedby="helpId" placeholder="sno">
-                        <input type="text" class="form-control shadow-none mx-1" required name="machinePass" id=""
-                            aria-describedby="helpId" placeholder="password">
+                    <div class="table-responsive-xl">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Machine_Name</th>
+                                    <th scope="col">Serial_No.</th>
+                                    <th scope="col" style="width: 6em;">Wty</th>
+                                    <th scope="col" style="width: 10em;"></th>
+                                    <th scope="col">From</th>
+                                    <th scope="col">Till</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="row-1 position-relative">
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
+                                            required name="machineName" aria-describedby="helpId"
+                                            placeholder="machine name">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
+                                            required name="machineNum" aria-describedby="helpId" placeholder="machine sno">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="number"
+                                            class="form-control shadow-none mx-1 warranty-input" required
+                                            name="warrantyPeriod" onkeyup="updateWarrantyDate(1)"
+                                            aria-describedby="helpId" style="width:2.8em;" required placeholder="0">
+                                    </td>
+                                    <td>
+                                        <select class="form-select warranty-select" style="width:7em ;"
+                                            onchange="updateWarrantyDate(1)" name="warrantyType">
+                                            <option value="years" selected>years</option>
+                                            <option value="months">months</option>
+                                            <option value="weeks">weeks</option>
+                                            <option value="days">days</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" type="text"
+                                            class="form-control shadow-none mx-1 datepicker warranty-input" required
+                                            name="warrantyFrom" onkeyup="updateWarrantyDate(1)"
+                                            onchange="updateWarrantyDate(1)" aria-describedby="helpId"
+                                            placeholder="warranty from" required>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" readonly type="text"
+                                            class="form-control shadow-none mx-1 warranty-input" name="warrantyTo"
+                                            onkeyup="updateWarrantyDate(1)" aria-describedby="helpId"
+                                            placeholder="warranty till">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <h6 class="text-end mr-2 text-secondary mb-5 pb-5"> <span class="d-lg-inline d-none">( Ctrl + Q ) </span><span
-                        class="cursor-pointer text-primary add-new-machine-service-report"> Add
+                <h6 class="text-end mr-2 text-secondary mb-5 pb-5"> <span class="d-lg-inline d-none">( Ctrl + Q )
+                    </span><span class="cursor-pointer text-primary add-new-machine-service-report"> Add
                         new +</span></h6>
                 <input type="text" hidden class="total-machines-added" name="totalMachinesAdded">
             </div>
@@ -121,7 +176,7 @@
                 {{/each}}
                 <button class="btn btn-primary shadow-none ms-3 submit-machine-sale-report-btn"
                     type="submit">Submit</button>
-            </div>`
+            </div>
         </div>
     </form>
 </div>
@@ -137,12 +192,8 @@
     integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<link rel="stylesheet" href="/css/admin/sales-data/salesData.css">
 
 {{/inline}}
-<script src="https://momentjs.com/downloads/moment.js"></script>
-<script src="/js/admin/ajaxReq.js"></script>
-<script src="/js/admin/sales-data/addNewsalesData.js"></script>
 <script>
     const webHost = `{{webHost}}`
     $('#search-form input').attr('placeholder', '')
@@ -151,3 +202,6 @@
     $('#invoiceDate').focus()
     setInterval(function () { updatesalesReportNumber() }, 100);
 </script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="/js/admin/ajaxReq.js"></script>
+<script src="/js/admin/sales-data/addNewsalesData.js"></script>

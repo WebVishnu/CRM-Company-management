@@ -1,8 +1,8 @@
 const path = require("path");
-const mongodb = require("mongodb").MongoClient;
-const csvtojson = require("csvtojson");
+// const mongodb = require("mongodb").MongoClient;
+// const csvtojson = require("csvtojson");
 const SData = require(path.join(__dirname, "../models/salesSchema/machineSalesSchema"));
-
+const Admin = require(path.join(__dirname, "../models/adminSchema"));
 const fs = require('fs');
 // get all sale data
 exports.getAllSalesData = async function (req, res) {
@@ -11,7 +11,7 @@ exports.getAllSalesData = async function (req, res) {
     res.send({
       success: true,
       salesData: await SData.find().limit(req.params.limit),
-      totalReports:allreportLength.length
+      totalReports: allreportLength.length
     })
   } catch (error) {
     res.send({
@@ -19,6 +19,37 @@ exports.getAllSalesData = async function (req, res) {
     });
   }
 };
+
+exports.createNewSaleData = async function (req, res) {
+  try {
+    const { adminToken } = req.cookies;
+    const admin = await Admin.find({ _id: adminToken.uID })
+    const data = await SData.find()
+    console.log(req.body)
+    await SData.create({
+      createdBy: {
+        adminName: admin[0].adminName,
+        adminID: admin[0]._id
+      },
+      reportNumber: pad(data.length, 3),
+      invoiceDate: req.body.invoiceDate,
+      invoiceNum: req.body.invoiceNum,
+      customerName: req.body.customerName,
+      address: req.body.address,
+      mobileNum: req.body.mobileNum,
+      machines: req.body.allMachines
+    }).then(() => {
+      res.send({
+        success: true,
+      });
+    })
+  } catch (e) {
+    console.log(e)
+    res.send({
+      success: false,
+    });
+  }
+}
 
 // get single sale data
 exports.getSingleSalesData = async function (req, res) {
@@ -37,21 +68,21 @@ exports.getSingleSalesData = async function (req, res) {
 
 // search sale data
 exports.getSearchedSaleData = async function (req, res) {
-  query = `${req.params.query}`
+  query = `${req.params.query.replaceAll("-","/")}`
   try {
     const salesData = await SData.find({
       $or: [
+        { "createdBy.adminName": { $regex: query, $options: 'i' } },
         { "invoiceDate": { $regex: query, $options: 'i' } },
         { "invoiceNum": { $regex: query, $options: 'i' } },
         { "reportNumber": { $regex: query, $options: 'i' } },
         { "customerName": { $regex: query, $options: 'i' } },
         { "address": { $regex: query, $options: 'i' } },
-        { "warranty": { $regex: query, $options: 'i' } },
         { "machines.machineName": { $regex: query, $options: 'i' } },
         { "machines.machineNum": { $regex: query, $options: 'i' } },
-        { "machines.password": { $regex: query, $options: 'i' } },
       ]
     })
+
     res.send({
       success: true,
       salesData: salesData
@@ -67,15 +98,14 @@ exports.getSearchedSaleData = async function (req, res) {
 // Edit sales Data
 exports.editSalesDataAdmin = async function (req, res) {
   try {
-    const salesData = {
+    await SData.findOneAndUpdate({ _id: req.params.id }, {
       invoiceNum: req.body.invoiceNum,
       customerName: req.body.customerName,
       address: req.body.address,
       mobileNum: req.body.mobileNum,
       warranty: req.body.warranty,
-      machines:req.body.machines
-    }
-    await SData.findOneAndUpdate({ _id: req.params.id }, salesData)
+      machines: req.body.machines
+    })
     const report = await SData.findOne({ _id: req.params.id })
     res.send({
       success: true,
@@ -96,48 +126,48 @@ exports.getSaleReportNumber = async (req, res) => {
   res.send({ success: true, reportNumber: data.length })
 }
 
-// save bulk sale data
-exports.addBulkSalesDataAdmin = async function (req, res) {
-  const data = await SData.find()
-  await csvtojson().fromFile(req.file.path).then(source => {
-    // Fetching the all data from each row
-    arrayToInsert = []
-    for (var i = 0, reportNumber = data.length + 1; i < source.length; i++, reportNumber++) {
-      var singleRow = {
-        reportNumber: pad(reportNumber, 3),
-        invoiceDate: source[i]["invoiceDate"],
-        machineName: source[i]["machineName"],
-        machineNum: source[i]["machineNum"],
-        barCode: source[i]["barCode"],
-        customerName: source[i]["customerName"],
-        address: source[i]["address"],
-        mobileNum: source[i]["mobileNum"],
-        status: source[i]["status"],
-      };
-      arrayToInsert.push(singleRow);
-    }
-    // inserting into the table student
-    // return arrayToInsert
-    mongodb.connect(
-      process.env.DB_URL,
-      { useNewUrlParser: true, useUnifiedTopology: true },
-      (err, client) => {
-        if (err) throw err;
-        client
-          .db("VitcoDatabase")
-          .collection("sales datas")
-          .insertMany(arrayToInsert, (err, res) => {
-            if (err) throw err;
-            client.close();
-          });
-      }
-    );
-    fs.unlinkSync(req.file.path)
-    res.send({
-      success: true,
-    })
-  });
-}
+// // save bulk sale data
+// exports.addBulkSalesDataAdmin = async function (req, res) {
+//   const data = await SData.find()
+//   await csvtojson().fromFile(req.file.path).then(source => {
+//     // Fetching the all data from each row
+//     arrayToInsert = []
+//     for (var i = 0, reportNumber = data.length + 1; i < source.length; i++, reportNumber++) {
+//       var singleRow = {
+//         reportNumber: pad(reportNumber, 3),
+//         invoiceDate: source[i]["invoiceDate"],
+//         machineName: source[i]["machineName"],
+//         machineNum: source[i]["machineNum"],
+//         barCode: source[i]["barCode"],
+//         customerName: source[i]["customerName"],
+//         address: source[i]["address"],
+//         mobileNum: source[i]["mobileNum"],
+//         status: source[i]["status"],
+//       };
+//       arrayToInsert.push(singleRow);
+//     }
+//     // inserting into the table student
+//     // return arrayToInsert
+//     mongodb.connect(
+//       process.env.DB_URL,
+//       { useNewUrlParser: true, useUnifiedTopology: true },
+//       (err, client) => {
+//         if (err) throw err;
+//         client
+//           .db("VitcoDatabase")
+//           .collection("sales datas")
+//           .insertMany(arrayToInsert, (err, res) => {
+//             if (err) throw err;
+//             client.close();
+//           });
+//       }
+//     );
+//     fs.unlinkSync(req.file.path)
+//     res.send({
+//       success: true,
+//     })
+//   });
+// }
 
 
 

@@ -105,15 +105,15 @@ exports.addnewSaleReportForm = async function (req, res) {
             if (err) {
                 res.clearCookie("adminToken");
                 res.send({
-                    success:false
+                    success: false
                 })
             } else {
                 const admin = await Admin.find({ _id: adminToken.uID })
                 const data = await salesData.find()
                 await salesData.create({
                     createdBy: {
-                        adminName:admin[0].adminName,
-                        adminID:admin[0]._id,
+                        adminName: admin[0].adminName,
+                        adminID: admin[0]._id,
                     },
                     reportNumber: pad(data.length, 3),
                     invoiceDate: req.body.invoiceDate,
@@ -122,17 +122,17 @@ exports.addnewSaleReportForm = async function (req, res) {
                     address: req.body.address,
                     mobileNum: req.body.mobileNum,
                     warranty: req.body.warranty,
-                    machines:req.body.allMachines
+                    machines: req.body.allMachines
                 })
                 res.send({
-                    success:true
+                    success: true
                 })
             }
         });
     }
     else {
         res.send({
-            success:false
+            success: false
         })
     }
 }
@@ -195,39 +195,59 @@ exports.addNewPartSalesData = async function (req, res) {
     }
 }
 
-
-
-// upload new sales report
-exports.addNewPartSalesDataForm = async function (req, res) {
-    const { adminToken } = req.cookies;
-    if (adminToken) {
-        jwt.verify(adminToken.token, process.env.JWT_SECRET_ADMIN, async function (err, decoded) {
-            if (err) {
-                res.clearCookie("adminToken");
-                res.redirect("/vitco-india/admin/login");
-            } else {
-                const admin = await Admin.find({ _id: adminToken.uID })
-                const data = await partSalesData.find()
-                await partSalesData.create({
-                    createdBy: {
-                        adminName:admin[0].adminName,
-                        adminID:admin[0]._id
-                    },
-                    reportNumber: pad(data.length, 3),
-                    invoiceDate: req.body.invoiceDate,
-                    invoiceNum: req.body.invoiceNum,
-                    customerName: req.body.customerName,
-                    address: req.body.address,
-                    mobileNum: req.body.mobileNum,
-                    warranty: req.body.warranty,
-                    parts: req.body.parts
-
-                })
-                res.redirect('/vitco-impex/control/sales-report/machine/add-new')
-            }
-        });
-    }
-    else {
-        res.redirect('/vitco-india/admin/login')
+// print sales report -- parts
+exports.printPartSaleReport = async function (req, res) {
+    try {
+        const { adminToken } = req.cookies;
+        const admin = await Admin.findById(adminToken.uID)
+        let report;
+        let option = req.params.category
+        if(req.params.category == "parts"){
+            report = await partSalesData.find({ _id: req.params.id })
+        }else if(req.params.category == "machine"){
+            report = await salesData.find({ _id: req.params.id })
+        }else{
+            report = []
+        }
+        res.render('admin/salesData/printSalesData/partSalesData', { admin,option, report, "webHost": req.headers.host, "protocol": req.headers.host })
+    } catch (error) {
+        console.log(error)
+        res.redirect('/vitco-india/control/admin/not-allowed')
     }
 }
+
+// upload new sales report
+// exports.addNewPartSalesDataForm = async function (req, res) {
+//     const { adminToken } = req.cookies;
+//     if (adminToken) {
+//         jwt.verify(adminToken.token, process.env.JWT_SECRET_ADMIN, async function (err, decoded) {
+//             if (err) {
+//                 res.clearCookie("adminToken");
+//                 res.redirect("/vitco-india/admin/login");
+//             } else {
+//                 const admin = await Admin.find({ _id: adminToken.uID })
+//                 const data = await partSalesData.find()
+//                 console.log(req.body.parts)
+//                 await partSalesData.create({
+//                     createdBy: {
+//                         adminName:admin[0].adminName,
+//                         adminID:admin[0]._id
+//                     },
+//                     reportNumber: pad(data.length, 3),
+//                     invoiceDate: req.body.invoiceDate,
+//                     invoiceNum: req.body.invoiceNum,
+//                     customerName: req.body.customerName,
+//                     address: req.body.address,
+//                     mobileNum: req.body.mobileNum,
+//                     warranty: req.body.warranty,
+//                     parts: req.body.parts
+
+//                 })
+//                 res.redirect('/vitco-impex/control/sales-report/machine/add-new')
+//             }
+//         });
+//     }
+//     else {
+//         res.redirect('/vitco-india/admin/login')
+//     }
+// }

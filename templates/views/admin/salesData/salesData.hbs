@@ -5,6 +5,24 @@
         background-color: #26ABE2;
         color: #fff !important;
     }
+
+    .all-sale-data-row:hover {
+        background-color: #d7f3ff !important;
+    }
+
+    .filter-result-menu {
+        height: 0;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+    }
+
+    .filter-result-menu.active {
+        height: auto;
+        position: relative;
+        visibility: visible;
+        opacity: 1;
+    }
 </style>
 {{/inline}}
 
@@ -12,20 +30,33 @@
 <script>
     window.scrollTo(0, 0)
 </script>
-<input type="hidden" class="sales-length-input">
+{{!-- <input type="hidden" class="sales-length-input"> --}}
+<div class="filter-result-menu mt-4">
+    <div class="container-fluid px-md-4">
+        <div class="row">
+            <div class="col-1 d-flex align-items-center justify-content-end">
+                Range
+            </div>
+            <div class="col-4 d-flex">
+                <input type="text" name="daterange" id="daterange"
+                    class="form-control shadow-none me-3 date-filter-input">
+                <button class="btn bg-text-base-color shadow-none" onclick="filterByDate()">Filter</button>
+                <button class="btn btn-danger shadow-none mx-2"
+                    onclick="$('.filter-result-menu').removeClass('active')"><i class="bi bi-x-lg"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
 <div style="width:100%;display:flex;justify-content:center;align-items:center;position:
-    relative;" id="all-complaints-main-body" class=" mb-5">
+    relative;" id="sale-data-main-body" class=" mb-5">
     <table style="margin-top: 2em;" class="sales-data-table-container">
         <thead>
             <tr>
                 <th scope="col" style="word-break:break-all;border-radius:6px 0 0 0 ">SR</th>
+                <th scope="col" style="word-break:break-all;">Created By</th>
                 <th scope="col" style="word-break:break-all;">Invo. Date</th>
-                <th scope="col" style="word-break:break-all;">M. Name</th>
-                <th scope="col" style="word-break:break-all;">M No.</th>
                 <th scope="col" style="word-break:break-all;">Cus. Name</th>
-                <th scope="col" style="word-break:break-all;">Address</th>
-                <th scope="col" style="word-break:break-all;">Mobile</th>
-                <th scope="col" style="word-break:break-all;border-radius:0 6px 0 0">Status</th>
+                <th scope="col" style="word-break:break-all;border-radius:0 6px 0 0">Mobile</th>
             </tr>
         </thead>
         <tbody id="sales-data-table-body">
@@ -56,35 +87,49 @@
 <div class="bottom-right-fixed " style="position:fixed;right:0.5em;bottom:0.5em">
     {{#each admin.permissions}}
     {{#ifeq this.permissionName "all"}}
-    <a href="/vitco-impex/control/sales-report/machine/add-new" class="btn bg-text-base-color"><i
-            class="bi bi-plus-square"></i></a>
+    <a href="/vitco-impex/control/sales-report/machine/add-new" class="btn bg-text-base-color" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Add new"><i class="bi bi-plus-square"></i></a>
     {{/ifeq}}
     {{#ifeq this.permissionName "machineSalesData"}}
     {{#each this.permissionKeys}}
     {{#ifeq this.keyName "create"}}
-    <a href="/vitco-impex/control/sales-report/machine/add-new" class="btn bg-text-base-color"><i
-            class="bi bi-plus-square"></i></a>
+    <a href="/vitco-impex/control/sales-report/machine/add-new" class="btn bg-text-base-color" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Add new"><i class="bi bi-plus-square"></i></a>
     {{/ifeq}}
     {{/each}}
     {{/ifeq}}
     {{/each}}
-
-    <button class="btn shadow-none bg-text-base-color" onclick="refreshAllReports()">
-        <i class="bi bi-arrow-clockwise"></i> Refresh all
+    <button class="btn shadow-none bg-text-base-color" onclick="printReports()" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Print Data">
+        <i class="bi bi-printer"></i>
+    </button>
+    <button class="btn shadow-none bg-text-base-color filter-results-btn"
+        onclick="$('.filter-result-menu').toggleClass('active')" data-bs-toggle="tooltip" data-bs-placement="top"
+        title="Date filter">
+        <i class="bi bi-calendar-date"></i>
+    </button>
+    <button class="btn shadow-none bg-text-base-color" onclick="refreshAllReports()" data-bs-toggle="tooltip"
+        data-bs-placement="top" title="Refresh all">
+        <i class="bi bi-arrow-clockwise"></i>
     </button>
 </div>
 <div class="fixed-bottom-center">
     <span class="total-search-results hide shadow"></span>
 </div>
 
-<form style="position:fixed;bottom:1em;right:1em;display:flex;overflex-x:auto;" id="UploadSalesFileForm" class="d-none">
+
+
+
+
+{{!-- <form style="position:fixed;bottom:1em;right:1em;display:flex;overflex-x:auto;" id="UploadSalesFileForm"
+    class="d-none">
     <input type="file" hidden name="saleDataCSVfile" id="upload-sale-data-input"
         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
     <button class="btn btn-primary shadow-none upload-sale-data-submit-btn-icon"
         onclick="$('#upload-sale-data-input').trigger('click');" type="button"><i
             class="bi bi-cloud-upload"></i></button>
     <button type="submit" class="btn btn-primary shadow-none upload-sale-data-submit-btn mx-3">Submit</button>
-</form>
+</form> --}}
 
 {{!-- modals --}}
 <div class="view-sale-data-details-modal p-md-3 p-2">
@@ -94,12 +139,12 @@
                 <h3>Sale Entry Details <span class="sales-report-number"></span></h3>
             </div>
             <div class="col-md-4 col-2 my-4 d-flex justify-content-end">
-                <span class="text-muted d-md-block d-none ">
+                {{!-- <span class="text-muted d-md-block d-none ">
                     <img src="/images/letters/alt.png" alt="" height="30em" width="53em"
                         class="mx-2 d-lg-inline d-none">
                     <i class="bi bi-plus-lg d-lg-inline d-none"></i>
                     <img src="/images/letters/a.png" alt="" height="30em" width="30em" class="mx-2 d-lg-inline d-none">
-                </span>
+                </span> --}}
                 <i class="bi bi-x-circle cursor-pointer" style="font-size:1.5em"
                     onclick="$('.view-sale-data-details-modal').removeClass('active');$('html').css('overflow', 'auto');"></i>
             </div>
@@ -153,52 +198,67 @@
                         name="mobileNumber" id="" aria-describedby="helpId" placeholder="enter mobile number">
                 </div>
             </div>
-            <div class="col-md-6">
+            {{!-- <div class="col-md-6">
                 <div class="form-group">
                     <label for="">Warranty</label>
                     <input readonly type="text"
                         class="form-control shadow-none sale-details-warranty-input toggle-input" name="warranty" id=""
                         aria-describedby="helpId" placeholder="enter warranty">
                 </div>
-            </div>
-            <div class="col-12 d-flex justify-content-around">
+            </div> --}}
+            {{!-- <div class="col-12 d-flex justify-content-around">
                 <label class="w-100">Machine</label>
                 <label class="w-100">Serial No.</label>
                 <label class="w-100">Password</label>
-            </div>
-            <div class="col-12 mb-5 pb-5">
-
-                <div class="form-group all-machines-container">
+            </div> --}}
+            <div class="col-12">
+                <div class="table-responsive-xl all-machines-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Machine_Name</th>
+                                <th scope="col">Serial_No.</th>
+                                <th scope="col">From</th>
+                                <th scope="col">Till</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
             <div style="position: fixed;bottom:0.5em;right:0.5em;width: auto;">
+
                 <button class="btn btn-secondary shadow-none mt-3" onclick="closeEditMenu()">Close</button>
                 {{#each admin.permissions}}
                 {{#ifeq this.permissionName "all"}}
                 <button
                     class="btn text-light bg-base-color shadow-none mt-3  mx-2 change-sales-report-machine-details-btn"
-                    onclick="$('.submit-changes-sales-report-machine-details-btn').removeClass('hide');
-        $(this).addClass('hide').css('position','absolute');toggleSalesEditInputRead(false)">
+                    onclick="switchEditMode('ON')">
                     <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
                 <button class='btn btn-info shadow-none mt-3 mx-2 submit-changes-sales-report-machine-details-btn hide'
-                    onclick='editSaleData()'>Apply Changes</button>
+                    onclick='applyChangeSaleData()'>Apply Changes</button>
                 {{/ifeq}}
                 {{#ifeq this.permissionName "machineSalesData"}}
                 {{#each this.permissionKeys}}
                 {{#ifeq this.keyName "edit"}}
                 <button
                     class="btn text-light bg-base-color shadow-none mt-3  mx-2 change-sales-report-machine-details-btn"
-                    onclick="$('.submit-changes-sales-report-machine-details-btn').removeClass('hide');
-        $(this).addClass('hide').css('position','absolute');toggleSalesEditInputRead(false)">
+                    onclick="switchEditMode('ON')">
                     <i class="bi bi-arrow-left-right mr-2"></i>Change</button>
                 <button class='btn btn-info shadow-none mt-3 mx-2 submit-changes-sales-report-machine-details-btn hide'
-                    onclick='editSaleData()'>Apply Changes</button>
+                    onclick='applyChangeSaleData()'>Apply Changes</button>
                 {{/ifeq}}
                 {{/each}}
                 {{/ifeq}}
                 {{/each}}
+                <a class="print-sale-report-btn" target="_blank">
+                    <button class="btn bg-text-base-color shadow-none mt-3"><i class="fa fa-print mx-1"
+                            aria-hidden="true"></i>Print</button>
+                </a>
             </div>
-            
+
         </div>
     </div>
 </div>

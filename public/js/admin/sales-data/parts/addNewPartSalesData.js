@@ -3,8 +3,8 @@ $('.common-shortcuts').append('<li class="list-group-item"><span>Backspace</span
 date = moment().format('L').split('/')
 $('input[name="invoiceDate"]').val(`${date[1]}/${date[0]}/${date[2]}`)
 $('input[name="warrantyFrom"]').val(moment().format('DD/MM/YYYY'))
-$('input[name="warrantyTo"]').val(moment(moment().format('DD/MM/YYYY'), 'DD/MM/YYYY').add(1, 'years').format('DD/MM/YYYY'))
 let newMachineInputsNumber = 1
+$('input[name="invoiceNum"]').focus()
 // add new machine service report on click function
 $(".add-new-machine-service-report").on("click", function () { addNewMachineInputs() });
 $('.datepicker').datepicker({ format: 'dd/mm/yyyy' });
@@ -56,25 +56,21 @@ async function updatesalesReportNumber() {
 async function addNewMachineInputs() {
     newMachineInputsNumber++
     $(".service-report-all-parts-info-inputs tbody").append(`
-            <tr class="row-${newMachineInputsNumber}">
-            <td>
+    <tr class="row-${newMachineInputsNumber} new-part">
+            <td class="position-relative">
+                <button type="button" style="position: absolute;left:1em;top:-1.7em" class="btn btn-danger shadow-none" onclick="$(this).parent().parent().remove()">Delete</button>
                 <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
-                    required name="machineName" aria-describedby="helpId"
+                    required name="partName" aria-describedby="helpId"
                     placeholder="part name">
             </td>
             <td>
                 <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
-                    required name="machineNum" aria-describedby="helpId" placeholder="part sno">
+                    required name="partNumber" aria-describedby="helpId" placeholder="part sno">
             </td>
             <td>
-                <input autocomplete="off" type="text" class="form-control shadow-none mx-1 datepicker warranty-input"
-                    required name="warrantyFrom" onkeyup="updateWarrantyDate(${newMachineInputsNumber})" onchange="updateWarrantyDate(${newMachineInputsNumber})"
-                    aria-describedby="helpId" placeholder="warranty from" value="${moment().format('DD/MM/YYYY')}">
-            </td>
-            <td>
-                <input autocomplete="off" type="text" class="form-control shadow-none mx-1 warranty-input"
+                <input autocomplete="off" type="number" class="form-control shadow-none mx-1 warranty-input"
                     required name="warrantyPeriod" onkeyup="updateWarrantyDate(${newMachineInputsNumber})"
-                    aria-describedby="helpId" value="1" style="width:2.5em;">
+                    aria-describedby="helpId" style="width:2.5em;" placeholder="0">
             </td>
             <td>
                 <select class="form-select warranty-select" style="width:7em ;" onchange="updateWarrantyDate(${newMachineInputsNumber})"
@@ -86,13 +82,17 @@ async function addNewMachineInputs() {
                 </select>
             </td>
             <td>
+                <input autocomplete="off" type="text" class="form-control shadow-none mx-1 datepicker warranty-input"
+                    required name="warrantyFrom" onkeyup="updateWarrantyDate(${newMachineInputsNumber})" onchange="updateWarrantyDate(${newMachineInputsNumber})"
+                    aria-describedby="helpId" placeholder="warranty from" value="${moment().format('DD/MM/YYYY')}">
+            </td>
+            <td>
                 <input autocomplete="off" readonly type="text"
                     class="form-control shadow-none mx-1 warranty-input" required name="warrantyTo"
                     onkeyup="updateWarrantyDate(${newMachineInputsNumber})" aria-describedby="helpId"
-                    placeholder="warranty to">
+                    placeholder="warranty till">
             </td>
         </tr>`)
-    $('input[name="warrantyTo"]').val(moment(moment().format('DD/MM/YYYY'), 'DD/MM/YYYY').add(1, 'years').format('DD/MM/YYYY'))
     $('.datepicker').datepicker({ format: 'dd/mm/yyyy' });
     appyOnFocusShortcuts()
 }
@@ -138,13 +138,13 @@ $('#add-new-part-sale-report-form').on('submit', (e) => {
     e.preventDefault()
     allParts = []
     tempArr = $('input[name="partName"]').map((i, e) => e.value).get()
-    tempArr.forEach((element, i) => {
+    tempArr.forEach((partName, i) => {
         allParts.push({
-            partName: element,
+            partName,
             partNumber: $('input[name="partNumber"]')[i].value,
             warranty: {
-                from: $(`.row-${rowNum} input[name="warrantyFrom"]`).val(),
-                to: $(`.row-${rowNum} input[name="warrantyTo"]`).val()
+                from: $(`.row-${i + 1} input[name="warrantyFrom"]`).val(),
+                to: $(`.row-${i + 1} input[name="warrantyTo"]`).val()
             },
         })
     });
@@ -153,7 +153,7 @@ $('#add-new-part-sale-report-form').on('submit', (e) => {
         <span class="sr-only">Loading...</span>
     </div>`)
     inputFunctions("readonly", true)
-    axios.post(`/vitco-impex/control/sales-report/parts/add-new`, {
+    axios.post(`/api/v1/sales-data/parts/create-new`, {
         invoiceDate: $('input[name="invoiceDate"]').val(),
         invoiceNum: $('input[name="invoiceNum"]').val(),
         customerName: $('input[name="customerName"]').val(),
@@ -175,7 +175,6 @@ $('#add-new-part-sale-report-form').on('submit', (e) => {
 
 // update warranty date for parts
 function updateWarrantyDate(rowNum) {
-    console.log($(`.row-${rowNum} input[name="warrantyTo"]`))
     $(`.row-${rowNum} input[name="warrantyTo"]`)
         .val(moment($(`.row-${rowNum} input[name="warrantyFrom"]`).val(), 'DD/MM/YYYY')
             .add($(`.row-${rowNum} input[name="warrantyPeriod"]`).val(), $(`.row-${rowNum} select[name="warrantyType"]`).val()).format('DD/MM/YYYY'))
