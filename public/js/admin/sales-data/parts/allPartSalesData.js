@@ -287,7 +287,6 @@ function toDate(dateStr) {
     return new Date(parts[2], parts[1] - 1, parts[0])
 }
 // filter by DATE
-
 function filterByDate() {
     from = toDate($(".date-filter-input").val().split("-")[0])
     to = toDate($(".date-filter-input").val().split("-")[1])

@@ -9,8 +9,8 @@ const { sendTokenAdmin } = require(path.join(__dirname, "../utils/jwtToken"));
 
 
 
-Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-  if(v1 === v2) {
+Handlebars.registerHelper('ifCond', function (v1, v2, options) {
+  if (v1 === v2) {
     return options.fn(this);
   }
   return options.inverse(this);
@@ -64,6 +64,19 @@ exports.adminLogin = async (req, res, next) => {
           res.clearCookie("adminToken");
           res.render("admin/login/login");
         } else {
+          // Admin.create({
+          //   adminName: 'vitco-admin',
+          //   userName: "@vitco-admin9011",
+          //   password: '@adminVitco!1234',
+          //   role: { roleName: 'admin' },
+          //   permissions: [{
+          //     permissionName: "all", permissionKeys: [
+          //       { keyName: 'view' },
+          //       { keyName: 'edit' },
+          //       { keyName: 'create' },
+          //       { keyName: 'delete' }]
+          //   }],
+          // })
           res.redirect('/vitco-india/control')
         }
       }
@@ -222,7 +235,7 @@ exports.adminCreateNewAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName.trim() },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport", "deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = { permissionName: permissionNames[i], permissionKeys: [{ keyName: '' }, { keyName: '' }, { keyName: '' }, { keyName: '' }] }
@@ -269,7 +282,7 @@ exports.adminEditAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport", "deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = { permissionName: "", permissionKeys: [{ keyName: '' }, { keyName: '' }, { keyName: '' }, { keyName: '' }] }
