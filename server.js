@@ -4,7 +4,7 @@ const livereload = require("livereload");
 const connectLiveReload = require("connect-livereload");
 const connectDatabase = require(path.join(__dirname,'/database/connection'))
 require('dotenv').config({ path: path.join(__dirname,'/database/config.env') });
-
+// this is a change
 // Uncaught exceptions
 process.on('uncaughtException', (err) => {
     console.log(`MAIN ERROR: ${err}`)
