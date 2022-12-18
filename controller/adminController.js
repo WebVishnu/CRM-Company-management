@@ -10,8 +10,8 @@ const ServiceReport = require(path.join(
 const bcrypt = require("bcryptjs");
 const { sendTokenAdmin } = require(path.join(__dirname, "../utils/jwtToken"));
 
-Handlebars.registerHelper("ifCond", function (v1, v2, options) {
-  if (v1 === v2) {
+Handlebars.registerHelper("ifCond", function  (v1, v2, options) {
+  if  (v1 === v2) {
     return options.fn(this);
   }
   return options.inverse(this);
@@ -80,8 +80,7 @@ exports.adminLogin = async (req, res, next) => {
           res.clearCookie("adminToken");
           res.render("admin/login/login");
         } else {
-         
-          res.redirect("/vitco-india/control");
+          res.redirect('/vitco-india/control')
         }
       }
     );
@@ -218,13 +217,7 @@ exports.adminCreateNewAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName.trim() },
             permissions: [],
           };
-          permissionNames = [
-            "complaints",
-            "machineSalesData",
-            "partSalesData",
-            "serviceReport",
-            "deliveryOrderVoucher",
-          ];
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {
@@ -298,13 +291,7 @@ exports.adminEditAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName },
             permissions: [],
           };
-          permissionNames = [
-            "complaints",
-            "machineSalesData",
-            "partSalesData",
-            "serviceReport",
-            "deliveryOrderVoucher",
-          ];
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {

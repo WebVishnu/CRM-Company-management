@@ -30,7 +30,21 @@
 <script>
     window.scrollTo(0, 0)
 </script>
-{{!-- <input type="hidden" class="sales-length-input"> --}}
+{{!-- PRINT SEARCH RESULTS --}}
+<div class="print-results-table" id="print-results-table" style="display: none;">
+    <table border="1" cellpadding="3" cellspacing="0">
+        <thead>
+            <th>Sno.</th>
+            <th>Invoice date</th>
+            <th>Invoice Num</th>
+            <th>Customer Name</th>
+            <th colspan="4">Parts</th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+{{!-- FILTER BY DATE SECTION --}}
 <div class="filter-result-menu mt-4">
     <div class="container-fluid px-md-4">
         <div class="row">
@@ -47,6 +61,7 @@
         </div>
     </div>
 </div>
+{{!-- SALE DATA TABLE SECTION --}}
 <div style="width:100%;display:flex;justify-content:center;align-items:center;position:
     relative;" id="sale-data-main-body" class=" mb-5">
     <table style="margin-top: 2em;" class="sales-data-table-container">
@@ -64,6 +79,7 @@
         </tbody>
     </table>
 </div>
+{{!-- LOAD MORE --}}
 <div class="container sales-data-loader" style="position: relative;bottom:3em">
     <div class="row">
         <div class="col d-flex flex-column align-items-center">
@@ -76,6 +92,7 @@
         </div>
     </div>
 </div>
+{{!-- GOT ALL REPORTS --}}
 <div class="container got-all-reports d-none" style="position: relative;bottom:3em">
     <div class="row">
         <div class="col-12 text-center">
@@ -83,7 +100,7 @@
         </div>
     </div>
 </div>
-
+{{!-- FIXED DIV --}}
 <div class="bottom-right-fixed " style="position:fixed;right:0.5em;bottom:0.5em">
     {{#each admin.permissions}}
     {{#ifeq this.permissionName "all"}}
@@ -116,7 +133,8 @@
 <div class="fixed-bottom-center">
     <span class="total-search-results hide shadow"></span>
 </div>
-
+{{!-- =============================================== --}}
+{{!-- =============================================== --}}
 
 
 
@@ -131,7 +149,7 @@
     <button type="submit" class="btn btn-primary shadow-none upload-sale-data-submit-btn mx-3">Submit</button>
 </form> --}}
 
-{{!-- modals --}}
+{{!-- SALE DATA DETAILS CONTAINER --}}
 <div class="view-sale-data-details-modal p-md-3 p-2">
     <div class="container-fluid">
         <div class="row">

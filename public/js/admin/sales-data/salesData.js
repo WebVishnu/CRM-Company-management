@@ -2,14 +2,14 @@ let loadDataNum = 20
 var latestReport = 20
 let gotAllreports = false
 let totalReports = 0
-var results = []
+let results = []
 const searchTotalResultDiv = $('.total-search-results')
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 
-axios.get(`/api/v1/sales-data/macnine/all/0`)
+axios.get(`/api/v1/sales-data/machine/all/0`)
     .then((response) => {
         results = response.data.salesData
     })
@@ -366,7 +366,6 @@ function toDate(dateStr) {
 }
 // filter by DATE
 function filterByDate() {
-    console.log(results)
     from = toDate($(".date-filter-input").val().split("-")[0])
     to = toDate($(".date-filter-input").val().split("-")[1])
     filteredData = results.filter(data => {
@@ -377,9 +376,8 @@ function filterByDate() {
     })
     $('.container got-all-reports').fadeOut(0)
     gotAllreports = true
-    results = filteredData
-    // showAllSalesData({
-    //     success: true,
-    //     salesData: filteredData
-    // })
+    showAllSalesData({
+        success: true,
+        salesData: filteredData
+    })
 }
