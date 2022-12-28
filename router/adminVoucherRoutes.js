@@ -5,11 +5,10 @@ const path = require('path');
 const { authorizedRoles } = require(path.join(__dirname, "../middlewares/auth"));
 const Admin = require(path.join(__dirname, "../models/adminSchema"));
 const DOVoucher = require(path.join(__dirname, "../models/vouchers/deliveryOrderSchema"));
-const Handlebars = require("hbs");
 
 //select vouchers  -- ADMIN 
 router.get('/vitco-impex/vouchers/choose-voucher', async (req, res, next) => {
-    if (await authorizedRoles("deliveryOrderVoucher", req, res, next, ["view"])) {
+    if (await authorizedRoles("vouchers", req, res, next, ["view"])) {
         const { adminToken } = req.cookies;
         const admin = await Admin.findById(adminToken.uID)
         res.render('admin/vouchers/selectVouchers', { "DOvouchers": (await DOVoucher.find()).length, "admin": admin, "webHost": req.headers.host, "protocol": req.headers.host })
@@ -36,13 +35,21 @@ router.get('/vitco-impex/vouchers/delivery-order/view-all', async (req, res, nex
     if (await authorizedRoles("deliveryOrderVoucher", req, res, next, ["view"])) {
         const { adminToken } = req.cookies;
         const admin = await Admin.findById(adminToken.uID)
-        res.render('admin/vouchers/delivery-order/view-all', { "admin": admin, "webHost": req.headers.host, "protocol": req.headers.host })
+        res.render('admin/vouchers/delivery-order/view-all', { "admin": admin })
     } else {
         res.redirect('/vitco-india/control/admin/not-allowed')
     }
 })
 
-
+// delivery order -- print delivery order
+router.get('/vitco-impex/vouchers/delivery-order/print/:id', async (req, res, next) => {
+    if (await authorizedRoles("deliveryOrderVoucher", req, res, next, ["view"])) {
+        const voucher = await DOVoucher.findById(req.params.id)
+        res.render('admin/vouchers/delivery-order/printDO', { voucher })
+    } else {
+        res.redirect('/vitco-india/control/admin/not-allowed')
+    }
+})
 
 module.exports = router
 

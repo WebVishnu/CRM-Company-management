@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Delivery order #{{voucher.voucherNum}}</title>
+    <link rel="icon" type="image/x-icon" href="/images/vitco-logo.ico" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<style>
+    :root {
+        --text-grey: #7E868C;
+    }
+
+    .top-header-link {
+        color: var(--text-grey);
+        font-weight: 400;
+        font-size: small;
+    }
+
+    .top-header-details {
+        font-size: small;
+    }
+
+    .table-header-th {
+        font-weight: 700;
+        color: #687076;
+        font-size: small;
+    }
+
+    .table-header-td {
+        font-size: small;
+        font-weight: 500;
+        color: #000;
+    }
+
+    .table-header-td span {
+        color: #687076;
+        font-weight: 400;
+    }
+
+    body {
+        margin: 0;
+        line-height: normal;
+        background-color: #e7e6e6 !important;
+    }
+
+    page {
+        background: white;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 0.5cm;
+        position: relative;
+        overflow: hidden;
+    }
+
+    page[size="A4"] {
+        padding: 1.5em;
+        width: 8.3in;
+        height: 10.8in;
+    }
+    table thead{
+         background-color: #F8F9FA;
+    }
+    .table td.abbreviation {
+        max-width: 30px;
+    }
+
+    .table td.abbreviation p {
+        word-break: break-all;
+    }
+</style>
+
+<body>
+    <div class="pages">
+        <page size="A4" data-page-num="none" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <h2 style="font-weight:bolder">
+                            Delivery order
+                        </h2>
+                        <h6>#{{voucher.voucherNum}}</h6>
+                        <div class=" mt-3 d-flex">
+                            <div>
+                                <h6 class="top-header-link">Order date</h6>
+                                <h6 class="top-header-link">Consignee</h6>
+                                <h6 class="top-header-link">Mobile</h6>
+                                <h6 class="top-header-link gstNum">GST</h6>
+                                <h6 class="top-header-link panNum">PAN</h6>
+                            </div>
+                            <div class="ms-5">
+                                <h6 class="top-header-details">{{voucher.orderDate}}</h6>
+                                <h6 class="top-header-details">{{voucher.consignee}}</h6>
+                                <h6 class="top-header-details">{{voucher.consigneeMobile}}</h6>
+                                <h6 class="top-header-details gstNum">{{voucher.gstInNum}}</h6>
+                                <h6 class="top-header-details panNum">{{voucher.panNumORaadharNum}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 offset-2">
+                        <div class="d-flex justify-content-end">
+                            <img src="/svg/VitcoLogo.svg" alt="">
+                        </div>
+                        <div class=" mt-3 d-flex justify-content-end">
+                            <div>
+                                <h6 class="top-header-link text-end">Address</h6>
+                                <h6 class="top-header-details text-end">{{voucher.consigneeAddress}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col table-col position-relative" style="height: 38em;overflow: hidden;padding-bottom: 4em;">
+                        <table class="table mt-5 table-responsive position-relative">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="table-header-th">#</th>
+                                    <th scope="col" class="table-header-th">Product name</th>
+                                    <th scope="col" class="table-header-th">Qty</th>
+                                    <th scope="col" class="table-header-th">Rate</th>
+                                    <th scope="col" class="table-header-th">GST</th>
+                                    <th scope="col" class="table-header-th">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col d-flex justify-content-between">
+                        <div class="d-flex flex-column text-center">
+                            <img class="admin-signature" height="100px" width="150px"
+                                src="{{voucher.signatures.admin}}">
+                            <h6 class="text-secondary" style="font-weight:400;font-style:italic;">Created By</h6>
+                        </div>
+                        <div class="d-flex flex-column text-center">
+                            <img class="received-by-signature" height="100px" width="150px"
+                                src="{{voucher.signatures.receiver}}">
+                            <h6 class="text-secondary" style="font-weight:400;font-style:italic;">Received By</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </page>
+    </div>
+    <script>
+
+    </script>
+    <div style="position:fixed;right:1em;bottom:1em;display:flex;z-index:99">
+        <button class="btn mx-1 btn-primary shadow-none print-button " onclick="printDiv()"><i
+                class="bi bi-printer-fill"></i></button>
+    </div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+    integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+    integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    if (`{{{ voucher.gstInNum }}}` == "") {
+        $('.gstNum').remove()
+    } if (`{{{ voucher.panNumORaadharNum }}}` == "") {
+        $('.panNum').remove()
+    }
+    let pageHtml = `${$('.pages').html()}`
+    var pgNo = 0
+    function ObjectId() { }
+    products = [{{{ voucher.products }}}]
+    addNewPage(0)
+    function addNewPage(n) {
+        pgNo++
+        TempPageHtml = pageHtml.replaceAll(`data-page-num="none" style="display: none;"`, `data-page-num="${pgNo}"`)
+        $('.pages').append(TempPageHtml)
+        overflowed = false
+        lastIndex = n
+        total = 0
+        advance = 0
+        for (let i = n; i <= products.length - 1; i++) {
+            if ($(`page[data-page-num="${pgNo}"] .table-col`).prop('scrollHeight') - 1 > $(`page[data-page-num="${pgNo}"] .table-col`).outerHeight()) {
+                overflowed = true
+                lastIndex = i
+                break
+            }
+            const product = products[i];
+            console.log( products)
+            total += parseInt(product.grossTotal)
+            $(`page[data-page-num="${pgNo}"] table tbody`).append(`
+            <tr>
+                <th class="table-header-td" scope="row">${i + 1}</th>
+                <td class="table-header-td abbreviation">
+                    <p class="m-0">
+                    ${product.productName}</p>
+                    <span>${product.serialNum}</span>
+                </td>
+                <td class="table-header-td">${format(product.qty)}</td>
+                <td class="table-header-td">₹ ${format(product.rate)}<br><span>${product.unit}</span></td>
+                <td class="table-header-td">₹ ${format(product.totalGst)}<br><span>${product.gstRate}%</span></td>
+                <td class="table-header-td">₹ ${format(product.grossTotal)}</td>
+            </tr>`)
+        }
+        paymentReceived = "{{{voucher.advancePaymentReceived}}}"
+        if (paymentReceived == "true") {
+            payments = [{{{ voucher.advancePayment }}}]
+            payments.forEach(payment => {
+                advance += parseInt(payment.advanceAmount)
+            });
+        }
+        $(`page[data-page-num="${pgNo}"] .table-col`).append(`
+                <div class="col position-absolute w-100 text-end py-2 pe-2" style="bottom: 0em;right: 0;background-color: #F8F9FA;">
+                    <h6 class="text-secondary m-0">Total : ₹ ${format(total)}</h6>
+                    <p style="font-size: 11px;" class="text-secondary m-0">Advance : ₹ ${format(advance)}</p>
+                    <p style="font-size: 11px;" class="text-secondary m-0">Current Status : ₹ ${(total >= advance) ? (total == advance) ? "Clear" : format(total - advance) + " Cr" : format(advance - total) + " Dr"} </p>
+                </div> `)
+        if (overflowed) {
+            addNewPage(lastIndex)
+        }
+    }
+    // print file
+    function printDiv() {
+        $('.print-button').css('display', 'none');
+        $('body').attr('style', "background-color:#fff!important");
+        window.print();
+        $('.print-button').removeClass('hide')
+        $('body').attr('style', "overflow-y:auto");
+        $('html').attr('style', "overflow-y:auto");
+    }
+    
+    // indian format converter
+    function format(x) {
+        var negative = x < 0,
+            str = String(negative ? -x : x),
+            arr = [],
+            i = str.indexOf("."),
+            j;
+
+        if (i === -1) {
+            i = str.length;
+        } else {
+            for (j = str.length - 1; j > i; j--) {
+                arr.push(str[j]);
+            }
+            arr.push(".");
+        }
+        i--;
+
+        for (j = 0; i >= 0; i--, j++) {
+            if (j > 2 && (j % 2 === 1)) {
+                arr.push(",");
+            }
+            arr.push(str[i]);
+        }
+
+        if (negative) {
+            arr.push("-");
+        }
+
+        return arr.reverse().join("");
+    }
+</script>
+
+</html>

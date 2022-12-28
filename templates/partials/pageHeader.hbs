@@ -11,10 +11,9 @@
         width: 100vw;
         padding: 3em 5em;
         background-color: #F6F6F6;
-        margin-top: 10em;
         
     }
-    .page-header-heading div>h3 {
+    .page-header-heading div>h5 {
             font-weight: 300;
             background-color: #209CD1;
             padding: 0.5em;
@@ -24,10 +23,10 @@
             width: calc(90% - 1vw);
         }
       .page-header-heading div:nth-child(2) {
-            font-size: calc(1.5em + 1vw);
+            font-size: calc(1em + 1vw);
             width: 90%;
             margin-top: 1em;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--theme-colour);
         }
 
@@ -52,11 +51,11 @@
 
 <div class="page-header-heading">
     <div>
-        <h3>
+        <h5>
             {{#> page-header-heading}}
             There is no content here
             {{/page-header-heading}}
-        </h3>
+        </h4>
         {{#> page-header-extra-options}}
         {{/page-header-extra-options}}
     </div>

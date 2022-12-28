@@ -46,7 +46,8 @@ function getAdminDetails(id) {
     checkPermissionInput("machineSalesData", 4, result.data);
     checkPermissionInput("partSalesData", 8, result.data);
     checkPermissionInput("serviceReport", 12, result.data);
-    checkPermissionInput("deliveryOrderVoucher", 16, result.data);
+    checkPermissionInput("vouchers", 16, result.data);
+    checkPermissionInput("deliveryOrderVoucher", 20, result.data);
   }).catch((e) => {
     console.log(e)
   })

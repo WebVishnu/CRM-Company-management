@@ -15,9 +15,7 @@ function loadReportsOnScroll() {
     }
 }
 
-keyboardJS.bind('alt + a', (e) => {
-    loadedReports = 0
-    gotAllreports = false
+keyboardJS.bind('esc', (e) => {
     if (!$('.view-sale-data-details-modal').hasClass('hide')) {
         $('.view-sale-data-details-modal').addClass('hide');
         $('html').removeAttr('style');

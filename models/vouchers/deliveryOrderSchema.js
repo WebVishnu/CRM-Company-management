@@ -28,12 +28,30 @@ const deliveryOrder = new mongoose.Schema({
     advancePaymentReceived: { type: 'string', required: true },
     advancePayment: [
         {
-            mode: { type: 'string', },
-            advanceDate: { type: 'string', },
-            advanceAmount: { type: 'string', },
+            mode: { type: 'string' },
+            advanceDate: { type: 'string' },
+            advanceAmount: { type: 'string' },
             paymentDetails: {}
         }
     ],
+    afterPayments:[
+        {
+            mode: { type: 'string' },
+            date: { type: 'string' },
+            amount: { type: 'string' },
+            details: {}
+        }
+    ],
+    signatures: {
+        admin: {
+            type: 'string',
+            default: ""
+        }
+        ,receiver: {
+            type: 'string',
+            default: ""
+        }
+    },
     dispatchDetails: {
         adminDetails: {
             adminName: { type: 'string' },

@@ -27,9 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/7f1332f97e.js" crossorigin="anonymous"></script>
     {{#> css}}
     {{/css}}
 </head>
@@ -174,8 +172,8 @@
         visibility: hidden;
         opacity: 0;
         color: #fff;
-        height: 95vh;
-        width: 97vw;
+        height: calc(100vh - 2em);
+        width: calc(100vw - 2em);
         position: fixed;
         top: 1em;
         left: 1em;
@@ -260,23 +258,23 @@
                 <div class="col-md-5 mt-4 ms-3">
                     <h6>Page shortcuts</h6>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span>Alt + M</span> <span>All machine sales data</span></li>
-                        <li class="list-group-item"><span>Alt + P</span> <span>All parts sales data</span></li>
-                        <li class="list-group-item"><span>Alt + S</span> <span>Open service reports</span></li>
-                        <li class="list-group-item"><span>Alt + I</span> <span>Open inbox</span></li>
-                        <li class="list-group-item"><span>Alt + C</span> <span>Open complaints</span></li>
-                        <li class="list-group-item"><span>Alt + H</span> <span>Go to profile page</span></li>
+                        <li class="list-group-item"><span>Alt + M</span> <span>Machine sales data</span></li>
+                        <li class="list-group-item"><span>Alt + P</span> <span>Parts sales data</span></li>
+                        <li class="list-group-item"><span>Alt + Q</span> <span>Service reports</span></li>
+                        <li class="list-group-item"><span>Alt + I</span> <span>Inbox</span></li>
+                        <li class="list-group-item"><span>Alt + C</span> <span>Complaints</span></li>
+                        <li class="list-group-item"><span>Alt + H</span> <span>Profile page</span></li>
+                        <li class="list-group-item"><span>Alt + V</span> <span>Choose a voucher ( use num to select vouchers )</span></li>
                     </ul>
                 </div>
-                <div class="col-md-5 mt-4 ms-5 ps-5">
+                <div class="col-md-5 mt-4 ms-md-5 ps-md-5 ps-4">
                     <h6>Common shortcuts</h6>
                     <ul class="list-group list-group-flush common-shortcuts">
                         <li class="list-group-item"><span>R</span> <span>Refresh all reports</span></li>
-                        <li class="list-group-item"><span>Ctrl + /</span> <span>Start searching</span></li>
-                        <li class="list-group-item"><span>Alt + A</span> <span>Close report details</span></li>
-                        <li class="list-group-item"><span>Alt + =</span> <span>Add new report</span></li>
-                        <li class="list-group-item"><span>Shift + /</span> <span>Open shortcut box</span></li>
-                        <li class="list-group-item"><span>ESCAPE</span> <span>Close shortcut box</span></li>
+                        <li class="list-group-item"><span>Ctrl  /</span> <span>Start searching</span></li>
+                        <li class="list-group-item"><span>ESC</span> <span>Close report details</span></li>
+                        <li class="list-group-item"><span>Alt  +</span> <span>Add new report</span></li>
+                        <li class="list-group-item"><span>Shift  /</span> <span>Open shortcut box</span></li>
                     </ul>
                 </div>
             </div>
@@ -453,7 +451,7 @@
                             <div data-i18n="Basic">Vouchers</div>
                         </a>
                     </li>
-                    <li class="menu-main-item">
+                    {{!-- <li class="menu-main-item">
                         <a href="/vitco-impex/control/purchase/home" class="menu-link" data-link="purchase">
                             <i class="bi bi-receipt-cutoff me-3"></i>
                             <div data-i18n="Basic">Purchase</div>
@@ -464,7 +462,7 @@
                             <i class="bi bi-graph-up-arrow me-3"></i>
                             <div data-i18n="Basic">Production</div>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="menu-main-item">
                         <a href="/vitco-impex/control/inventory/home" class="menu-link" data-link="inventory">
                             <i class="bi bi-box2 me-3"></i>
@@ -700,7 +698,7 @@
                         </ul>
                     </li>
                     {{/ifeq}}
-                    {{#ifCond this.permissionName 'deliveryOrderVoucher'}}
+                    {{#ifCond this.permissionName 'vouchers'}}
                     {{#ifeq this.permissionKeys.0.keyName "view"}}
                     <li class="menu-main-item">
                         <a href="/vitco-impex/vouchers/choose-voucher" class="menu-link" data-link="vouchers">
@@ -917,7 +915,7 @@
         window.location.replace("/vitco-impex/control/sales-report/parts/all")
     });
     // service report
-    keyboardJS.bind('alt + s', (e) => {
+    keyboardJS.bind('alt + q', (e) => {
         e.preventDefault()
         window.location.replace("/vitco-india/control/service-reports/all")
     });
@@ -935,6 +933,10 @@
     keyboardJS.bind('alt + h', (e) => {
         e.preventDefault()
         window.location.replace("/vitco-india/control")
+    });
+    keyboardJS.bind('alt + v', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-impex/vouchers/choose-voucher")
     });
     //================================================================================
 
@@ -967,6 +969,10 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+{{!-- signature pad --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.3.4/signature_pad.min.js"
+    integrity="sha512-Mtr2f9aMp/TVEdDWcRlcREy9NfgsvXvApdxrm3/gK8lAMWnXrFsYaoW01B5eJhrUpBT7hmIjLeaQe0hnL7Oh1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 {{!-- date range picker --}}
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>

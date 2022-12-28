@@ -18,8 +18,8 @@
     <table style="margin: 2em 0;">
         <thead>
             <tr>
-                <th scope="col" style="border-radius:6px 0 0 0 "></th>
-                <th scope="col">Admin name</th>
+                {{!-- <th scope="col" style="border-radius:6px 0 0 0 "></th> --}}
+                <th scope="col" style="border-radius:6px 0 0 0 ">Admin name</th>
                 <th scope="col">ID </th>
                 <th scope="col">Password</th>
                 <th scope="col">Role</th>
@@ -31,10 +31,10 @@
             {{#each allAdmins}}
             <tr>
                 {{#ifeq this.userName "@vitco-admin9011"}}
-                <td data-label="Username">
+                {{!-- <td data-label="Username">
                     <img src="{{this.profilePhoto}}" class="img-fluid"
                         style="border-radius:50%;max-height:3em;max-width:3em;height:3em;width:3em;object-fit:cover">
-                </td>
+                </td> --}}
                 <td data-label="Username">{{this.adminName}}</td>
                 <td data-label="Username">{{this.userName}}</td>
                 <td data-label="Password"><a class="cursor-pointer text-primary" data-toggle="modal"
@@ -90,10 +90,10 @@
                 <td data-label="Actions"><i class="bi bi-emoji-frown display-6 text-danger"></i></td>
                 {{/ifeq}}
                 {{#ifnoteq this.userName "@vitco-admin9011"}}
-                <td data-label="Username">
+                {{!-- <td data-label="Username">
                     <img src="{{this.profilePhoto}}" class="img-fluid"
                         style="border-radius:50%;max-height:3em;max-width:3em;height: 3em;width: 3em;">
-                </td>
+                </td> --}}
                 <td data-label="Username" style=" word-break: break-all;">{{this.adminName}}</td>
                 <td data-label="Username" style=" word-break: break-all;">{{this.userName}}</td>
                 <td data-label="Password"><a class="cursor-pointer text-primary" data-toggle="modal"
@@ -323,18 +323,38 @@
                                                                 onclick="return false"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td scope="row" data-toggle="tooltip" data-placement="top" title="Delivery voucher">DO</td>
+                                                        <td scope="row">Vouchers</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="vouchers">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-vouchers" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row" data-toggle="tooltip" data-placement="top"
+                                                            title="Delivery order">DO</td>
                                                         <input type="text" hidden name="permissionName"
                                                             value="deliveryOrderVoucher">
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="view-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="view-deliveryOrderVoucher" name="permissionName">
+                                                        </td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="edit-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="edit-deliveryOrderVoucher" name="permissionName">
+                                                        </td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="create-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="create-deliveryOrderVoucher"
+                                                                name="permissionName"></td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="delete-deliveryOrderVoucher" name="permissionName"
-                                                                onclick="return false"></td>
+                                                                value="delete-deliveryOrderVoucher"
+                                                                name="permissionName" onclick="return false"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -474,18 +494,38 @@
                                                                 onclick="return false"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td scope="row" data-toggle="tooltip" data-placement="top" title="Delivery voucher">DO</td>
+                                                        <td scope="row">Vouchers</td>
+                                                        <input type="text" hidden name="permissionName"
+                                                            value="vouchers">
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="view-vouchers" name="permissionName"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="edit-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="create-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                        <td><input type="checkbox" style="margin-left:0.5em"
+                                                                value="delete-vouchers" name="permissionName"
+                                                                onclick="return false"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td scope="row" data-toggle="tooltip" data-placement="top"
+                                                            title="Delivery order">DO</td>
                                                         <input type="text" hidden name="permissionName"
                                                             value="deliveryOrderVoucher">
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="view-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="view-deliveryOrderVoucher" name="permissionName">
+                                                        </td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="edit-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="edit-deliveryOrderVoucher" name="permissionName">
+                                                        </td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="create-deliveryOrderVoucher" name="permissionName"></td>
+                                                                value="create-deliveryOrderVoucher"
+                                                                name="permissionName"></td>
                                                         <td><input type="checkbox" style="margin-left:0.5em"
-                                                                value="delete-deliveryOrderVoucher" name="permissionName"
-                                                                onclick="return false"></td>
+                                                                value="delete-deliveryOrderVoucher"
+                                                                name="permissionName" onclick="return false"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

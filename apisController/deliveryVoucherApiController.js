@@ -26,12 +26,17 @@ exports.createNewDO = async function (req, res) {
       products: req.body.products,
       advancePayment: req.body.advancePayment,
       advancePaymentReceived: req.body.advancePaymentReceived,
+      signatures: {
+        admin: req.body.adminSignaturePad,
+        receiver: req.body.receivedBySignaturePad
+      }
     }).catch((e) => {
       console.log(e)
       throw "error"
-    }).then(() => {
+    }).then((response) => {
       res.send({
         success: true,
+        id: response._id
       });
     })
   } catch (error) {
@@ -49,12 +54,12 @@ exports.filterDO = async function (req, res) {
     if (req.params.filter === "all") {
       res.send({
         success: true,
-        vouchers: await DOVoucher.find().catch((e) => { throw e })
+        vouchers: await DOVoucher.find().skip(req.params.from).limit(parseInt(req.params.to)).select("-signatures.admin").select("-signatures.receiver").catch((e) => { throw e })
       })
     } else if (req.params.filter === "admin") {
       res.send({
         success: true,
-        vouchers: await DOVoucher.find({ 'createdBy.adminID': admin._id }).catch((e) => { throw e })
+        vouchers: await DOVoucher.find({ 'createdBy.adminID': admin._id }).skip(req.params.from).limit(parseInt(req.params.to)).select("-signatures.admin").select("-signatures.receiver").catch((e) => { throw e })
       })
     } else if (req.params.filter.includes("query=")) {
       query = req.params.filter.replace('query=', "").replaceAll("-", "/")
@@ -68,9 +73,6 @@ exports.filterDO = async function (req, res) {
             { "consignee": { $regex: query, $options: 'i' } },
             { "consigneeMobile": { $regex: query, $options: 'i' } },
             { "products.productName": { $regex: query, $options: 'i' } },
-            { "dispatchDetails.dispatchedBy": { $regex: query, $options: 'i' } },
-            { "dispatchDetails.dispatchVehicleNum": { $regex: query, $options: 'i' } },
-            { "dispatchDetails.dispatchDate": { $regex: query, $options: 'i' } },
           ]
         }).catch((e) => { throw e })
       })

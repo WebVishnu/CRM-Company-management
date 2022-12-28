@@ -26,12 +26,7 @@ exports.viewComplaints = async (req, res) => {
                 );
             } else {
                 const user = await User.findById(token.uID)
-                const complaints = await Complaint.aggregate([
-                    {
-                        $match: {
-                            "userDetails.contactNumber": user.phoneNumber
-                        }
-                    }])
+                const complaints = await Complaint.find({"userDetails.contactNumber": user.phoneNumber})
                 if (complaints == []) {
                     if (req.params.state == "submitted") {
                         res.render('user/complaints/viewComplaints', { "user": user, "submitted": true })

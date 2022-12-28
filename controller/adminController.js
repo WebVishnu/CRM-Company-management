@@ -183,8 +183,7 @@ exports.allAdminsControlPanel = async (req, res, next) => {
           res.redirect("/vitco-india/admin/login");
         } else {
           const admin = await Admin.findById(adminToken.uID);
-          const allAdmins = await Admin.find();
-
+          const allAdmins = await Admin.find().select("-profilePhoto");
           res.render("admin/controlAdmins/controlAdmins", {
             admin: admin,
             allAdmins: allAdmins,
@@ -217,7 +216,7 @@ exports.adminCreateNewAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName.trim() },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","vouchers","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {
@@ -291,7 +290,7 @@ exports.adminEditAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","deliveryOrderVoucher"]
+          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","vouchers","deliveryOrderVoucher"]
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {

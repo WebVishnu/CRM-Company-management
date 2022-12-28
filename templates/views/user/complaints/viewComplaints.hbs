@@ -1,17 +1,7 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-  <!-- Required meta tags -->
-  {{>headTags}}
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-  <meta name="description" content="Post your complaint and let us help you get back to focusing on what really matters.">
-  <!-- Style -->
-  <link rel="stylesheet" href="/css/complaints/viewComplaints.css">
-  <title>Complaints - Vitco Impex</title>
-  <link rel="stylesheet" href="/css/loading/loading.css">
-
-</head>
+{{>userHeader}}
+{{#*inline "title"}}Complaints{{/inline}}
+{{#*inline "description"}}Our goal is to provide a safe, secure, and easy-to-use complaint management system that will allow you to make a complaint about any concern you might have.{{/inline}}
+{{#*inline "css"}}
 <style>
   body,
   html {
@@ -172,25 +162,38 @@
       border-bottom: 0;
     }
   }
-
 </style>
-
-<body>
-  {{>loading}}
-  {{>header}}
-  {{>pageHeader}}
-  {{#*inline "page-header-heading"}}
-  Your Complaints
-  {{/inline}}
-  {{#*inline "page-header-extra-options"}}
-  <button class="new-complaint-btn-link" onclick="window.location.href = '/complaint-new/new'">Add new</button>
-  {{/inline}}
-  {{#*inline "page-header-data"}}
-  We're happy to assist you with all of your problems.
-  {{/inline}}
-  <button class="new-complaint-btn" onclick="window.location.href = '/complaint-new/new'">Add new</button>
-  {{!-- <div class="complaints">
-    <table>
+{{/inline}}
+{{#*inline "body"}}
+{{>pageHeader}}
+{{#*inline "page-header-heading"}}
+Your Complaints
+{{/inline}}
+{{#*inline "page-header-extra-options"}}
+<button class="new-complaint-btn-link" onclick="window.location.href = '/complaint-new/new'">Add new</button>
+{{/inline}}
+{{#*inline "page-header-data"}}
+We're happy to assist you with all of your problems.
+{{/inline}}
+<button class="new-complaint-btn" onclick="window.location.href = '/complaint-new/new'">Add new</button>
+{{!-- <div class="complaints">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Complaint ID</th>
+        <th scope="col">Machine seriel number</th>
+        <th scope="col">Date Of purchase</th>
+        <th scope="col">Issue</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody id="all-complaints-body">
+    </tbody>
+  </table> --}}
+  <div class="complaints">
+    {{#if user}}
+    {{#if complaints}}
+    <table style="margin-bottom: 7em;">
       <thead>
         <tr>
           <th scope="col">Complaint ID</th>
@@ -200,83 +203,57 @@
           <th scope="col">Status</th>
         </tr>
       </thead>
-      <tbody id="all-complaints-body">
+      <tbody>
+        {{#each complaints}}
+        <tr>
+          <td data-label="Complaint ID">{{complaintID}}</td>
+          <td data-label="Seriel Number">{{machineSerielNumber}}</td>
+          <td data-label="Date of purchase">{{DOP}}</td>
+          <td data-label="Problem">{{issue}}</td>
+          {{#if (eq complaintStatus "Pending")}}
+          <td data-label="Status"><button style="background-color: #FDF4F6;color:#DE486C">{{complaintStatus}}</button>
+          </td>
+          {{/if}}
+          {{#if (eq complaintStatus "Progress")}}
+          <td data-label="Status"><button style="background-color: #FFF7E6;color:#FFB61A">In Progress</button></td>
+          {{/if}}
+          {{#if (eq complaintStatus "Solved")}}
+          <td data-label="Status"><button style="background-color: #EBF9F4;color:#2FB182">{{complaintStatus}}</button>
+          </td>
+          {{/if}}
+        </tr>
+        {{/each}}
       </tbody>
-    </table> --}}
-    <div class="complaints">
-      {{#if user}}
-      {{#if complaints}}
-      <table style="margin-bottom: 7em;">
-        <thead>
-          <tr>
-            <th scope="col">Complaint ID</th>
-            <th scope="col">Machine seriel number</th>
-            <th scope="col">Date Of purchase</th>
-            <th scope="col">Issue</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each complaints}}
-          <tr>
-            <td data-label="Complaint ID">{{complaintID}}</td>
-            <td data-label="Seriel Number">{{machineSerielNumber}}</td>
-            <td data-label="Date of purchase">{{DOP}}</td>
-            <td data-label="Problem">{{issue}}</td>
-            {{#if (eq complaintStatus "Pending")}}
-            <td data-label="Status"><button style="background-color: #FDF4F6;color:#DE486C">{{complaintStatus}}</button>
-            </td>
-            {{/if}}
-            {{#if (eq complaintStatus "Progress")}}
-            <td data-label="Status"><button style="background-color: #FFF7E6;color:#FFB61A">In Progress</button></td>
-            {{/if}}
-            {{#if (eq complaintStatus "Solved")}}
-            <td data-label="Status"><button style="background-color: #EBF9F4;color:#2FB182">{{complaintStatus}}</button>
-            </td>
-            {{/if}}
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-      {{else}}
-      <div class="not-loggined-img">
-        <img src="/images/no complaints.png" alt="">
-      </div>
-      {{/if}}
-      {{else}}
-      <div class="not-loggined-img">
-        <img src="/images/please login image.png" alt="">
-      </div>
-      {{/if}}
-
-    </div>
-
-
-
-
-    {{!-- new complaitn submit toast --}}
-    {{#if submitted}}
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed;">
-      <div class="toast-header">
-        <strong class="me-auto">New Complaint</strong>
-        <small>Latest</small>
-        <span class="material-symbols-outlined" style="color:#fff;position: absolute;top:10px;right:10px;cursor:pointer"
-          onclick="$('.toast').css({'display':'none','opacity':'0','visibility':'visible'});processAjaxData('/complaint/all')">
-          cancel
-        </span>
-      </div>
-      <div class="toast-body">
-        Your Complaint has been submitted.
-      </div>
+    </table>
+    {{else}}
+    <div class="not-loggined-img">
+      <img src="/images/no complaints.png" alt="">
     </div>
     {{/if}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{else}}
+    <div class="not-loggined-img">
+      <img src="/images/please login image.png" alt="">
+    </div>
+    {{/if}}
 
-    <script src="/js/complaints/main.js"></script>
-
-</body>
-{{>commonScripts}}
-
-</html>
+  </div>
+  {{!-- new complaitn submit toast --}}
+  {{#if submitted}}
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed;">
+    <div class="toast-header">
+      <strong class="me-auto">New Complaint</strong>
+      <small>Latest</small>
+      <span class="material-symbols-outlined" style="color:#fff;position: absolute;top:10px;right:10px;cursor:pointer"
+        onclick="$('.toast').css({'display':'none','opacity':'0','visibility':'visible'});processAjaxData('/complaint/all')">
+        cancel
+      </span>
+    </div>
+    <div class="toast-body">
+      Your Complaint has been submitted.
+    </div>
+  </div>
+  {{/if}}
+ {{/inline}}
+{{#*inline "script"}}
+  <script src="/js/complaints/main.js"></script>
+{{/inline}}

@@ -1,6 +1,13 @@
+// GLOBAL
+let currentSignaturePad = 1
+
+// shortcuts
 keyboardJS.bind('ctrl + q', (e) => {
     addNewProduct()
 });
+const adminSignaturePad = new SignaturePad(document.querySelector("#adminSignaturePad"));
+// const passedBySignaturePad = new SignaturePad(document.querySelector("passed-by-signature-pad"));
+const receivedBySignaturePad = new SignaturePad(document.querySelector("#receivedBySignaturePad"));
 
 $.getJSON('/js/admin/vouchers/delivery-order/people.json', function (data) {
 }).catch((e) => {
@@ -38,68 +45,99 @@ $('.mode-of-advance-payment').on('change', () => {
 
 
 // on form submit
-$('form').on('submit', (e) => {
+function submitForm(cmd) {
+    advanceTb = $('.advanceEntryTbody')
+    table = $('#allProductsTable tbody')
     if ($('.allProductsTbody tr').length == 0) {
-        e.preventDefault()
-        $('.error').html("please add a product to the list")
+        $('.error').html("")
+        setTimeout(() => {
+            $('.error').html("please add a product to the list")
+        }, 200);
         $('html, body').animate({ scrollTop: $("#allProductsTable").offset().top - 20 * 16 }, 500);
-    } else if ($('.mode-of-advance-payment').val() == "null") {
-        e.preventDefault()
-        $('.error').html("please choose the mode of payment")
-    } else {
-        e.preventDefault()
-        // basic data
-        var data = $('#createNewDo').serializeArray().reduce(function (obj, item) {
-            obj[item.name] = item.value;
-            return obj;
-        }, {});
-        // products 
-        data["products"] = []
-        table = $('#allProductsTable tbody')
-        for (let i = 0; i < $('#allProductsTable tbody tr').length; i++) {
-            tempElement = table.children(i).children().children(`input`)
-            data["products"].push({
-                productName: tempElement[0].value,
-                serialNum: tempElement[1].value,
-                qty: tempElement[2].value,
-                unit: tempElement[3].value,
-                rate: tempElement[4].value,
-                amount: tempElement[5].value,
-                gstRate: tempElement[6].value,
-                totalGst: tempElement[7].value,
-                grossTotal: tempElement[8].value,
-            })
-        }
-
-        // mode of payment
-        data["advancePayment"] = []
-        data["advancePaymentReceived"] = ($('.advanceDetailsCheckbox').prop('checked')==true)?true:false
-        advanceTb = $('.advanceEntryTbody')
-        for (let i = 0; i < $('.advanceEntryTbody tr').length; i++) {
-            tempElement = advanceTb.children()[i].children
-            data["advancePayment"].push({
-                mode: tempElement[0].children[0].value,
-                advanceDate: tempElement[1].children[0].value,
-                advanceAmount: tempElement[2].children[0].value,
-                paymentDetails: getAdvancePaymentDetails(i)
-            })
-        }
-        submitBtn = $('button[type="submit"]')
-        submitBtn.attr('type', 'button').html(`
-        <div class="spinner-border spinner-border-sm" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>`)
-        // submitting req
-        axios.post('/api/v1/vitco-impex/voucher/delivery-order/new', data).then((res) => {
-            if (res.data.success == true) {
-                location.reload();
-            } else {
-                submitBtn.removeClass("bg-base-color").addClass("btn-danger").html("Error !")
-                $('.error').html('Please wait until it is resolved')
-            }
-        }).catch((err) => { console.log(err) })
     }
-})
+    // else if (parseInt($('.totalAmount').html()) < parseInt($('.totalAdvncSpan').html())) {
+    //     $('.error').html("Advance payment can't be more than " + parseInt($('.totalAmount').html()))
+    // } 
+    else if ($('.mode-of-advance-payment').val() == "null") {
+        $('.error').html("")
+        setTimeout(() => {
+            $('.error').html("please choose the mode of payment")
+        }, 200);
+    } else if ($('input').filter('[required]:visible').val() == "" || $('textarea').filter('[required]:visible').val() == "") {
+        $('.error').html("")
+        setTimeout(() => {
+            $('.error').html("Fill the form correctly")
+        }, 200);
+    } else {
+        error = false
+        for (let i = 1; i <= $('.signature-container .signature-pad').length; i++) {
+            canvas = $(`.signature-container .section-${i} canvas`)
+            if (eval(canvas.attr("id")).isEmpty()) {
+                error = true
+                break;
+            }
+        }
+        if (!error) {
+            // basic data
+            var data = $('#createNewDo').serializeArray().reduce(function (obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            // products 
+            data["products"] = []
+            for (let i = 0; i <= $('#allProductsTable tbody tr').length - 1; i++) {
+                Gtd = table.children()[i].children // array of table data ( <td></td> ) of ( row = i )
+                data["products"].push({
+                    productName: Gtd[0].children[1].value,
+                    serialNum: Gtd[1].children[0].value,
+                    qty: Gtd[2].children[0].value,
+                    unit: Gtd[3].children[0].value,
+                    rate: Gtd[4].children[0].value,
+                    amount: Gtd[5].children[0].value,
+                    gstRate: Gtd[6].children[0].value,
+                    totalGst: Gtd[7].children[0].value,
+                    grossTotal: Gtd[8].children[0].value,
+                })
+            }
+            // mode of payment
+            data["advancePayment"] = []
+            data["advancePaymentReceived"] = ($('.advanceDetailsCheckbox').prop('checked') == true) ? true : false
+            for (let i = 0; i < $('.advanceEntryTbody tr').length; i++) {
+                tempElement = advanceTb.children()[i].children
+                data["advancePayment"].push({
+                    mode: tempElement[0].children[0].value,
+                    advanceDate: tempElement[1].children[0].value,
+                    advanceAmount: tempElement[2].children[0].value,
+                    paymentDetails: getAdvancePaymentDetails(i)
+                })
+            }
+            submitBtn = $('button[type="submit"]')
+            submitBtn.attr('type', 'button').html(`
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>`)
+            // submitting req
+            axios.post('/api/v1/vitco-impex/voucher/delivery-order/new', data).then((res) => {
+                if (res.data.success == true) {
+                    if (cmd == "submit") {
+                        location.reload();
+                    } else if (cmd == "print") {
+                        window.open(`/vitco-impex/vouchers/delivery-order/print/${res.data.id}`, "_blank");
+                        location.reload();
+                    }
+                } else {
+                    submitBtn.removeClass("bg-base-color").addClass("btn-danger").html("Error !")
+                    $('.error').html('Please wait until it is resolved')
+                }
+            }).catch((err) => { console.log(err) })
+        } else {
+            $('.error').html("")
+            setTimeout(async () => {
+                $('.error').html("Please sign your report properly.")
+            }, 200);
+        }
+    }
+}
 
 
 let advanceInputNum = 0
@@ -127,11 +165,11 @@ function getAdvancePaymentDetails(index) {
 }
 
 //add more advance payment inputs
-function tempFunction(ele,advIn) {
+function tempFunction(ele, advIn) {
     if ($(ele).val() == 'others') {
         $('.other-advance-head').removeClass('hide');
         $(`td[data-other-inp-row=${advIn}]`).removeClass('hide');
-    }else{
+    } else {
         $(`td[data-other-inp-row=${advIn}]`).addClass('hide');
     }
 }
@@ -183,6 +221,7 @@ async function deleteProduct(row) {
     }
     printTotalAmount()
 }
+
 // total amount for single product
 function getAmountSingleProduct(row) {
     qtyInput = $(`tr[data-product-row="${row}"] td:nth-child(3) input`)
@@ -198,15 +237,17 @@ function getAmountSingleProduct(row) {
 // make total count for single product
 function getTotalSingleProduct(row) {
     totalInput = $(`tr[data-product-row="${row}"] td:nth-child(9) input`)
-    amountInput = $(`tr[data-product-row="${row}"] td:nth-child(5) input`)
+    amountInput = $(`tr[data-product-row="${row}"] td:nth-child(6) input`)
     gstInput = $(`tr[data-product-row="${row}"] td:nth-child(7) select`)
     gstValInput = $(`tr[data-product-row="${row}"] td:nth-child(8) input`)
     if (amountInput.val() != "" && gstInput.val() != "") {
-        totalGst = (parseInt(amountInput.val()) * parseInt(gstInput.val())) / 100
+        totalGst = (parseInt(amountInput.val()) * (parseInt(gstInput.val()) / 100))
         gstValInput.val(totalGst)
         totalInput.val(parseInt(totalGst) + parseInt(amountInput.val())).trigger("change")
     }
 }
+
+
 
 // make advance total 
 function printTotalAmount() {
@@ -268,4 +309,65 @@ async function addNewProduct() {
             </tr>`)
 
 
+}
+
+
+// next signature pad
+function nextSignaturePad() {
+    $(`.signature-container .section-${currentSignaturePad}`).fadeOut(0)
+    currentSignaturePad++
+    $(`.signature-container .section-${currentSignaturePad}`).fadeIn(0)
+    // changing title
+    $('.signature-modal #signature-modal-title').html($(`.signature-container .section-${currentSignaturePad}`).data("pad-title"))
+    if ($(`.signature-container .section-${currentSignaturePad + 1}`).length == 0) {
+        $('.submit-signature-btn').html("Save").attr("onclick", "submitSignature()")
+    } else {
+        $('.submit-signature-btn').html("Next")
+    }
+    if (currentSignaturePad > 1) {
+        $('.previous-signature-pad').fadeIn(0)
+    } else {
+        $('.previous-signature-pad').fadeOut(0)
+
+    }
+}
+// previous signature pad
+function previousSignaturePad() {
+    $('.submit-signature-btn').html("Save").attr("onclick", "nextSignaturePad()")
+    $('.submit-signature-btn').html("Next")
+    $(`.signature-container .section-${currentSignaturePad}`).fadeOut(0)
+    currentSignaturePad--
+    $(`.signature-container .section-${currentSignaturePad}`).fadeIn(0)
+    // changing title
+    $('.signature-modal #signature-modal-title').html($(`.signature-container .section-${currentSignaturePad}`).data("pad-title"))
+    if (currentSignaturePad > 1) {
+        $('.previous-signature-pad').fadeIn(0)
+    } else {
+        $('.previous-signature-pad').fadeOut(0)
+    }
+}
+// clear signature 
+function clearSignaturePad() {
+    eval($(`.signature-container .section-${currentSignaturePad} canvas`).attr("id")).clear()
+}
+
+// submit signature to signature inputs
+function submitSignature() {
+    $('.add-signature-btn').html("Edit Signature")
+    $('.signature-modal .close').click();
+    for (let i = 1; i <= currentSignaturePad; i++) {
+        canvas = $(`.signature-container .section-${i} canvas`)
+        data = eval(canvas.attr("id")).toDataURL();
+        $(`input[name="${canvas.attr("id")}"]`).val(data)
+    }
+}
+// MEDIA QUERIES
+if (Modernizr.mq('(max-width: 363px)')) {
+    $('.signature-pad')[0].setAttribute("width", 250)
+} else if (Modernizr.mq('(max-width: 413px)')) {
+    $('.signature-pad')[0].setAttribute("width", 300)
+} else if (Modernizr.mq('(max-width: 460px)')) {
+    $('.signature-pad')[0].setAttribute("width", 350)
+} else if (Modernizr.mq('(max-width: 767px)')) {
+    $('.signature-pad')[0].setAttribute("width", 400)
 }

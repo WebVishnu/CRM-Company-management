@@ -106,7 +106,8 @@
                         <h5 class="m-0">Delivery order</h5>
                     </a>
                     {{/ifeq}}
-                    <span style="color:rgb(74, 74, 74);font-size: 12px;">Total Vouchers: {{@root.DOvouchers}}</span> <br>
+                    <span style="color:rgb(74, 74, 74);font-size: 12px;">Total Vouchers: {{@root.DOvouchers}}</span>
+                    <br>
                     <span style="font-size: 12px;">
                         {{#ifeq this.permissionKeys.2.keyName "create"}}
                         <a href="/vitco-impex/vouchers/delivery-order/new" class="mx-3">Create new </a>
@@ -127,7 +128,12 @@
 {{/inline}}
 {{#*inline "script"}}
 <script>
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    keyboardJS.bind('1', (e) => {
+        e.preventDefault()
+        window.location.replace("/vitco-impex/vouchers/delivery-order/view-all")
+    });
 </script>
 {{/inline}}

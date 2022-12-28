@@ -8,11 +8,15 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 results = []
-axios.get(`/api/v1/sales-data/parts/all/0`)
-    .then((response) => {
-        results = response.data.salesData
-    })
-    .catch(err => { console.log(err); })
+async function getAllreports() {
+    data = await axios.get(`/api/v1/sales-data/parts/all/0`)
+        .then((response) => {
+            return response.data.salesData
+        })
+        .catch(err => { console.log(err); })
+    return data
+}
+
 // date range picker
 $('input[name="daterange"]').daterangepicker({
     locale: {
@@ -27,11 +31,11 @@ $(window).on('scroll', async () => {
                 loadDataNum += 20
                 if (loadDataNum <= totalReports - 20) {
                     $(".sales-data-loader").removeClass("d-none")
-                    getAllSalesDataAjaxCall(loadDataNum)
+                    getReports(loadDataNum)
                 } else {
                     $(".sales-data-loader").removeClass("d-none")
                     gotAllreports = true
-                    await getAllSalesDataAjaxCall(0)
+                    await getReports(0)
                     $(".got-all-reports").removeClass("d-none")
                 }
             }
@@ -56,7 +60,7 @@ $('#search-form input').on('keyup', async function () {
     } else {
         $('.load-more-data-btn').attr('style', 'display:block!important')
         // $(".filter-results-btn").fadeOut(0)
-        getAllSalesDataAjaxCall(20)
+        getReports(20)
     }
 });
 $('.upload-sale-data-submit-btn').fadeOut(0)
@@ -83,13 +87,19 @@ keyboardJS.bind('r', () => { refreshAllReports() })
 // =========================================================================
 
 // all sales data
-function getAllSalesDataAjaxCall(limit) {
+function getReports(limit) {
     try {
         searchTotalResultDiv.addClass('hide')
         axios.get(`/api/v1/sales-data/parts/all/${limit}`)
             .then((response) => {
                 // totalReports = response.data.totalReports
                 $(".sales-data-loader").addClass("d-none");
+                if (limit == 20) {
+                    getAllreports().then(res => {
+                        results = res;
+                        printResults(results)
+                    })
+                }
                 showAllSalesData(response.data)
             })
             .catch(err => { console.log(err) })
@@ -115,6 +125,7 @@ async function getsearchedSalesDataAjaxCall(query) {
                 }
                 $(".sales-data-loader").addClass("d-none");
                 results = response.data.salesData
+                printResults(response.data.salesData)
                 showAllSalesData(response.data)
 
             })
@@ -182,33 +193,9 @@ async function printSaleReport(result) {
 // print all the sales data to the html page
 async function showAllSalesData(result) {
     if (result.success) {
-        if (result.salesData.length < 20) {
-            $('.load-more-data-btn').attr('style', 'display:none!important')
-        }
         tableData = ``;
-        $(".print-results-table tbody").html('')
         for (let i = 0; i < result.salesData.length; i++) {
             data = result.salesData[i]
-            $(".print-results-table tbody").append(`
-            <tr style="">
-                <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""} >${data.reportNumber}</td>
-                <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.invoiceDate}</td>
-                <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.invoiceNum}</td>
-                <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.customerName}</td>
-                <td>${(data.parts.length > 0) ? `${data.parts[0].partName}` : ""}</td>
-                <td>${(data.parts.length > 0) ? `${data.parts[0].partNumber}` : ""}</td>
-                <td>${(data.parts.length > 0) ? `${data.parts[0].warranty.from}` : ""}</td>
-                <td>${(data.parts.length > 0) ? `${data.parts[0].warranty.to}` : ""}</td>
-            </tr>`)
-            data.parts.forEach(part => {
-                $(".print-results-table tbody").append(`
-                        <tr>
-                            <td>${part.partName}</td>
-                            <td>${part.partNumber}</td>
-                            <td>${part.warranty.from}</td>
-                            <td>${part.warranty.to}</td>
-                        </tr>`)
-            });
             tableData += `
                     <tr style="word-break: break-word;" class="all-sale-data-row" onclick='
                             $(".toggle-input").prop("readonly", true);
@@ -274,7 +261,7 @@ async function applyChangeSaleData() {
         parts: allParts
     }).then((response) => {
         // loadDataNum = 20
-        // getAllSalesDataAjaxCall(20)
+        // getReports(20)
         // toggleSalesEditInputRead(true)
         // console.log(response.data)
         printSaleReport(response.data.report)
@@ -299,6 +286,7 @@ function filterByDate() {
     $('.container got-all-reports').fadeOut(0)
     gotAllreports = true
     results = filteredData
+    printResults(filteredData)
     showAllSalesData({
         success: true,
         salesData: filteredData
@@ -314,7 +302,7 @@ async function pad(n, length) {
 // =========================================================================
 // FUNCTION CALLS
 // =========================================================================
-getAllSalesDataAjaxCall(20)
+getReports(20)
 // ================================================================
 
 // refresh all reports
@@ -327,7 +315,7 @@ function refreshAllReports() {
     setTimeout(() => {
         loadDataNum = 20;
         gotAllreports = false;
-        getAllSalesDataAjaxCall(20);
+        getReports(20);
         $('.sales-data-table-container').css('display', 'inline-table');
     }, 100);
 }
@@ -338,4 +326,35 @@ function printReports() {
     printJS('print-results-table', 'html')
     $('.print-results-table').fadeOut(0).removeClass("active")
 
+}
+
+
+// print results for physical copy of results print function
+async function printResults(res) {
+    $(".print-results-table tbody").html('')
+    for (let i = 0; i < res.length; i++) {
+        let data = res[i]
+        // print tbody
+        $(".print-results-table tbody").append(`
+        <tr>
+            <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""} >${data.reportNumber}</td>
+            <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.invoiceDate}</td>
+            <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.invoiceNum}</td>
+            <td ${(data.parts.length > 0) ? `rowspan="${data.parts.length + 1}"` : ""}>${data.customerName}</td>
+            <td>${(data.parts.length > 0) ? `${data.parts[0].partName}` : ""}</td>
+            <td>${(data.parts.length > 0) ? `${data.parts[0].partNumber}` : ""}</td>
+            <td>${(data.parts.length > 0) ? `${data.parts[0].warranty.from}` : ""}</td>
+            <td>${(data.parts.length > 0) ? `${data.parts[0].warranty.to}` : ""}</td>
+        </tr>`)
+        // print all parts
+        data.parts.forEach(machine => {
+            $(".print-results-table tbody").append(`
+                    <tr>
+                        <td>${machine.partName}</td>
+                        <td>${machine.partNumber}</td>
+                        <td>${machine.warranty.from}</td>
+                        <td>${machine.warranty.to}</td>
+                    </tr>`)
+        });
+    }
 }

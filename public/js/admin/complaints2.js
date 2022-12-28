@@ -1,4 +1,4 @@
-keyboardJS.bind('alt + a', (e) => {
+keyboardJS.bind('esc', (e) => {
     checkclass()
     $('.complaint-details-modal').removeClass("active");
 });

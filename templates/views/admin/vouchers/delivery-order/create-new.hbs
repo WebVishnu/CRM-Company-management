@@ -87,6 +87,53 @@
     .product-tooltip.active .product-tooltiptext {
         visibility: visible;
     }
+
+
+    /*.signature-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        height: 35em;
+        width: 30em;
+        z-index: 20;
+    }
+
+    .creator-signature::before{
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: -33.5%;
+    left: -35%;
+    z-index: -3;
+    background-color: #d0d0d040;
+}*/
+    /*.creator-signature {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .creator-signature .signature-pad {
+        height: 20em;
+        max-width: 60em;
+        width: 60em;
+        margin: 1em;
+        background-color: #ffffff;
+        border: 1px solid #d0d0d0;
+
+    }
+
+    @media (max-width:1200px) {
+        .signature-container {
+            height: 98%;
+            width: 95%;
+        }
+    }*/
 </style>
 {{/style}}
 
@@ -177,7 +224,7 @@
                 <div class="form-group">
                     <div class="mb-3">
                         <label for="gstNum">GST IN NO.</label>
-                        <input autocomplete="off"  type="text" class="form-control shadow-none" id="gstNum"
+                        <input autocomplete="off" type="text" class="form-control shadow-none" id="gstNum"
                             name="gstInNum" placeholder="enter gst invoice number">
                     </div>
                     {{!-- <div class="my-3">
@@ -293,66 +340,81 @@
 
             </div>
         </div>
-        {{!-- <hr>
-        <div class="row">
-            <h4 class="my-2 text-base-color">Dispatch Details</h4>
-            <div class="col-md-5">
-                <div class="form-group">
-                    <div class="my-3">
-                        <label for="dispatchedBy">Dispatched By </label>
-                        <input autocomplete="off" required type="text" class="form-control shadow-none"
-                            id="dispatchedBy" name="dispatchedBy" placeholder="who dispatched it ?">
-                    </div>
-                    <div class="my-3">
-                        <label for="dispatchVehicleNum">Dispatch vehicle no. </label>
-                        <input autocomplete="off" required type="text" class="form-control shadow-none"
-                            id="dispatchVehicleNum" name="dispatchVehicleNum" placeholder="enter vehicle number">
-                    </div>
-                    <div class="my-3">
-                        <label for="remark">Remark </label>
-                        <textarea required style="resize: none;" type="text" class="form-control shadow-none"
-                            name="remark" id="remark" placeholder="enter order summary"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5 offset-md-1">
-                <div class="form-group my-3">
-                    <div class="my-3">
-                        <label for="machineSrNum">Machine Serial No. </label>
-                        <input autocomplete="off" required type="text" class="form-control shadow-none"
-                            id="machineSrNum" name="machineSrNum" placeholder="enter serial number">
-                    </div>
-                    <div class="mb-3">
-                        <label for="invoiceNum">Invoice No.</label>
-                        <input autocomplete="off" required type="text" class="form-control shadow-none" id="invoiceNum"
-                            name="invoiceNum" placeholder="enter invoice number">
-                    </div>
-                    <div class="mb-3">
-                        <label for="invoiceDate">Invoice Date</label>
-                        <div class="input-group date" data-date-format="dd/mm/yyyy">
-                            <input autocomplete="off" type="text" required class="form-control" placeholder="dd/mm/yyyy"
-                                name="invoiceDate">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
+        <div>
+            <h4 class="my-3 text-base-color">Sign your report
+                <button class="btn bg-base-color text-light mx-3 w-auto shadow-none add-signature-btn" type="button"
+                    data-toggle="modal" data-target="#signature-modal">Add Signture</button>
+            </h4>
+            {{!-- signature inputs --}}
+            <input type="hidden" name="adminSignaturePad">
+            {{!-- <input type="text" name="passedBySignature"> --}}
+            <input type="hidden" name="receivedBySignaturePad">
+            {{!-- signature pads --}}
+            <div class="signature-modal modal" id="signature-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="signature-modal-title">Admin Signature </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="signature-container">
+                                <div class="section-1 creator-signature" data-pad-title="Admin signature">
+                                    <canvas id="adminSignaturePad" data-sign-pad="1"
+                                        class="signature-pad creator-signature-pad" height="220" width="450"></canvas>
+                                </div>
+                                {{!-- <div class="section-2">
+                                    <canvas id="passed-by-signature-pad" class="signature-pad creator-signature-pad"
+                                        height="220" width="450"></canvas>
+                                </div> --}}
+                                <div class="section-2" style="display: none;"
+                                    data-pad-title="Receiver signature <br> <small class='text-secondary' style='font-size: 14px;'>Review your report before Signature</small>">
+                                    <canvas id="receivedBySignaturePad" data-sign-pad="2"
+                                        class="signature-pad received-by-signature-pad" height="220"
+                                        width="450"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary shadow-none"
+                                onclick="clearSignaturePad()">Clear</button>
+                            <div>
+                                <small class="signature-modal-error"></small>
+                                <button type="button" class="btn btn-success shadow-none previous-signature-pad"
+                                    onclick="previousSignaturePad()" style="display: none;">Back</button>
+                                <button type="button" class="btn bg-text-base-color shadow-none submit-signature-btn"
+                                    onclick="nextSignaturePad()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> --}}
+
+        </div>
         <div class="submit-container d-flex justify-content-end ps-3 align-items-center"
             style="position: fixed;bottom:1em;right:1em;">
             <span class="error display-5 mx-3"></span>
-            <button class="btn bg-base-color text-light mx-3 shadow-none"
-                onclick="window.location.href ='/vitco-impex/vouchers/delivery-order/view-all'" type="button"><i
-                    class="bi bi-view-stacked mx-1"></i>View all</button>
+            <button class="btn bg-base-color text-light shadow-none" type="button"
+                data-toggle="tooltip" data-placement="top" title="Print and submit" onclick="submitForm('print')">
+                <i class="bi bi-printer mx-1"></i></button>
+            <button class="btn bg-base-color text-light mx-2 shadow-none"
+                onclick="window.location.href ='/vitco-impex/vouchers/delivery-order/view-all'" type="button" data-toggle="tooltip" data-placement="top" title="View all">
+                <i class="bi bi-eye mx-1"></i></button>
             <button style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
-                class="btn bg-base-color text-light shadow-none" type="submit">Submit</button>
+                class="btn bg-base-color text-light shadow-none" type="button" onclick="submitForm('submit')">Submit</button>
         </div>
     </form>
 </div>
 {{/inline}}
 {{#*inline "script"}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 {{!-- my script --}}
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 <script src="/js/admin/vouchers/delivery-order/create-new.js"></script>
 {{/inline}}
