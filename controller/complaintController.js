@@ -27,22 +27,23 @@ exports.viewComplaints = async (req, res) => {
             } else {
                 const user = await User.findById(token.uID)
                 const complaints = await Complaint.find({"userDetails.contactNumber": user.phoneNumber})
-                if (complaints == []) {
-                    if (req.params.state == "submitted") {
-                        res.render('user/complaints/viewComplaints', { "user": user, "submitted": true })
-                    }
-                    else {
-                        res.render('user/complaints/viewComplaints', { "user": user })
-                    }
+                if (req.params.state == "submitted") {
+                    res.render('user/complaints/viewComplaints', { "user": user, "complaints": complaints, "submitted": true })
                 }
                 else {
-                    if (req.params.state == "submitted") {
-                        res.render('user/complaints/viewComplaints', { "user": user, "complaints": complaints, "submitted": true })
-                    }
-                    else {
-                        res.render('user/complaints/viewComplaints', { "user": user, "complaints": complaints })
-                    }
+                    res.render('user/complaints/viewComplaints', { "user": user, "complaints": complaints })
                 }
+                // if (complaints == []) {
+                //     if (req.params.state == "submitted") {
+                //         res.render('user/complaints/viewComplaints', { "user": user, "submitted": true })
+                //     }
+                //     else {
+                //         res.render('user/complaints/viewComplaints', { "user": user })
+                //     }
+                // }
+                // else {
+                    
+                // }
             }
         });
     }
@@ -97,7 +98,7 @@ exports.uploadComplaint = async (req, res) => {
                 );
             } else {
                 const user = await User.findById(token.uID)
-                if (isAlreadyComplaintRegistered.length > 0) {
+                if (isAlreadyComplaintRegistered.length > 0 && req.body.MserielNumber != "0") {
                     res.render('user/complaints/newComplaints', { "error": "This Complaint is already registered", "user": user })
                 }
                 else {
@@ -140,7 +141,7 @@ exports.uploadComplaint = async (req, res) => {
         });
     }
     else {
-        if (isAlreadyComplaintRegistered.length > 0) {
+        if (isAlreadyComplaintRegistered.length > 0 && req.body.MserielNumber != "0") {
             res.render('user/complaints/newComplaints', { "error": "This Complaint is already registered" })
         }
         else {

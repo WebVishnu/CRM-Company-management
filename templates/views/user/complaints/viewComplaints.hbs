@@ -1,5 +1,6 @@
 {{>userHeader}}
 {{#*inline "title"}}Complaints{{/inline}}
+{{#*inline "headTags"}}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">{{/inline}}
 {{#*inline "description"}}Our goal is to provide a safe, secure, and easy-to-use complaint management system that will allow you to make a complaint about any concern you might have.{{/inline}}
 {{#*inline "css"}}
 <style>
@@ -239,19 +240,17 @@ We're happy to assist you with all of your problems.
   </div>
   {{!-- new complaitn submit toast --}}
   {{#if submitted}}
-  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed;">
-    <div class="toast-header">
-      <strong class="me-auto">New Complaint</strong>
-      <small>Latest</small>
-      <span class="material-symbols-outlined" style="color:#fff;position: absolute;top:10px;right:10px;cursor:pointer"
-        onclick="$('.toast').css({'display':'none','opacity':'0','visibility':'visible'});processAjaxData('/complaint/all')">
-        cancel
-      </span>
-    </div>
-    <div class="toast-body">
-      Your Complaint has been submitted.
-    </div>
+  <div class="toast show submitted-toast" style="position: fixed;bottom: 1em;left: 1em;" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+    <img src="\images\vitco icon circle.png" class="rounded me-2" height="25px">
+    <strong class="me-auto">New complaint registered</strong>
+    <small></small>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="$('.submitted-toast').removeClass('show');history.pushState(null, '', '/complaint/all');"></button>
   </div>
+  <div class="toast-body">
+    Your complaint has been registered, <br> Our team will contact you soon
+  </div>
+</div>
   {{/if}}
  {{/inline}}
 {{#*inline "script"}}
