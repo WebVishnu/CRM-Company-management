@@ -199,6 +199,10 @@ async function printSaleReport(result) {
                         required name="machineNum" aria-describedby="helpId" placeholder="part sno" value="${machine.machineNum}">
                 </td>
                 <td>
+                    <input readonly autocomplete="off" type="text" class="form-control shadow-none mx-1 toggle-input"
+                        required name="password" aria-describedby="helpId" placeholder="part sno" value="${machine.password}">
+                </td>
+                <td>
                     <input readonly autocomplete="off" type="text"
                         class="form-control shadow-none mx-1 datepicker warranty-input toggle-input" required
                         name="warrantyFrom"  aria-describedby="helpId"
@@ -263,6 +267,7 @@ async function printResults(res) {
             <td ${(data.machines.length > 0) ? `rowspan="${data.machines.length + 1}"` : ""}>${data.customerName}</td>
             <td>${(data.machines.length > 0) ? `${data.machines[0].machineName}` : ""}</td>
             <td>${(data.machines.length > 0) ? `${data.machines[0].machineNum}` : ""}</td>
+            <td>${(data.machines.length > 0) ? `${data.machines[0].password}` : ""}</td>
             <td>${(data.machines.length > 0) ? `${data.machines[0].warranty.from}` : ""}</td>
             <td>${(data.machines.length > 0) ? `${data.machines[0].warranty.to}` : ""}</td>
         </tr>`)
@@ -272,6 +277,7 @@ async function printResults(res) {
                     <tr>
                         <td>${machine.machineName}</td>
                         <td>${machine.machineNum}</td>
+                        <td>${machine.password}</td>
                         <td>${machine.warranty.from}</td>
                         <td>${machine.warranty.to}</td>
                     </tr>`)
@@ -307,6 +313,7 @@ function applyChangeSaleData() {
         machines.push({
             machineName: element.replaceAll('"', ''),
             machineNum: $('input[name="machineNum"]')[i].value.replaceAll('"', ''),
+            password: $('input[name="password"]')[i].value.replaceAll('"', ''),
             warranty: {
                 from: $(`input[name="warrantyFrom"]`).val(),
                 to: $(`input[name="warrantyTo"]`).val()
@@ -324,6 +331,7 @@ function applyChangeSaleData() {
     axios.post(`/api/v1/sales-data/machine/edit/${id}`, newSalesData)
         .then((response) => {
             switchEditMode("OFF")
+            console.log(response.data.report)
             printSaleReport(response.data.report)
         })
     // await editSaleDataAdminAjaxCall(id, newSalesData)
@@ -362,30 +370,30 @@ async function pad(n, length) {
 // FUNCTION CALLS
 // =========================================================================
 getSalesData(20)
-$('#UploadSalesFileForm').on('submit', async (e) => {
-    e.preventDefault()
-    let formData = new FormData();
-    let selectedFile = $('#upload-sale-data-input')[0].files[0];
-    formData.append("file", selectedFile);
-    try {
-        $(".sales-data-loader").removeClass("d-none")
-        await axios.post('/vitco-india/control/sales-report/upload/new', formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            }
-        }).then(async () => {
-            await getSalesData(20)
-                .then(() => {
-                    $('.upload-sale-data-submit-btn-icon').html(`<i class="bi bi-cloud-upload"></i>`)
-                    $('.upload-sale-data-submit-btn').fadeOut(0)
-                    $('#upload-sale-data-input').val('')
-                    window.location.reload()
-                })
-        }).catch(err => { console.log(err) })
-    } catch (error) {
-        console.log(error)
-    }
-})
+// $('#UploadSalesFileForm').on('submit', async (e) => {
+//     e.preventDefault()
+//     let formData = new FormData();
+//     let selectedFile = $('#upload-sale-data-input')[0].files[0];
+//     formData.append("file", selectedFile);
+//     try {
+//         $(".sales-data-loader").removeClass("d-none")
+//         await axios.post('/vitco-india/control/sales-report/upload/new', formData, {
+//             headers: {
+//                 "Content-Type": "multipart/form-data",
+//             }
+//         }).then(async () => {
+//             await getSalesData(20)
+//                 .then(() => {
+//                     $('.upload-sale-data-submit-btn-icon').html(`<i class="bi bi-cloud-upload"></i>`)
+//                     $('.upload-sale-data-submit-btn').fadeOut(0)
+//                     $('#upload-sale-data-input').val('')
+//                     window.location.reload()
+//                 })
+//         }).catch(err => { console.log(err) })
+//     } catch (error) {
+//         console.log(error)
+//     }
+// })
 // ================================================================
 // refresh page
 function refreshAllReports() {

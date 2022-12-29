@@ -25,7 +25,6 @@ exports.createNewSaleData = async function (req, res) {
     const { adminToken } = req.cookies;
     const admin = await Admin.find({ _id: adminToken.uID })
     const data = await SData.find()
-    console.log(req.body)
     await SData.create({
       createdBy: {
         adminName: admin[0].adminName,

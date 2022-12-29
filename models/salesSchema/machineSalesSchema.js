@@ -50,6 +50,10 @@ const salesSchema = mongoose.Schema({
             type: "string",
             required: [true, "Please enter a machine Number"],
         },
+        password: {
+            type: "string",
+            default: ""
+        },
         warranty: {
             from: {
                 type: "string",
