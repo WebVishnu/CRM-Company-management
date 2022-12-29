@@ -171,6 +171,10 @@ async function printSaleReport(result) {
                         required name="partNumber" aria-describedby="helpId" placeholder="part sno" value="${part.partNumber}">
                 </td>
                 <td>
+                    <input readonly autocomplete="off" type="text" class="form-control shadow-none mx-1 toggle-input"
+                        required name="password" aria-describedby="helpId" placeholder="part sno" value="${part.password}">
+                </td>
+                <td>
                     <input readonly autocomplete="off" type="text"
                         class="form-control shadow-none mx-1 datepicker warranty-input toggle-input" required
                         name="warrantyFrom" aria-describedby="helpId"
@@ -228,7 +232,7 @@ function switchEditMode(cmd) {
         $('.toggle-input').prop('readonly', false);
         $('.datepicker').datepicker({ format: 'dd/mm/yyyy' });
     } else if (cmd == "OFF") {
-        $('.submit-changes-sales-report-machine-details-btn').addClass('hide').css('position', 'absolute')``;
+        $('.submit-changes-sales-report-machine-details-btn').addClass('hide').css('position', 'absolute');
         $(".change-sales-report-machine-details-btn").removeClass('hide').css('position', 'relative');
         $('.toggle-input').prop('readonly', true);
     }
@@ -246,6 +250,7 @@ async function applyChangeSaleData() {
         allParts.push({
             partName,
             partNumber: $('input[name="partNumber"]')[i].value,
+            password: $('input[name="password"]')[i].value,
             warranty: {
                 from: $(`input[name="warrantyFrom"]`).val(),
                 to: $(`input[name="warrantyTo"]`).val()
@@ -260,10 +265,6 @@ async function applyChangeSaleData() {
         mobileNum: $('input[name="mobileNum"]').val(),
         parts: allParts
     }).then((response) => {
-        // loadDataNum = 20
-        // getReports(20)
-        // toggleSalesEditInputRead(true)
-        // console.log(response.data)
         printSaleReport(response.data.report)
         switchEditMode("OFF")
     })

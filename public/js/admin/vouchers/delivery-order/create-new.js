@@ -285,6 +285,7 @@ async function addNewProduct() {
                       <option value="Ltr">Ltr</option>
                       <option value="Mtr">Mtr</option>
                       <option value="Bundle">Bundle</option>
+                      <option value="Set">Set</option>
                     </select>
                 </td>
                 <td class="p-1">

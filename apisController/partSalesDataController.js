@@ -71,15 +71,15 @@ exports.editPartSalesDataAdmin = async function (req, res) {
       address: req.body.address,
       mobileNum: req.body.mobileNum,
       parts: req.body.parts
-    }).then(response => {
-      res.send({
-        success: true,
-        report: response
-      })
     }).catch(err => {
       console.log(err)
       throw "error"
     })
+    res.send({
+      success: true,
+      report:await partSData.findById({ _id: req.params.id })
+    })
+    
   } catch (error) {
     res.send({
       success: false,

@@ -70,7 +70,7 @@ async function addNewPage(index) {
                         style="word-break:break-word;border:none;width:100%;" rows="1"
                         oninput="autosize(this)">${services[i].problem.trim()}</textarea>
                 </td>
-                <td style="word-break:break-all;font-size:12px;overflow-y:hidden;width:18em;">
+                <td style="word-break:break-all;font-size:12px;overflow-y:hidden">
                     <textarea id='print-txt-area-id' data-TextareaPageNo=${pages} class="print-textarea" spellcheck="false" type="text"
                         style="word-break:break-word;border:none;width:100%;" rows="1"
                         oninput="autosize(this)">${services[i].actionTaken.trim()}</textarea>
@@ -172,7 +172,7 @@ async function addNewPage(index) {
             }
             $(`.parts-in-part-name-${i}`).val(partInInputsArr.replace(',', '\n'))
             $(`.parts-in-part-out-${i}`).val(partOutInputsArr.replace(',', '\n'))
-            $(`.parts-in-part-wty-${i}`).val(services[i].partWarranty.replaceAll(' ?>> ', '\n'))
+            // $(`.parts-in-part-wty-${i}`).val(services[i].partWarranty.replaceAll(' ?>> ', '\n'))
         }
         for (let j = 0; j < $('.print-textarea').length; j++) {
             const element = $('.print-textarea')[j];

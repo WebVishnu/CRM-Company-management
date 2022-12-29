@@ -68,6 +68,10 @@ async function addNewMachineInputs() {
                     required name="partNumber" aria-describedby="helpId" placeholder="part sno">
             </td>
             <td>
+                <input autocomplete="off" type="text" class="form-control shadow-none mx-1"
+                    required name="password" aria-describedby="helpId" placeholder="password">
+            </td>
+            <td>
                 <input autocomplete="off" type="number" class="form-control shadow-none mx-1 warranty-input"
                     required name="warrantyPeriod" onkeyup="updateWarrantyDate(${newMachineInputsNumber})"
                     aria-describedby="helpId" style="width:2.5em;" placeholder="0">
@@ -142,6 +146,7 @@ $('#add-new-part-sale-report-form').on('submit', (e) => {
         allParts.push({
             partName,
             partNumber: $('input[name="partNumber"]')[i].value,
+            password: $('input[name="password"]')[i].value,
             warranty: {
                 from: $(`.row-${i + 1} input[name="warrantyFrom"]`).val(),
                 to: $(`.row-${i + 1} input[name="warrantyTo"]`).val()

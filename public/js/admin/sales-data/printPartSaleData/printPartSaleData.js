@@ -21,7 +21,7 @@ function addNewPage(index) {
                     <tr>
                         <th scope="col">${(option == "machine") ? "Machine" : "Part"} name</th>
                         <th scope="col">Seriel Num</th>
-                        ${(option == "machine")?`<th scope="col">Password</th>`:""}
+                        <th scope="col">Password</th>
                         <th scope="col">Warranty from</th>
                         <th scope="col">Warranty Till</th>
                     </tr>
@@ -61,11 +61,11 @@ function addNewPage(index) {
                         style="word-break:break-word;border:none;width:100%;" rows="1"
                         oninput="autosize(this)">${(option == "machine") ? part.machineNum : part.partNumber}</textarea>
                 </td>
-                ${option == "machine" ? `<td style="word-break:break-all;font-size:12px;overflow-y:hidden">
+                <td style="word-break:break-all;font-size:12px;overflow-y:hidden">
                 <textarea id='print-txt-area-id' class="print-textarea" spellcheck="false" type="text"
                     style="word-break:break-word;border:none;width:100%;" rows="1"
                     oninput="autosize(this)">${part.password}</textarea>
-                </td>`:""}
+                </td>
                 <td style="word-break:break-all;font-size:12px;overflow-y:hidden">
                     <textarea id='print-txt-area-id' class="print-textarea" spellcheck="false" type="text"
                         style="word-break:break-word;border:none;width:100%;" rows="1"
