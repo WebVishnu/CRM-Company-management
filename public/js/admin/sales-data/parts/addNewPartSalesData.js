@@ -110,7 +110,7 @@ function inputFunctions(task, value) {
         $('input[name="customerName"]'),
         $('input[name="address"]'),
         $('input[name="mobileNum"]'),
-        $('input[name="warranty"]'),
+        $('input[name="warrantyPeriod"]'),
         $('input[name="partName"]'),
         $('input[name="partNumber"]'),
         $('input[name="password"]')
@@ -165,7 +165,8 @@ $('#add-new-part-sale-report-form').on('submit', (e) => {
         address: $('input[name="address"]').val(),
         mobileNum: $('input[name="mobileNum"]').val(),
         parts: allParts
-    }).then(() => {
+    }).then((res) => {
+        console.log(res)
         $('input[name="invoiceNum"]').focus()
         $('.submit-part-sale-report-btn').removeClass('btn-primary').addClass('btn-success').html(`Submitted successfully`)
         setTimeout(() => {

@@ -37,8 +37,8 @@ router.get('/api/v1/sales-data/parts/get-report-number', async (req, res, next) 
 })
 
 // create new parts sales report -- post
-router.get('/api/v1/sales-data/parts/create-new', async (req, res, next) => {
-    if (await authorizedRoles("partSalesData", req, res, next, ["create"])) { createNewPartSales(req, res) }
-    else { res.send({ success: false, }) }
+router.post('/api/v1/sales-data/parts/create-new', async (req, res, next) => {
+    if (await authorizedRoles("partSalesData", req, res, next, ["create"])) {  createNewPartSales(req, res) }
+    else { res.send({ success: false,message:"you are not allowed" }) }
 })
 module.exports = router

@@ -104,7 +104,7 @@ exports.addNewServiceReport = catchAsyncErrors(async (req, res, next) => {
 })
 
 
-async function pad(n, length) {
+function pad(n, length) {
     var len = length - ('' + n).length;
     return (len > 0 ? new Array(++len).join('0') : '') + n
 }

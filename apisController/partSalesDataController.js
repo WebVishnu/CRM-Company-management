@@ -1,5 +1,6 @@
 const path = require("path");
 const partSData = require(path.join(__dirname, "../models/salesSchema/partSalesSchema"));
+const Admin = require(path.join(__dirname, "../models/adminSchema"));
 
 // get all sale data
 exports.getAllPartSalesData = async function (req, res) {
@@ -106,11 +107,12 @@ exports.getPartSalesReportNumber = async function (req, res) {
 
 
 // create new parts sales data
-exports.createNewPartSales = async () => {
+exports.createNewPartSales = async (req, res) => {
   try {
+    const { adminToken } = req.cookies;
     const admin = await Admin.find({ _id: adminToken.uID })
-    const data = await partSalesData.find()
-    await partSalesData.create({
+    const data = await partSData.find()
+    await partSData.create({
       createdBy: {
         adminName: admin[0].adminName,
         adminID: admin[0]._id
@@ -123,14 +125,22 @@ exports.createNewPartSales = async () => {
       mobileNum: req.body.mobileNum,
       warranty: req.body.warranty,
       parts: req.body.parts
-
+      
     })
     res.send({
       success: true,
     })
   } catch (error) {
+    console.log(error)
     res.send({
       success: false,
     })
   }
+}
+
+
+
+function pad(n, length) {
+  var len = length - ('' + n).length;
+  return (len > 0 ? new Array(++len).join('0') : '') + n
 }
