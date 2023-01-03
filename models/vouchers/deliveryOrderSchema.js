@@ -15,7 +15,7 @@ const deliveryOrder = new mongoose.Schema({
     products: [
         {
             productName: { type: 'string', required: true },
-            serialNum: { type: 'string', required: true },
+            serialNum: { type: 'string', default: "" },
             qty: { type: 'string', required: true },
             unit: { type: 'string', required: true },
             rate: { type: 'string', required: true },
@@ -34,7 +34,7 @@ const deliveryOrder = new mongoose.Schema({
             paymentDetails: {}
         }
     ],
-    afterPayments:[
+    afterPayments: [
         {
             mode: { type: 'string' },
             date: { type: 'string' },
@@ -47,7 +47,7 @@ const deliveryOrder = new mongoose.Schema({
             type: 'string',
             default: ""
         }
-        ,receiver: {
+        , receiver: {
             type: 'string',
             default: ""
         }
@@ -61,7 +61,8 @@ const deliveryOrder = new mongoose.Schema({
         dispatchStatus: { type: "string", default: "Pending" },
         dispatchedBy: { type: 'string' },
         dispatchDate: { type: 'string' },
-        dispatchVehicleNum: { type: 'string' },
+        dispatchVehicleNum: { type: 'string', default: "" },
+        transporterID: { type: 'string', default: "" },
     }
 })
 

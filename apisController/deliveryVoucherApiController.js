@@ -98,6 +98,7 @@ exports.dispatchDO = async function (req, res) {
         dispatchedBy: req.body.dispatchedBy,
         dispatchDate: req.body.dispatchDate,
         dispatchVehicleNum: req.body.dispatchVehicleNum,
+        transporterID: req.body.transporterID,
         dispatchStatus: "Dispatched"
       }
     }).then(async () => {

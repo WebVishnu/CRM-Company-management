@@ -30,7 +30,7 @@
                             Voucher No.</th>
                         <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;">
-                            Created By</th>
+                            Cus. Name</th>
                         <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;">
                             Order Date</th>
@@ -42,7 +42,7 @@
                             Advance</th>
                         <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;">
-                            Due</th>
+                            Balance</th>
                         <th scope="col" class="user-select-none text-truncate"
                             style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Dispatch Status
                         </th>
@@ -287,6 +287,11 @@
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchedBy" name="dispatchedBy" placeholder="who dispatched it ?">
                     </div>
+                     <div class="my-3">
+                        <label class="font-weight-bold" for="transporterID">Transporter ID </label>
+                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
+                            id="transporterID" name="transporterID" >
+                    </div>
                     {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="dispatchVehicleNum">Dispatch vehicle no. </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
@@ -338,6 +343,11 @@
         <div class="submit-container d-flex justify-content-end ps-3 align-items-center"
             style="position: fixed;bottom:1em;right:1em;">
             {{#each admin.permissions}}
+            {{#ifeq this.permissionName "all"}}
+            <button data-toggle="modal" data-target="#dispatchDOmodal"
+                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button"><i
+                    class="bi bi-truck mx-2"></i>Dispatch</button>
+            {{/ifeq}}
             {{#ifeq this.permissionName "deliveryOrderVoucher"}}
             {{#each this.permissionKeys}}
             {{#ifeq this.keyName "edit"}}
@@ -391,8 +401,14 @@
                     </div>
                     <div class="form-group">
                         <label for="dispatchVehicleNum">Vehicle no.</label>
-                        <input required type="text" class="form-control shadow-none" name="dispatchVehicleNum"
+                        <input   type="text" class="form-control shadow-none" name="dispatchVehicleNum"
                             id="dispatchVehicleNum" placeholder="enter vehicle num">
+                    </div>
+                    <h6 class="text-center text-secondary form-group">OR</h6>
+                    <div class="form-group">
+                        <label for="transporterID">Transporter ID</label>
+                        <input   type="text" class="form-control shadow-none" name="transporterID"
+                            id="transporterID" placeholder="enter transporter id">
                     </div>
                 </div>
                 <div class="modal-footer">

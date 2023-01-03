@@ -98,7 +98,7 @@
                 <div class="d-flex align-items-center">
                     <span class="d-flex align-items-center mx-2">( ESC )</span>
                     <i class="bi bi-x-circle close-complaint-details-btn" style="cursor: pointer;font-size:1.5em"
-                        onclick="checkclass();$('.complaint-details-modal').toggleClass('active');$('.actions-dialog-box-container').removeClass('open');"></i>
+                        onclick="$('.complaint-details-modal').toggleClass('active');$('.actions-dialog-box-container').removeClass('open');"></i>
                 </div>
             </div>
         </div>
@@ -353,6 +353,20 @@
             <div class="container-fluid">
                 <div class="row">
                     {{#each admin.permissions}}
+                    {{#ifeq this.permissionName "all"}}
+                    <form class="add-new-action-form mt-1 mb-2">
+                        <small class="form-text text-muted ms-3">Type "done" if solved</small>
+                        <div class="col d-flex add-new-action-container">
+                            <input type="text" class="form-control shadow-none new-action-text-area" name="" id=""
+                                aria-describedby="helpId" placeholder="Enter your action here..." required>
+                            <button type="submit" class="btn" style="padding:0 10px 0 10px;"><i
+                                    class="bi bi-caret-right-square" style="font-size:30px;display:grid"></i></button>
+                        </div>
+                    </form>
+                    <div class="add-new-action-completed-text pt-2 pb-1 bg-success hide">
+                        <h5 class="text-center text-light">Good, you solved it !</h5>
+                    </div>
+                    {{/ifeq}}
                     {{#ifeq this.permissionName "complaints"}}
                     {{#each this.permissionKeys}}
                     {{#ifeq this.keyName "edit"}}

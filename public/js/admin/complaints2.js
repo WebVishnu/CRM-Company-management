@@ -1,5 +1,5 @@
 keyboardJS.bind('esc', (e) => {
-    checkclass()
+    // checkclass()
     $('.complaint-details-modal').removeClass("active");
 });
 keyboardJS.bind('a', (e) => {
@@ -92,6 +92,7 @@ async function checkStatus(actions, complaintID) {
 async function printComplaints(complaints) {
     data = ``
     for (var i = complaints.length - 1; i >= 0; i--) {
+        lastAction = complaints[i].actions[complaints[i].actions.length - 1]
         data += `
             <tr style='user-select: none' class="cursor-pointer single-complaint-row" onclick='$(".complaint-details-modal").addClass("active").trigger("classChange");viewComplaintDetails(${JSON.stringify(complaints[i])});'>
                 <td data-label="Complaint ID" style="word-break: break-word;">${ShortifyString(moment(complaints[i].dateIssued).format('DD-MM-YYYY'))}</td>
@@ -101,7 +102,7 @@ async function printComplaints(complaints) {
                 <td data-label="Problem" style="word-break: break-word;">${ShortifyString(complaints[i].issue)}</td>
                 <td data-label="Address" style='word-wrap: break-word'>${ShortifyString(complaints[i].userDetails.address)}</td>
                 <td data-label="DOP" style="word-break: break-word;">${ShortifyString(complaints[i].DOP)}</td>
-                <td class="complaint-status" data-status=${complaints[i].complaintStatus}><button>${(complaints[i].complaintStatus == "Solved") ? `${(complaints[i].actions[complaints[i].actions.length - 1].action == "done") ? `${complaints[i].actions[complaints[i].actions.length - 1].date.split('/')[1]}/${complaints[i].actions[complaints[i].actions.length - 1].date.split('/')[0]}/${complaints[i].actions[complaints[i].actions.length - 1].date.split('/')[2]}` : checkStatus(complaints[i].actions, complaints[i]._id)}` : complaints[i].complaintStatus}</button></td>
+                <td class="complaint-status" data-status=${complaints[i].complaintStatus}><button>${(complaints[i].complaintStatus == "Solved" && complaints[i].actions.length > 0) ? `${(lastAction.action == "done") ? `${lastAction.date.split('/')[1]}/${lastAction.date.split('/')[0]}/${lastAction.date.split('/')[2]}` : checkStatus(complaints[i].actions, complaints[i]._id)}` : complaints[i].complaintStatus}</button></td>
                 </tr>`
         // <button>${(complaints[i].complaintStatus == "Solved")?`<i class="bi bi-check-lg"></i>${(complaints[i].actions[complaints[i].actions.length-1].action == "done"?complaints[i].actions[complaints[i].actions.length-1].date:checkStatus(complaints[i].actions,complaints[i]._id)}`}</button></td>
 
@@ -277,19 +278,14 @@ $('#search-box').keyup(() => {
 // check class 
 function checkclass() {
     if ($('button[data-bs-target="#pills-home"]').hasClass('active')) {
-        console.log("getAllComplaints")
         getAllComplaints()
     } else if ($('button[data-bs-target="#pills-solved"]').hasClass('active')) {
-        console.log("Solved")
         filterComplaint("Solved")
     } else if ($('button[data-bs-target="#pills-progress"]').hasClass('active')) {
-        console.log("Progress")
         filterComplaint("Progress")
     } else if ($('button[data-bs-target="#pills-pending"]').hasClass('active')) {
-        console.log("Pending")
         filterComplaint("Pending")
     } else if ($('button[data-bs-target="#pills-deleted"]').hasClass('active')) {
-        console.log("Deleted")
         filterComplaint("Deleted")
     }
 }

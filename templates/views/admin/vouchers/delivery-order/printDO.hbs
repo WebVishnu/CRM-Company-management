@@ -225,7 +225,7 @@
                 <div class="col position-absolute w-100 text-end py-2 pe-2" style="bottom: 0em;right: 0;background-color: #F8F9FA;">
                     <h6 class="text-secondary m-0">Total : ₹ ${format(total)}</h6>
                     <p style="font-size: 11px;" class="text-secondary m-0">Advance : ₹ ${format(advance)}</p>
-                    <p style="font-size: 11px;" class="text-secondary m-0">Current Status : ₹ ${(total >= advance) ? (total == advance) ? "Clear" : format(total - advance) + " Cr" : format(advance - total) + " Dr"} </p>
+                    <p style="font-size: 11px;" class="text-secondary m-0">Current Status : ₹ ${(total >= advance) ? (total == advance) ? "Clear" : format(total - advance) + " Dr" : format(advance - total) + " Cr"} </p>
                 </div> `)
         if (overflowed) {
             addNewPage(lastIndex)

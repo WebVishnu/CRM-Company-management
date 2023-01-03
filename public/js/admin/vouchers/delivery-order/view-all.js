@@ -2,37 +2,40 @@
 gotAllVouchers = false
 dataNum = 20
 totalVouchers = 0
-filterVouchers("all", 0, 0).then(res => { totalVouchers = res })
+
 $('.input-group.date').datepicker({ format: "dd/mm/yyyy" });
 
 keyboardJS.bind('r', (e) => {
     e.preventDefault()
     refreshVouchers()
 });
-
+keyboardJS.bind('esc', (e) => {
+    e.preventDefault()
+    closeVoucherDetails()
+});
 // when search
 searchInput.on('keyup', (e) => {
     e.preventDefault();
     if (searchInput.val() != "") {
         $('.page-right-title .nav-link').removeClass("active")
         $('.got-all-data').addClass('hide')
-        filterVouchers(`query=${searchInput.val().replaceAll("/", "-")}`,0,20)
+        filterVouchers(`query=${searchInput.val().replaceAll("/", "-")}`, 0, 20)
     } else {
         $('.all-voucher-pill').addClass('active')
         $('.got-all-data').removeClass('hide')
         gotAllVouchers = false
         dataNum = 20
-        filterVouchers(checkFilters(), dataNum, dataNum + 20)
+        filterVouchers(checkFilters(), totalVouchers - dataNum, totalVouchers)
     }
 })
 
 // laod data when scrolled
-$(window).on('scroll', () => {  
-    if (dataNum != totalVouchers - 1) {
+$(window).on('scroll', () => {
+    if (totalVouchers - dataNum > 0) {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
             if (searchInput.val() == "" && !gotAllVouchers) {
                 $('.got-all-data').addClass('hide')
-                filterVouchers(checkFilters(), dataNum, dataNum + 20)
+                filterVouchers(checkFilters(), totalVouchers - dataNum, totalVouchers)
                 dataNum += 20
             }
         }
@@ -45,16 +48,22 @@ $(window).on('scroll', () => {
 // open voucher details model
 function openVoucherDetails(voucher) {
     $('body , html').css('overflow-y', 'hidden')
-    keyboardJS.bind('esc', (e) => { closeVoucherDetails() });
     $('.voucher-details-container').fadeIn(100).attr("tabindex", -1).focus().css('overflow-y', 'auto')
     $('.print-report-btn').attr("href", `/vitco-impex/vouchers/delivery-order/print/${voucher._id}`)
     $('.page-title').css('left', '0em')
     keys = _.keys(voucher)
-    dispatchDetailsKeys = _.keys(voucher.dispatchDetails)
     //dispatch details
     $('#dispatchDOmodal input[name="DOid"]').val(voucher._id)
     if (voucher.dispatchDetails.dispatchStatus === 'Dispatched') {
         $('.dispatch-details-container').removeClass('hide d-none')
+        dispatchDetailsKeys = _.keys(voucher.dispatchDetails)
+        // dispatch details
+        for (let i = 0; i < dispatchDetailsKeys.length; i++) {
+            const key = dispatchDetailsKeys[i];
+            $(`.voucher-details-container .dispatch-details-container input[name="${key}"]`).val(voucher.dispatchDetails[key])
+            $(`.voucher-details-container .dispatch-details-container textarea[name="${key}"]`).val(voucher.dispatchDetails[key])
+        }
+
         $('.dispatch-details-container input[name="adminName"]').val(voucher.dispatchDetails.adminDetails.adminName)
         $('.voucher-details-container button.dispatch-btn')
             .html('<i class="bi bi-patch-check-fill mx-2"></i>Dispatched')
@@ -75,12 +84,7 @@ function openVoucherDetails(voucher) {
         $(`.voucher-details-container input[name="${key}"]`).val(voucher[key])
         $(`.voucher-details-container textarea[name="${key}"]`).val(voucher[key])
     }
-    // dispatch details
-    for (let i = 0; i < dispatchDetailsKeys.length; i++) {
-        const key = dispatchDetailsKeys[i];
-        $(`.voucher-details-container input[name="${key}"]`).val(voucher.dispatchDetails[key])
-        $(`.voucher-details-container textarea[name="${key}"]`).val(voucher.dispatchDetails[key])
-    }
+
     // product details
     productsData = ``
     const products = voucher.products
@@ -140,7 +144,9 @@ function openVoucherDetails(voucher) {
 
     }
 }
-filterVouchers("admin", 0, 20)
+
+filterVouchers("all", 0, 0).then(res => { totalVouchers = res; filterVouchers("admin", totalVouchers - dataNum, totalVouchers); dataNum += 20 })
+
 // print data to table
 function printAllVouchers(v) {
     if (v.length != 0) {
@@ -166,11 +172,11 @@ function printAllVouchers(v) {
             tempData += `
                     <tr class="tb-row" onclick='openVoucherDetails(${JSON.stringify(voucher)})'>
                        <td data-label="Voucher number" class="text-truncate">${voucher.voucherNum}</td>
-                       <td data-label="Created by" class="text-truncate">${voucher.createdBy.adminName}</td>
+                       <td data-label="Created by" class="text-truncate">${voucher.consignee}</td>
                        <td data-label="Order date" class="text-truncate">${voucher.orderDate}</td>
                        <td data-label="Total Amt." class="text-truncate">₹ ${totalAmount}</td>
                        <td data-label="Advance" class="text-truncate text-uppercase">₹ ${advance}</td>
-                       <td data-label="Due amount" class="text-truncate">${(totalAmount < advance) ? `<span class="text-success">₹ ${advance - totalAmount} Dr</span>` : ((totalAmount - advance) == 0) ? `<i class="bi bi-check-circle-fill text-success"></i>` : `<span class="text-danger">₹ ${totalAmount - advance} Cr</span>`}</td>
+                       <td data-label="Due amount" class="text-truncate">${(totalAmount < advance) ? `<span class="text-success">₹ ${advance - totalAmount} Cr</span>` : ((totalAmount - advance) == 0) ? `<i class="bi bi-check-circle-fill text-success"></i>` : `<span class="text-danger">₹ ${totalAmount - advance} Dr</span>`}</td>
                        <td data-label="Dispatch status" class="text-truncate"><span data-dispatch-status="${voucher.dispatchDetails.dispatchStatus}">${voucher.dispatchDetails.dispatchStatus}</span></td>
                     </tr>`
         }
@@ -187,12 +193,12 @@ async function filterVouchers(filter, from, to) {
     $('.loading-spinner').removeClass('hide')
     data = 0
     if (!gotAllVouchers || filter.includes("query=")) {
-        data = await axios.get(`/api/v1/vitco-impex/filter/delivery-order/${filter}/0/${to}`)
+        data = await axios.get(`/api/v1/vitco-impex/filter/delivery-order/${filter}/${from}/${to}`)
             .then((res) => {
                 if (from == 0 && to == 0) {
                     return res.data.vouchers.length
                 } else if (res.data.success) {
-                    if(res.data.vouchers.length < 40){
+                    if (res.data.vouchers.length < 40 && !gotAllVouchers) {
                         $('.got-all-data').addClass('hide')
                     }
                     $('.loading-spinner').addClass('hide')
@@ -201,7 +207,7 @@ async function filterVouchers(filter, from, to) {
             }).catch((e) => {
                 $('.loading-spinner').html('We found some error, Please wait until it is resolved')
             })
-    }else{
+    } else {
         gotAllVouchers = true
         $('.got-all-data').removeClass('hide')
     }
@@ -226,14 +232,14 @@ function closeVoucherDetails() {
     $('.advance-payment-heading').html('Advance Payments')
 }
 
-function refreshVouchers(){
+function refreshVouchers() {
     $('.got-all-data').addClass('hide')
     searchInput.val('')
     $('#all-delivery-voucher-tbody').html("")
     setTimeout(() => {
-        dataNum = 20
         gotAllVouchers = false
-        filterVouchers(checkFilters(), 0,20)
+        filterVouchers(checkFilters(), totalVouchers - 20, totalVouchers)
+        dataNum = 40
     }, 50);
 }
 // when dispatch modal opens clear it
@@ -249,17 +255,19 @@ $('#dispatchDOmodal').on('shown.bs.modal', function (e) {
 // dispatch order
 $('#dispatchDOmodal form').on('submit', (e) => {
     e.preventDefault()
-    data = _.object($('#dispatchDOmodal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
-    axios.post('/api/v1/vitco-impex/voucher/delivery-order/dispatch', data).then((res) => {
-        if (res.data.success) {
-            $('#dispatchDOmodal form .form-group').addClass('hide')
-            $('#dispatchDOmodal .modal-footer').addClass('hide')
-            $('#dispatchDOmodal .modal-body').addClass('d-flex justify-content-center')
-            $('#dispatchDOmodal img').removeClass('hide')
-            openVoucherDetails(res.data.voucher)
-            filterVouchers(checkFilters(), dataNum, dataNum + 20)
-        }
-    }).catch((e) => {
-        console.log(e)
-    })
+    if ($('#dispatchDOmodal #dispatchVehicleNum').val() != '' || $('#dispatchDOmodal input[name="transporterID"]').val() != "") {
+        data = _.object($('#dispatchDOmodal form').serializeArray().map(function (v) { return [v.name, v.value]; }))
+        axios.post('/api/v1/vitco-impex/voucher/delivery-order/dispatch', data).then((res) => {
+            if (res.data.success) {
+                $('#dispatchDOmodal form .form-group').addClass('hide')
+                $('#dispatchDOmodal .modal-footer').addClass('hide')
+                $('#dispatchDOmodal .modal-body').addClass('d-flex justify-content-center')
+                $('#dispatchDOmodal img').removeClass('hide')
+                openVoucherDetails(res.data.voucher)
+                filterVouchers(checkFilters(), totalVouchers - dataNum, totalVouchers)
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+    }
 })
