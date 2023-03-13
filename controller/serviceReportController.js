@@ -50,12 +50,12 @@ exports.adminAllServiceReport = catchAsyncErrors(async (req, res, next) => {
             } else {
                 // var url = process.env.BASE_DB_URL;
                 // MongoClient.connect(url).then((client) => {
-  
+
                 //     console.log('Database created');
-                      
+
                 //     // database name
                 //     const db = client.db("nishu");
-                      
+
                 //     // collection name
                 //     db.createCollection("nishu1");
                 // })
@@ -110,44 +110,68 @@ function pad(n, length) {
 }
 
 // Post Service Report -- post 
-exports.PostServiceReport = catchAsyncErrors(async (req, res, next) => {
-    const { adminToken } = req.cookies;
-    if (adminToken) {
-        jwt.verify(adminToken.token, process.env.JWT_SECRET_ADMIN, async function (err, decoded) {
-            if (err) {
-                res.clearCookie("adminToken");
-                res.redirect(
-                    "/vitco-india/admin/login"
-                );
-            } else {
-                const admin = await Admin.find({ _id: adminToken.uID })
-                const tempReport = await ServiceReport.find()
-                await ServiceReport.create({
-                    createdBy: {
-                        name: admin[0].adminName,
-                        adminId: admin[0]._id
-                    },
-                    reportNumber: `${await pad(tempReport.length, 3)}`,
-                    date: req.body.formData.date,
-                    time: req.body.formData.time,
-                    customerName: req.body.formData.customerName.replaceAll("'", ""),
-                    mobile: req.body.formData.mobile.replaceAll("'", ""),
-                    technicianName: req.body.formData.technicianName.replaceAll("'", ""),
-                    attendingLocation: req.body.formData.attendingLocation.replaceAll("'", ""),
-                    address: req.body.formData.address.replace(/(\r\n|\n|\r)/gm, "").replaceAll("'", ""),
-                    customerSignImgDataUrl: req.body.formData.customerSignImgDataUrl,
-                    technicianSignImgDataUrl: req.body.formData.technicianSignImgDataUrl,
-                    service: req.body.allMachines
-                })
-                res.redirect('/vitco-india/control/service-reports/new-form')
-            }
-        });
-    }
-    else {
+exports.PostServiceReport = async (req, res, next) => {
+    try {
+        const admin = await Admin.find({ _id: adminToken.uID })
+        const tempReport = await ServiceReport.find().select("-customerSignImgDataUrl -technicianSignImgDataUrl")
+        await ServiceReport.create({
+            createdBy: {
+                name: admin[0].adminName,
+                adminId: admin[0]._id
+            },
+            reportNumber: `${await pad(tempReport.length, 3)}`,
+            date: req.body.formData.date,
+            time: req.body.formData.time,
+            customerName: req.body.formData.customerName.replaceAll("'", ""),
+            mobile: req.body.formData.mobile.replaceAll("'", ""),
+            technicianName: req.body.formData.technicianName.replaceAll("'", ""),
+            attendingLocation: req.body.formData.attendingLocation.replaceAll("'", ""),
+            address: req.body.formData.address.replace(/(\r\n|\n|\r)/gm, "").replaceAll("'", ""),
+            customerSignImgDataUrl: req.body.formData.customerSignImgDataUrl,
+            technicianSignImgDataUrl: req.body.formData.technicianSignImgDataUrl,
+            service: req.body.allMachines
+        })
+        res.redirect('/vitco-india/control/service-reports/new-form')
+    } catch (error) {
         res.redirect('/vitco-india/admin/login')
-
     }
-})
+    // const { adminToken } = req.cookies;
+    // if (adminToken) {
+    //     jwt.verify(adminToken.token, process.env.JWT_SECRET_ADMIN, async function (err, decoded) {
+    //         if (err) {
+    //             res.clearCookie("adminToken");
+    //             res.redirect(
+    //                 "/vitco-india/admin/login"
+    //             );
+    //         } else {
+    //             const admin = await Admin.find({ _id: adminToken.uID })
+    //             const tempReport = await ServiceReport.find()
+    //             await ServiceReport.create({
+    //                 createdBy: {
+    //                     name: admin[0].adminName,
+    //                     adminId: admin[0]._id
+    //                 },
+    //                 reportNumber: `${await pad(tempReport.length, 3)}`,
+    //                 date: req.body.formData.date,
+    //                 time: req.body.formData.time,
+    //                 customerName: req.body.formData.customerName.replaceAll("'", ""),
+    //                 mobile: req.body.formData.mobile.replaceAll("'", ""),
+    //                 technicianName: req.body.formData.technicianName.replaceAll("'", ""),
+    //                 attendingLocation: req.body.formData.attendingLocation.replaceAll("'", ""),
+    //                 address: req.body.formData.address.replace(/(\r\n|\n|\r)/gm, "").replaceAll("'", ""),
+    //                 customerSignImgDataUrl: req.body.formData.customerSignImgDataUrl,
+    //                 technicianSignImgDataUrl: req.body.formData.technicianSignImgDataUrl,
+    //                 service: req.body.allMachines
+    //             })
+    //             res.redirect('/vitco-india/control/service-reports/new-form')
+    //         }
+    //     });
+    // }
+    // else {
+    //     res.redirect('/vitco-india/admin/login')
+
+    // }
+}
 
 
 // print report

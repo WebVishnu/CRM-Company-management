@@ -52,7 +52,6 @@ function submitForm(cmd, e) {
     }
     advanceTb = $('.advanceEntryTbody')
     table = $('#allProductsTable tbody')
-    console.log($('.required'))
     if ($('.allProductsTbody tr').length == 0) {
         $('.error').html("")
         setTimeout(() => {
@@ -94,15 +93,23 @@ function submitForm(cmd, e) {
                 Gtd = table.children()[i].children // array of table data ( <td></td> ) of ( row = i )
                 data["products"].push({
                     productName: Gtd[0].children[1].value,
-                    serialNum: Gtd[1].children[0].value,
-                    qty: Gtd[2].children[0].value,
-                    unit: Gtd[3].children[0].value,
-                    rate: Gtd[4].children[0].value,
-                    amount: Gtd[5].children[0].value,
-                    gstRate: Gtd[6].children[0].value,
-                    totalGst: Gtd[7].children[0].value,
-                    grossTotal: Gtd[8].children[0].value,
+                    // serialNum: Gtd[1].children[0].value,
+                    qty: Gtd[1].children[0].value,
+                    unit: Gtd[2].children[0].value,
+                    rate: Gtd[3].children[0].value,
+                    amount: Gtd[4].children[0].value,
+                    gstRate: Gtd[5].children[0].value,
+                    totalGst: Gtd[6].children[0].value,
+                    grossTotal: Gtd[7].children[0].value,
                 })
+                // serialNum: Gtd[1].children[0].value,
+                //     qty: Gtd[2].children[0].value,
+                //     unit: Gtd[3].children[0].value,
+                //     rate: Gtd[4].children[0].value,
+                //     amount: Gtd[5].children[0].value,
+                //     gstRate: Gtd[6].children[0].value,
+                //     totalGst: Gtd[7].children[0].value,
+                //     grossTotal: Gtd[8].children[0].value,
             }
             // mode of payment
             data["advancePayment"] = []
@@ -274,14 +281,14 @@ async function addNewProduct() {
     $('.add-product-section small').fadeOut(0)
     $('.add-product-section > .d-flex').removeClass('justify-content-between').addClass('justify-content-end')
     productCursor++
+    //<td class="p-1">
+    //    <input required type="text" class="product-details-input required specification w-100 form-control shadow-none">
+    //</td>
     $('.allProductsTbody').append(`
         <tr class="product-tooltip" data-product-row="${productCursor}">
                 <td class="p-1">
                     <span class="product-tooltiptext cursor-pointer" onclick="deleteProduct(${productCursor})"><i class="bi bi-trash3-fill"></i> Delete Row</span>
                     <input required type="text" class="product-details-input productName required w-100 form-control shadow-none">
-                </td>
-                <td class="p-1">
-                    <input required type="text" class="product-details-input required specification w-100 form-control shadow-none">
                 </td>
                 <td class="p-1">
                     <input required type="number" class="product-details-input required qty w-100 form-control shadow-none" onkeyup="getAmountSingleProduct(${productCursor})">
@@ -372,6 +379,17 @@ function submitSignature() {
         $(`input[name="${canvas.attr("id")}"]`).val(data)
     }
 }
+
+// auto complete form
+function autoComplete(ele, key) {
+    // axios.get(`/api/v1/voucher/delivery-order/find/${key}/${(ele[0].value == "")?"@#$":ele[0].value}`).then((res) => {
+    //     console.log(res.data)
+    //     if(res.data.success){
+            
+    //     }
+    // })
+}
+
 // MEDIA QUERIES
 if (Modernizr.mq('(max-width: 363px)')) {
     $('.signature-pad')[0].setAttribute("width", 250)

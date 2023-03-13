@@ -1,7 +1,5 @@
 const path = require('path')
 const app = require(path.join(__dirname,'/app'))
-const livereload = require("livereload");
-const connectLiveReload = require("connect-livereload");
 const connectDatabase = require(path.join(__dirname,'/database/connection'))
 require('dotenv').config({ path: path.join(__dirname,'/database/config.env') });
 // this is a change
@@ -16,11 +14,14 @@ process.on('uncaughtException', (err) => {
 const port = process.env.PORT || 3000
 
 // connecting to database
-connectDatabase();
+let server;
+connectDatabase().then(()=>{
+    server = app.listen(port)
+})
 
 // listen on port
 
-const server = app.listen(port)
+
 // Unhandled Promiser exception
 process.on('unhandledRejection', (err) => {
     console.log(`err: ${err.message}`)

@@ -177,8 +177,8 @@
                     </div> --}}
                     <div class="my-3">
                         <label for="partyName">Consignee</label>
-                        <input autocomplete="off" required type="text" class="form-control shadow-none" id="partyName"
-                            name="consignee" placeholder="enter party name">
+                        <input autocomplete="off" required type="text" class="form-control shadow-none" id="consignee"
+                            name="consignee" placeholder="enter party name" onkeyup="autoComplete($(this),'consignee')">
                     </div>
                     {{!-- <div class="my-3">
                         <label for="address">Consignee Address</label>
@@ -207,13 +207,14 @@
                         <label for="mobile">Consignee Mobile </label>
                         <input autocomplete="off" style="padding-left: 40px;" required type="number"
                             class="form-control shadow-none" id="mobile" name="consigneeMobile"
-                            placeholder="enter party mobile number">
+                            placeholder="enter party mobile number" onkeyup="autoComplete($(this),'consigneeMobile')">
                         <span style="position:absolute;left:5px;bottom:6px;">+91</span>
                     </div>
                     <div class="my-3">
                         <label for="address">Consignee Address</label>
                         <textarea required style="resize: none;" type="text" rows="4" class="form-control shadow-none"
-                            name="consigneeAddress" id="address" placeholder="enter party address"></textarea>
+                            name="consigneeAddress" id="address" placeholder="enter party address"
+                            onkeyup="autoComplete($(this),'consigneeAddressQ')"></textarea>
                     </div>
                 </div>
             </div>
@@ -254,7 +255,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Product Name</th>
-                        <th scope="col">Serial No.</th>
+                        {{!-- <th scope="col">Serial No.</th> --}}
                         <th scope="col">QTY</th>
                         <th scope="col">Unit</th>
                         <th scope="col">Rate</th>
@@ -400,7 +401,8 @@
                 data-toggle="tooltip" data-placement="top" title="Print and submit">
                 <i class="bi bi-printer mx-1"></i></button> --}}
             <button class="btn bg-base-color text-light mx-2 shadow-none"
-                onclick="window.location.href ='/vitco-impex/vouchers/delivery-order/view-all'" type="button" data-toggle="tooltip" data-placement="top" title="View all">
+                onclick="window.location.href ='/vitco-impex/vouchers/delivery-order/view-all'" type="button"
+                data-toggle="tooltip" data-placement="top" title="View all">
                 <i class="bi bi-eye mx-1"></i></button>
             <button style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
                 class="btn bg-base-color text-light shadow-none" type="submit">Submit</button>
@@ -414,6 +416,14 @@
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
+    })
+    var options = [
+        { value: 'Adam', data: 'AD' },
+        // ...
+        { value: 'Tim', data: 'TM' }
+    ];
+    $('#autocomplete').autocomplete({
+        lookup: options
     })
 </script>
 <script src="/js/admin/vouchers/delivery-order/create-new.js"></script>

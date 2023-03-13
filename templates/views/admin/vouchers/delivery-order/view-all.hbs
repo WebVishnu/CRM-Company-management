@@ -8,12 +8,12 @@
     <span class="py-2 px-4 page-right-title border-radius-left">
         <ul class="nav nav-pills">
             <li class="nav-item px-1 user-select-none "
-                onclick="dataNum = 20;gotAllVouchers = false;filterVouchers('admin',0,20)">
+                onclick="dataNum = 20;gotAllVouchers = false;filterVouchers('admin', totalVouchers - dataNum, totalVouchers)">
                 <a class="nav-link my-voucher-pill active px-2 cursor-pointer bg-base-color-nav" data-toggle="pill"
                     role="tab" aria-selected="true">My vouchers</a>
             </li>
             <li class="nav-item px-1 user-select-none "
-                onclick="dataNum = 20;gotAllVouchers = false;filterVouchers('all',0,20)">
+                onclick="dataNum = 20;gotAllVouchers = false;filterVouchers('all', totalVouchers - dataNum, totalVouchers)">
                 <a class="nav-link px-2 all-voucher-pill cursor-pointer bg-base-color-nav" data-toggle="pill" role="tab"
                     aria-selected="false">All vouchers</a>
             </li>
@@ -74,7 +74,7 @@
     {{!-- =========================================================== --}}
     <div class="voucher-details-container container-fluid ps-4">
         <h3 style="background-color:#26abe2;position:absolute;top:1em;left:0px"
-            class="py-2 px-5 text-light border-radius-right shadow">Delivery order</h3>
+            class="py-2 px-5 text-light border-radius-right shadow">Delivery order <span></span></h3>
         <div class="row mt-5 pt-5" style="position: relative;">
             <div class="col-12">
                 <h5 class="view-details-divider" style="background-color: #f7f8fa;">Admin details
@@ -110,12 +110,18 @@
             </div>
             <div class="col-md-5">
                 <div class="form-group">
-                    <div class="my-3">
+                    <div class="my-3 orderDate-container">
+                        {{!-- <label class="font-weight-bold" for="orderDate">Order date</label>
+                        <input readonly autocomplete="off" type="text"
+                            class="editable bg-transparent form-control shadow-none" id="orderDate" name="orderDate"
+                            placeholder="dd/mm/yyyy"> --}}
                         <label class="font-weight-bold" for="orderDate">Order Date </label>
-                        <div class="suggestionbox-container">
-                            <input readonly autocomplete="off" type="text"
-                                class="bg-transparent form-control shadow-none" id="orderDate" name="orderDate"
-                                placeholder="dd/mm/yyyy">
+                        <div class="suggestionbox-container input-group date orderDate" data-date-format="dd/mm/yyyy">
+                            <input readonly autocomplete="off" type="text" class="bg-transparent form-control editable"
+                                id="orderDate" name="orderDate" placeholder="dd/mm/yyyy">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
                         </div>
                     </div>
                     {{!-- <div class="my-3">
@@ -128,9 +134,10 @@
                         </div>
                     </div> --}}
                     <div class="my-3">
-                        <label class="font-weight-bold" for="partyName">Consignee</label>
-                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
-                            id="partyName" name="consignee" placeholder="enter party name">
+                        <label class="font-weight-bold" for="consignee">Consignee</label>
+                        <input readonly autocomplete="off" type="text"
+                            class="editable bg-transparent form-control shadow-none" id="consignee" name="consignee"
+                            placeholder="enter party name">
                     </div>
 
                 </div>
@@ -150,14 +157,14 @@
                     <div class="my-3" style="position: relative;">
                         <label class="font-weight-bold" for="mobile">Consignee Mobile </label>
                         <input readonly autocomplete="off" style="padding-left: 40px" type="number"
-                            class="form-control shadow-none bg-transparent" id="mobile" name="consigneeMobile"
-                            placeholder="enter party mobile number">
+                            class="editable form-control shadow-none bg-transparent" id="consigneeMobile"
+                            name="consigneeMobile" placeholder="enter party mobile number">
                         <span style="position:absolute;left:5px;bottom:6px;">+91</span>
                     </div>
                     <div class="my-3">
                         <label class="font-weight-bold" for="consigneeAddress">Consignee Address</label>
                         <textarea readonly style="resize: none;background-color:transparent" type="text" rows="4"
-                            class="form-control shadow-none" name="consigneeAddress" id="address"
+                            class="editable form-control shadow-none" name="consigneeAddress" id="address"
                             placeholder="enter party address"></textarea>
                     </div>
                 </div>
@@ -169,8 +176,9 @@
                 <div class="form-group">
                     <div class="mb-3">
                         <label class="font-weight-bold" for="gstNum">GST IN NO.</label>
-                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
-                            id="gstNum" name="gstInNum" placeholder="enter gst invoice number">
+                        <input readonly autocomplete="off" type="text"
+                            class="editable bg-transparent form-control shadow-none" id="gstNum" name="gstInNum"
+                            placeholder="enter gst invoice number">
                     </div>
                 </div>
             </div>
@@ -178,8 +186,9 @@
                 <div class="form-group">
                     <div>
                         <label class="font-weight-bold" for="aadhaarNum">Aadhar no. / PAN NO. </label>
-                        <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
-                            id="aadhaarNum" name="panNumORaadharNum" placeholder="enter aadhaar number">
+                        <input readonly autocomplete="off" type="text"
+                            class="editable bg-transparent form-control shadow-none" id="panNumORaadharNum"
+                            name="panNumORaadharNum" placeholder="enter aadhaar number">
                     </div>
                     {{!-- <div class="mb-3">
                         <label class="font-weight-bold" for="panNum">PAN NO.</label>
@@ -199,7 +208,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Product Name</th>
-                        <th scope="col">Serial No.</th>
+                        <th scope="col" class="voucher-details-sr-col">Serial No.</th>
                         <th scope="col">QTY</th>
                         <th scope="col">Rate</th>
                         <th scope="col">Amount</th>
@@ -219,7 +228,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">Advance
+                <h5 class="view-details-divider advance-payment-heading mt-4" style="background-color: #f7f8fa;">
                     Payments</h5>
             </div>
             {{!-- <div class="col-md-5 advance-payment-container">
@@ -256,17 +265,17 @@
                         <thead>
                             <tr>
                                 <th scope="col" style="word-break: keep-all;">Mode</th>
-                                <th scope="col" style="word-break: keep-all;">Advance Date</th>
-                                <th scope="col">Advance Amount</th>
+                                <th scope="col" style="word-break: keep-all;">Date</th>
+                                <th scope="col">Amount</th>
                             </tr>
                         </thead>
                         <tbody class="advanceEntryTbody">
                         </tbody>
                     </table>
                 </div>
-                <h6 class="text-secondary text-end pe-5">Total advance : &#8377; <span
-                        class="totalAdvncSpan text-primary">
-                        0 </span></h6>
+                <h6 class="text-secondary text-end pe-5">Total: &#8377;
+                    <span class="totalAdvncSpan text-primary"> 0 </span>
+                </h6>
 
             </div>
         </div>
@@ -287,10 +296,10 @@
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
                             id="dispatchedBy" name="dispatchedBy" placeholder="who dispatched it ?">
                     </div>
-                     <div class="my-3">
+                    <div class="my-3">
                         <label class="font-weight-bold" for="transporterID">Transporter ID </label>
                         <input readonly autocomplete="off" type="text" class="bg-transparent form-control shadow-none"
-                            id="transporterID" name="transporterID" >
+                            id="transporterID" name="transporterID">
                     </div>
                     {{!-- <div class="my-3">
                         <label class="font-weight-bold" for="dispatchVehicleNum">Dispatch vehicle no. </label>
@@ -344,28 +353,211 @@
             style="position: fixed;bottom:1em;right:1em;">
             {{#each admin.permissions}}
             {{#ifeq this.permissionName "all"}}
+            {{!-- dispatch report --}}
             <button data-toggle="modal" data-target="#dispatchDOmodal"
-                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button"><i
-                    class="bi bi-truck mx-2"></i>Dispatch</button>
+                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button">
+                <i class="bi bi-truck mx-2"></i>
+                <p> Dispatch</p>
+            </button>
+            {{!-- edit report --}}
+            <button class="btn bg-text-base-color text-light ms-1 me-0 shadow edit-btn" type="button"
+                data-toggle="tooltip" data-placement="top" title="Edit" onclick="DOeditMenu('open')">
+                <i class="bi bi-pencil"></i></button>
+
+
             {{/ifeq}}
             {{#ifeq this.permissionName "deliveryOrderVoucher"}}
             {{#each this.permissionKeys}}
             {{#ifeq this.keyName "edit"}}
+            {{!-- dispatch report --}}
             <button data-toggle="modal" data-target="#dispatchDOmodal"
-                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button"><i
-                    class="bi bi-truck mx-2"></i>Dispatch</button>
+                class="btn bg-danger text-light mx-2 shadow dispatch-btn" type="button"><i class="bi bi-truck mx-2"></i>
+                <p> Dispatch</p>
+            </button>
+            {{!-- edit report --}}
+            <button class="btn bg-text-base-color text-light ms-1 me-0 shadow edit-btn" type="button"
+                data-toggle="tooltip" data-placement="top" title="Edit" onclick="DOeditMenu('open')">
+                <i class="bi bi-pencil"></i></button>
             {{/ifeq}}
             {{/each}}
             {{/ifeq}}
             {{/each}}
+            {{!-- add payment --}}
+            <button data-toggle="modal" data-target="#paymentModal"
+                class="btn bg-text-base-color text-light mx-2 shadow payment-btn" type="button">+ ₹</button>
+            {{!-- print report --}}
             <a href="" class="btn bg-text-base-color print-report-btn" data-toggle="tooltip" data-placement="top"
                 title="Print" target="_blank"><i class="bi bi-printer"></i></a>
+            {{!-- close modal --}}
             <button onclick="closeVoucherDetails()" class="btn bg-base-color text-light mx-2 shadow"
                 data-toggle="tooltip" data-placement="top" title="Close ( esc )" type="button"><i
                     class="bi bi-x-lg"></i></button>
         </div>
     </div>
 </div>
+
+{{!-- bootstrap toast --}}
+<div role="alert" aria-live="polite" aria-atomic="true" class="toast" id="toast" data-autohide="true" data-delay="1500">
+    <div class="toast-header bg-success text-light shadow">
+        <strong class="mr-auto">Delivery order updated Successfully</strong>
+        <small>Latest</small>
+    </div>
+</div>
+
+{{!-- delivery order details edit js --}}
+<script>
+    let orderDateContainerHTML = $(".voucher-details-container .orderDate-container").html()
+    function DOeditMenu(cmd) {
+        // DO edit menu -- open
+        if (cmd == 'open') {
+            $(".voucher-details-container .editable").prop('readonly', false);
+            $(".voucher-details-container .editable").css({ 'color': 'red' })
+            // change edit button props
+            $(".voucher-details-container .edit-btn").removeClass('bg-text-base-color').addClass("bg-success");
+            $(".voucher-details-container .edit-btn").attr({ 'data-original-title': 'Save', 'title': "Save", "onclick": "submit_DO_edit()" });
+            $(".voucher-details-container .edit-btn i").removeClass('bi-pencil').addClass("bi-check-lg");
+            // product details input enabling
+            $(".voucher-details-container .input-transparent").removeClass('pe-none')
+            $(".voucher-details-container .input-transparent").css({ 'color': 'red' })
+            // changing order date input to be aut select dates
+            $('.input-group.date.orderDate').datepicker({ format: "dd/mm/yyyy" });
+        }
+        // DO edit menu -- close
+        else if (cmd == 'close') {
+            $(".voucher-details-container .editable").prop('readonly', true);
+            $(".voucher-details-container .editable").css({ 'color': '#70767b' })
+            // change edit button props
+            $(".voucher-details-container .edit-btn").addClass('bg-text-base-color').removeClass("bg-success");
+            $(".voucher-details-container .edit-btn").attr({ 'data-original-title': 'Edit', 'title': "Edit", "onclick": "DOeditMenu('open')" });
+            $(".voucher-details-container .edit-btn i").addClass('bi-pencil').removeClass("bi-check-lg");
+            // product details input enabling
+            $(".voucher-details-container .input-transparent").addClass('pe-none')
+            $(".voucher-details-container .input-transparent").css({ 'color': '#70767b' })
+            // changing order date input to be aut select dates)
+            $('.input-group.date.orderDate').datepicker('remove', { format: "dd/mm/yyyy" });
+        }
+    }
+    async function submit_DO_edit() {
+        rows = $(".voucher-details-container .allProductsTbody tr") //  product rows
+        let DO = {
+            id: $('#dispatchDOmodal input[name="DOid"]').val(),
+            orderDate: $(".voucher-details-container #orderDate").val(),
+            consignee: $(".voucher-details-container #consignee").val(),
+            consigneeMobile: $(".voucher-details-container #consigneeMobile").val(),
+            consigneeAddress: $(".voucher-details-container #address").val(),
+            gstInNum: $(".voucher-details-container #gstNum").val(),
+            panNumORaadharNum: $(".voucher-details-container #panNumORaadharNum").val(),
+            products: []
+        }
+        // extracting product name and seriel number form the rows
+        for (let i = 0; i < rows.length; i++) {
+            DO.products.push({
+                productName: rows[i].children[0].children[0].value,
+                serialNum: (rows[i].children.length == 8) ? rows[0].children[1].children[0].value : ""
+            })
+        }
+        // API request
+        axios.post("/api/v1/voucher/delivery-order/edit", DO).then((res) => {
+            DOeditMenu("close")
+            openVoucherDetails(res.data.voucher)
+            $('.toast').toast('show')
+        }).catch(e => {
+            console.log(e)
+        })
+    }
+</script>
+
+<!-- aftre payments modal -->
+<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-light bg-base-color" style="margin: -1px;">
+                <h5 class="modal-title" style="font-family:'poppins','Open Sans';">Add Payments</h5>
+                <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mode</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>
+                                <i class="bi bi-plus display-6 cursor-pointer" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Add more" onclick="addMorePayments()"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select class="form-select shadow-none mode-of-advance-payment" style="width:7em">
+                                    <option value="cash" selected>Cash</option>
+                                    <option value="bank">Bank</option>
+                                    <option value="upi">UPI </option>
+                                    {{!-- <option value="others">Others</option> --}}
+                                </select>
+                            </td>
+                            <td class="input-group date" data-date-format="dd/mm/yyyy">
+                                <input autocomplete="off" type="text" class="form-control" placeholder="dd/mm/yyyy">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </td>
+                            <td class="position-relative">
+                                <i class="bi bi-currency-rupee" style="position:absolute;left:20px;top:30%"></i>
+                                <input type="number" maxlength="10" style="padding-left:30px;"
+                                    class="advance-money-input form-control shadow-none" onkeyup="getTotalPayment()">
+                            </td>
+                            <td> <button data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="button"
+                                    class="btn btn-danger shadow-none" onclick="$(this).parent().parent().remove()">
+                                    <i class="bi bi-trash3-fill"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="error w-100 text-end pe-4 text-danger"></div>
+            <div class="modal-footer">
+                <div class="payment-status d-flex">
+                    <div class="form-check px-1">
+                        <input type="radio" id="paymentStatusCR" name="paymentStatus" value="cr">
+                        <label for="paymentStatusCR">Credit</label>
+                    </div>
+                    <div class="form-check px-1">
+                        <input type="radio" id="paymentStatusDR" name="paymentStatus" value="dr" checked>
+                        <label for="paymentStatusDR">Debit</label>
+                    </div>
+                </div>
+
+                <span class="totalAmount badge bg-dark  p-2"></span>
+                <p id="totalPayment" class="badge bg-secondary p-2"></p>
+                <button type="button" class="btn bg-base-color text-light border-0 shadow-none"
+                    onclick="submitAP()">Include</button>
+            </div>
+            <script>
+                advanceInputTBhtml = $('#paymentModal table tbody').html() // html of ROW 
+
+                function addMorePayments() { $('#paymentModal table tbody').append(advanceInputTBhtml); $('.input-group.date').datepicker({ format: "dd/mm/yyyy" }); }
+                function getTotalPayment() {
+                    total = 0.0
+                    $.each($('#paymentModal table tbody tr'), (key, row) => {
+                        total += parseFloat((row.children[2].children[1].value == "" ? 0 : row.children[2].children[1].value))
+                    })
+                    $("#totalPayment").html(`TOTAL: ₹ ${(total == NaN) ? 0 : total.toFixed(2)}`)
+                }
+                $("#paymentModal").on('shown.bs.modal', function () {
+                    $('#paymentModal .error').addClass('hide')
+                    $('#paymentModal input[type="text"]').val("")
+                    $('#paymentModal input[type="number"]').val("")
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
 
 <!-- dispatch modal -->
 <div class="modal" id="dispatchDOmodal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -401,15 +593,49 @@
                     </div>
                     <div class="form-group">
                         <label for="dispatchVehicleNum">Vehicle no.</label>
-                        <input   type="text" class="form-control shadow-none" name="dispatchVehicleNum"
+                        <input type="text" class="form-control shadow-none" name="dispatchVehicleNum"
                             id="dispatchVehicleNum" placeholder="enter vehicle num">
                     </div>
                     <h6 class="text-center text-secondary form-group">OR</h6>
                     <div class="form-group">
                         <label for="transporterID">Transporter ID</label>
-                        <input   type="text" class="form-control shadow-none" name="transporterID"
-                            id="transporterID" placeholder="enter transporter id">
+                        <input type="text" class="form-control shadow-none" name="transporterID" id="transporterID"
+                            placeholder="enter transporter id">
                     </div>
+                    {{!-- <div class="form-group">
+                        <label>Products</label>
+                        <div class="container voucher-details-products-container">
+                            <div class="row" style="border-bottom: 1px solid #cbcbcb;">
+                                <div class="col-md-4">
+                                    <p style="line-height: 12px;">
+                                        <small> Product name <br> Qty: 21</small>
+                                    </p>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control shadow-none">
+                                    <div style="display: flex;width: 100%;overflow: auto;">
+                                        <button class="btn bg-text-base-color shadow-none py-0 px-2 m-1">1</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table products-tb">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Seriel Num</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">V bond</th>
+                                    <td><input type="text" class="form-control shadow-none"></td>
+                                    <td><input type="hidden"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary border-0 shadow-none"
@@ -457,6 +683,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"
     integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://www.jqueryscript.net/demo/stretch-textarea-fit-content/Jquery.autoResize.js"></script>
 {{!-- my script --}}
 <script src="/js/admin/vouchers/delivery-order/view-all.js"></script>
 {{/inline}}

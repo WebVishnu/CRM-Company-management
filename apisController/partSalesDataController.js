@@ -40,15 +40,15 @@ exports.getSearchedPartSaleData = async function (req, res) {
   try {
     const salesData = await partSData.find({
       $or: [
-        { "createdBy.adminName": { $regex: query, $options: 'i' } },
-        { "invoiceDate": { $regex: query, $options: 'i' } },
-        { "invoiceNum": { $regex: query, $options: 'i' } },
-        { "reportNumber": { $regex: query, $options: 'i' } },
-        { "customerName": { $regex: query, $options: 'i' } },
-        { "mobileNum": { $regex: query, $options: 'i' } },
-        { "address": { $regex: query, $options: 'i' } },
-        { "parts.partName": { $regex: query, $options: 'i' } },
-        { "parts.partNumber": { $regex: query, $options: 'i' } },
+        { "createdBy.adminName": { $regex: `${query}`, $options: 'i' } },
+        { "invoiceDate": { $regex: `${query}`, $options: 'i' } },
+        { "invoiceNum": { $regex: `${query}`, $options: 'i' } },
+        { "reportNumber": { $regex: `${query}`, $options: 'i' } },
+        { "customerName": { $regex: `${query}`, $options: 'i' } },
+        { "mobileNum": { $regex: `${query}`, $options: 'i' } },
+        { "address": { $regex: `${query}`, $options: 'i' } },
+        { "parts.partName": { $regex: `${query}`, $options: 'i' } },
+        { "parts.partNumber": { $regex: `${query}`, $options: 'i' } },
       ]
     })
     res.send({

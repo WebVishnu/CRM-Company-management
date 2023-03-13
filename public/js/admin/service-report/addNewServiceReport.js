@@ -38,7 +38,7 @@ function pad(n, length) {
     return (len > 0 ? new Array(++len).join('0') : '') + n
 }
 // update report number every second
-function updateServiceReportNumber() {
+async function updateServiceReportNumber() {
     axios.get("/api/v1/service-report/get-report-number").then((response) => {
         res = pad(response.data.reportNumber, 3)
         $('.report-number').html(res)
@@ -252,7 +252,6 @@ async function clearNewMachineForm() {
 // submit new service report
 $('#service-report-main-form').on('submit', (e) => {
     e.preventDefault()
-    console.log(allMachines)
     const formData = _.object($('#service-report-main-form').serializeArray().map(function (v) { return [v.name, v.value]; }))
     if (allMachines.length != 0) {
         if (formData.technicianSignImgDataUrl.length != 0 && formData.customerSignImgDataUrl.length != 0) {
@@ -274,13 +273,13 @@ $('#service-report-main-form').on('submit', (e) => {
 })
 
 
-// share report
-$('.share-service-report-btn').on('click', () => {
-    axios.get('/api/v1/service-report/share-report')
-        .then((response) => {
-            console.log(response)
-        })
-})
+// // share report
+// $('.share-service-report-btn').on('click', () => {
+//     axios.get('/api/v1/service-report/share-report')
+//         .then((response) => {
+//             console.log(response)
+//         })
+// })
 
 
 

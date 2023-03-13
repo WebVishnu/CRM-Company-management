@@ -4,7 +4,7 @@ const catchAsyncErrors = require(path.join(__dirname, "../middlewares/catchAsync
 
 
 exports.getServiceReportNumber = catchAsyncErrors(async (req, res, next) => {
-    data = await ServiceReport.find()
+    data = await ServiceReport.find().select("-customerSignImgDataUrl -technicianSignImgDataUrl")
     res.send({
         success: true,
         reportNumber: data.length
@@ -39,7 +39,7 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
             if (tempArray[i] == 'date') {
                 searchingQuery["date"] = { $regex: `${tempArray[i + 1].split('/')[1]}/${tempArray[i + 1].split('/')[0]}/${tempArray[i + 1].split('/')[2]}`, $options: 'i' }
             } else {
-                searchingQuery[tempArray[i]] = { $regex: tempArray[i + 1], $options: 'i' }
+                searchingQuery[tempArray[i]] = { $regex: `${tempArray[i + 1]}`, $options: 'i' }
             }
         }
         reports = await ServiceReport.find(searchingQuery).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
@@ -47,14 +47,14 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
     else if (query.includes('sn:')) {
         reports = await ServiceReport.find({
             $or: [
-                { "reportNumber": { $regex: query.replace('sn: ', ""), $options: 'i' } },
+                { "reportNumber": { $regex: `${query.replace('sn: ', "")}`, $options: 'i' } },
 
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     }else if (query.includes('advWty')) {
         reports =  await ServiceReport.find({
             $or: [
-                { "service.warranty": { $regex: req.body.wty, $options: 'i' } },
+                { "service.warranty": { $regex: `${req.body.wty}`, $options: 'i' } },
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     } else if (query.includes('d:')) {
@@ -68,27 +68,27 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
         query = query.replace('filter: ', '').split(' =>on ')
         reports = await ServiceReport.find({
             $or: [
-                { [`service.${query[1]}`]: { $regex: query[0], $options: 'i' } }
+                { [`service.${query[1]}`]: { $regex: `${query[0]}`, $options: 'i' } }
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     } else if (query.includes('mn:')) {
         query = query.replace('mn: ', '')
         reports = await ServiceReport.find({
             $or: [
-                { "service.machineNum": { $regex: query, $options: 'i' } },
+                { "service.machineNum": { $regex: `${query}`, $options: 'i' } },
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     } else {
         reports = await ServiceReport.find({
             $or: [
-                { "reportNumber": { $regex: query, $options: 'i' } },
-                { "time": { $regex: query, $options: 'i' } },
-                { "mobile": { $regex: query, $options: 'i' } },
-                { "customerName": { $regex: query, $options: 'i' } },
-                { "technicianName": { $regex: query, $options: 'i' } },
-                { "attendingLocation": { $regex: query, $options: 'i' } },
-                { "address": { $regex: query, $options: 'i' } },
-                { "service.status": { $regex: query, $options: 'i' } },
+                { "reportNumber": { $regex: `${query}`, $options: 'i' } },
+                { "time": { $regex: `${query}`, $options: 'i' } },
+                { "mobile": { $regex: `${query}`, $options: 'i' } },
+                { "customerName": { $regex: `${query}`, $options: 'i' } },
+                { "technicianName": { $regex: `${query}`, $options: 'i' } },
+                { "attendingLocation": { $regex: `${query}`, $options: 'i' } },
+                { "address": { $regex: `${query}`, $options: 'i' } },
+                { "service.status": { $regex: `${query}`, $options: 'i' } },
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
     }

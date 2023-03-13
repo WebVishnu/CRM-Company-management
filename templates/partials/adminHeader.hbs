@@ -22,14 +22,43 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="/css/admin/admin/admin.css" class="template-customizer-core-css" />
     <!-- Helpers -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    {{!--================================================== --}}
+    {{!-- BOOTSTRAP CSS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    {{!-- JQUERY --}}
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{!-- Autocomplete JQuery ========================================== --}}
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.2.27/jquery.autocomplete.min.js"></script>
+    {{!-- POPPER.js --}}
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    {{!-- BOOTSTRAP JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+    {{!--Font awesome ================================================== --}}
     <script src="https://kit.fontawesome.com/7f1332f97e.js" crossorigin="anonymous"></script>
     {{#> css}}
     {{/css}}
+    <!-- Google tag (gtag.js) -->
+    {{!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BRJ2RGFTEN"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-BRJ2RGFTEN');
+    </script> --}}
 </head>
 {{#> style}}{{/style}}
 <style>
@@ -94,20 +123,21 @@
         border-radius: 5px;
     }
 
+
     .custom-scrollbar::-webkit-scrollbar {
         width: 5px;
     }
 
     /* Track */
     .custom-scrollbar::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px grey;
         border-radius: 0;
+        background-color: rgb(226, 226, 226);
     }
 
     /* Handle */
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #26abe2;
-        border-radius: 10px;
+        border-radius: 0px;
     }
 
     /* Handle on hover */
@@ -264,17 +294,18 @@
                         <li class="list-group-item"><span>Alt + I</span> <span>Inbox</span></li>
                         <li class="list-group-item"><span>Alt + C</span> <span>Complaints</span></li>
                         <li class="list-group-item"><span>Alt + H</span> <span>Profile page</span></li>
-                        <li class="list-group-item"><span>Alt + V</span> <span>Choose a voucher ( use num to select vouchers )</span></li>
+                        <li class="list-group-item"><span>Alt + V</span> <span>Choose a voucher ( use num to select
+                                vouchers )</span></li>
                     </ul>
                 </div>
                 <div class="col-md-5 mt-4 ms-md-5 ps-md-5 ps-4">
                     <h6>Common shortcuts</h6>
                     <ul class="list-group list-group-flush common-shortcuts">
                         <li class="list-group-item"><span>R</span> <span>Refresh all reports</span></li>
-                        <li class="list-group-item"><span>Ctrl  /</span> <span>Start searching</span></li>
+                        <li class="list-group-item"><span>Ctrl /</span> <span>Start searching</span></li>
                         <li class="list-group-item"><span>ESC</span> <span>Close report details</span></li>
-                        <li class="list-group-item"><span>Alt  +</span> <span>Add new report</span></li>
-                        <li class="list-group-item"><span>Shift  /</span> <span>Open shortcut box</span></li>
+                        <li class="list-group-item"><span>Alt +</span> <span>Add new report</span></li>
+                        <li class="list-group-item"><span>Shift /</span> <span>Open shortcut box</span></li>
                     </ul>
                 </div>
             </div>
@@ -843,12 +874,6 @@
 
             {{#> body}}
             {{/body}}
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-                crossorigin="anonymous"></script>
 
 </body>
 <script>
@@ -954,7 +979,6 @@
     $('#search-form').on('submit', (e) => {
         e.preventDefault()
     })
-
 
 
 </script>

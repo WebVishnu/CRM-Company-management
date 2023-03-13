@@ -1,3 +1,46 @@
+.input-transparent {
+    border: none;
+    outline: none;
+}
+
+.input-transparent.pe-none {
+    pointer-events: none;
+}
+
+textarea {
+    resize: none;
+}
+
+.autocomplete-suggestions {
+    border: 1px solid #26abe2;
+    background: #FFF;
+    overflow: auto;
+}
+
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #3399FF;
+}
+
+.autocomplete-group {
+    padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+    display: block;
+    border-bottom: 1px solid #000;
+}
+
 /* ================================================================= */
 /* TABLE */
 .delivery-order-table table {
@@ -36,9 +79,11 @@
     .delivery-order-table table {
         border: 0;
     }
+
     .delivery-order-table table td {
         padding: 0.5em 0;
     }
+
     .delivery-order-table table caption {
         font-size: 1.3em;
     }
@@ -67,8 +112,8 @@
     .delivery-order-table table td:nth-child(1),
     .delivery-order-table table td:nth-child(3),
     .delivery-order-table table td:nth-child(4),
-    .delivery-order-table table td:nth-child(6), 
-        .delivery-order-table table td:nth-child(7) {
+    .delivery-order-table table td:nth-child(6),
+    .delivery-order-table table td:nth-child(7) {
         display: block;
         font-size: .8em;
         text-align: right;
@@ -125,12 +170,14 @@
     z-index: 999;
     overflow-y: auto;
 }
+
 @media (max-width:1200px) {
     .voucher-details-container {
         height: 100vh;
         width: 100vw;
     }
 }
+
 .page-title {
     position: relative;
     left: -1.2em;
@@ -172,7 +219,8 @@ span[data-dispatch-status="Pending"] {
     padding: 0.3em 0.5em;
     border-radius: 5px;
 }
-span[data-dispatch-status="Dispatched"]{
+
+span[data-dispatch-status="Dispatched"] {
     border: 1px solid #2fb083;
     background-color: #ebf8f5;
     color: #2fb083;
@@ -180,7 +228,7 @@ span[data-dispatch-status="Dispatched"]{
     border-radius: 5px;
 }
 
-.modal-body{
+.modal-body {
     background-color: #fff;
-    height: 26em;
+    height: auto;
 }

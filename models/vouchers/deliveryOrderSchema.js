@@ -28,20 +28,31 @@ const deliveryOrder = new mongoose.Schema({
     advancePaymentReceived: { type: 'string', required: true },
     advancePayment: [
         {
-            mode: { type: 'string' },
-            advanceDate: { type: 'string' },
-            advanceAmount: { type: 'string' },
+            adminID: { type: 'string' },
+            mode: { type: 'string', },
+            advanceDate: { type: 'string', },
+            advanceAmount: { type: 'string', },
             paymentDetails: {}
         }
     ],
-    afterPayments: [
-        {
-            mode: { type: 'string' },
-            date: { type: 'string' },
-            amount: { type: 'string' },
-            details: {}
-        }
-    ],
+    // afterPayments: [
+    //     {
+    //         adminDetails: {
+    //             adminName: { type: 'string' },
+    //             adminID: { type: 'string' },
+    //             createdOn: { type: 'string' }
+    //         },
+    //         payments: [
+    //             {
+    //                 mode: { type: 'string' },
+    //                 date: { type: 'string' },
+    //                 amount: { type: 'string' },
+    //                 details: {}
+    //             }
+    //         ]
+    //     }
+    // ],
+    paymentStatus: { type: 'string' },
     signatures: {
         admin: {
             type: 'string',
@@ -63,8 +74,24 @@ const deliveryOrder = new mongoose.Schema({
         dispatchDate: { type: 'string' },
         dispatchVehicleNum: { type: 'string', default: "" },
         transporterID: { type: 'string', default: "" },
+        // products:[
+        //     {
+        //         productName:{type: 'string'},
+        //         serialNum:{type: 'string'}
+        //     }
+        // ]
     }
 })
 
-deliveryOrder.index({ 'createdBy.adminName': 'text', voucherNum: 'text', orderDate: 'text', dispatchDate: 'text', receiverName: 'text', representativeName: 'text', consigneeMobile: 'text', consigneeAddress: 'text', gstInNum: 'text', panNum: 'text', aadharNum: 'text', specialInstructions: 'text', 'dispatchDetails.dispatchedBy': 'text', 'dispatchDetails.dispatchVehicleNum': 'text', 'dispatchDetails.machineSrNum': 'text', 'dispatchDetails.invoiceNum': 'text', });
+deliveryOrder.index({
+    'createdBy.adminName': 'text',
+    voucherNum: 'text', orderDate: 'text',
+    consigneeMobile: 'text',
+    consigneeAddress: 'text',
+    gstInNum: 'text',
+    panNum: 'text',
+    aadharNum: 'text',
+    'dispatchDetails.dispatchedBy': 'text',
+    'dispatchDetails.dispatchVehicleNum': 'text',
+});
 module.exports = mongoose.model("delivery-order", deliveryOrder)

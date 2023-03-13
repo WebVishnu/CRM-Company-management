@@ -16,23 +16,23 @@ exports.SearchUserComplaints = async (req, res, next) => {
             try {
                 searchedComplaints = await Complaint.find({
                     $or: [
-                        { "userDetails.customerName": { $regex: query, $options: 'i' } },
-                        { "userDetails.contactNumber": query },
-                        { "userDetails.address": { $regex: query, $options: 'i' } },
-                        { "issue": { $regex: query, $options: 'i' } },
-                        { "DOP": { $regex: query, $options: 'i' } },
-                        { "machineSerielNumber": query },
-                        { "complaintID": query },
+                        { "userDetails.customerName": { $regex: `${query}`, $options: 'i' } },
+                        { "userDetails.contactNumber": `${query}` },
+                        { "userDetails.address": { $regex: `${query}`, $options: 'i' } },
+                        { "issue": { $regex: `${query}`, $options: 'i' } },
+                        { "DOP": { $regex: `${query}`, $options: 'i' } },
+                        { "machineSerielNumber": `${query}` },
+                        { "complaintID": `${query}` },
 
                     ]
                 })
             } catch {
                 searchedComplaints = await Complaint.find({
                     $or: [
-                        { "userDetails.customerName": { $regex: query, $options: 'i' } },
-                        { "userDetails.address": { $regex: query, $options: 'i' } },
-                        { "issue": { $regex: query, $options: 'i' } },
-                        { "DOP": { $regex: query, $options: 'i' } },
+                        { "userDetails.customerName": { $regex: `${query}`, $options: 'i' } },
+                        { "userDetails.address": { $regex: `${query}`, $options: 'i' } },
+                        { "issue": { $regex: `${query}`, $options: 'i' } },
+                        { "DOP": { $regex: `${query}`, $options: 'i' } },
                     ]
                 })
             }

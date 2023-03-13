@@ -96,6 +96,14 @@ input[type=number]::-webkit-outer-spin-button {
   position: absolute;
 }
 
+.toast {
+  margin: 0.7em;
+  position: fixed;
+  bottom: 6em;
+  right: 1em;
+  z-index: 1000
+}
+
 hr.hr-1 {
   border: 0;
   height: 1px;
@@ -16423,6 +16431,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
   opacity: 1;
   visibility: visible;
 }
+
 .drop-down-menu-main-parts-sales-data {
   transition: all 0.3s ease-in-out;
   height: 0;
@@ -16438,6 +16447,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
   opacity: 1;
   visibility: visible;
 }
+
 .drop-down-menu-main-production {
   transition: all 0.3s ease-in-out;
   height: 0;
@@ -16502,7 +16512,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
   visibility: visible;
 }
 
-.menu-two-link-dropdown{
+.menu-two-link-dropdown {
   background-color: #f0f3f5;
 }
 

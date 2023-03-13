@@ -71,14 +71,14 @@ exports.getSearchedSaleData = async function (req, res) {
   try {
     const salesData = await SData.find({
       $or: [
-        { "createdBy.adminName": { $regex: query, $options: 'i' } },
-        { "invoiceDate": { $regex: query, $options: 'i' } },
-        { "invoiceNum": { $regex: query, $options: 'i' } },
-        { "reportNumber": { $regex: query, $options: 'i' } },
-        { "customerName": { $regex: query, $options: 'i' } },
-        { "address": { $regex: query, $options: 'i' } },
-        { "machines.machineName": { $regex: query, $options: 'i' } },
-        { "machines.machineNum": { $regex: query, $options: 'i' } },
+        { "createdBy.adminName": { $regex: `${query}`, $options: 'i' } },
+        { "invoiceDate": { $regex: `${query}`, $options: 'i' } },
+        { "invoiceNum": { $regex: `${query}`, $options: 'i' } },
+        { "reportNumber": { $regex: `${query}`, $options: 'i' } },
+        { "customerName": { $regex: `${query}`, $options: 'i' } },
+        { "address": { $regex: `${query}`, $options: 'i' } },
+        { "machines.machineName": { $regex: `${query}`, $options: 'i' } },
+        { "machines.machineNum": { $regex: `${query}`, $options: 'i' } },
       ]
     })
 
