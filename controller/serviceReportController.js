@@ -112,6 +112,7 @@ function pad(n, length) {
 // Post Service Report -- post 
 exports.PostServiceReport = async (req, res, next) => {
     try {
+        console.log(req.body)
         const admin = await Admin.find({ _id: adminToken.uID })
         const tempReport = await ServiceReport.find().select("-customerSignImgDataUrl -technicianSignImgDataUrl")
         await ServiceReport.create({
@@ -131,7 +132,9 @@ exports.PostServiceReport = async (req, res, next) => {
             technicianSignImgDataUrl: req.body.formData.technicianSignImgDataUrl,
             service: req.body.allMachines
         })
-        res.redirect('/vitco-india/control/service-reports/new-form')
+        res.send({
+            success:true
+        })
     } catch (error) {
         res.redirect('/vitco-india/admin/login')
     }

@@ -1,6 +1,7 @@
 const path = require('path');
 const ServiceReport = require(path.join(__dirname, "../models/machineServiceReportSchema"));
 const catchAsyncErrors = require(path.join(__dirname, "../middlewares/catchAsyncErrors"));
+const Admin = require(path.join(__dirname, "../models/adminSchema"));
 
 
 exports.getServiceReportNumber = catchAsyncErrors(async (req, res, next) => {
@@ -19,6 +20,40 @@ exports.getAllServiceReportMachines = catchAsyncErrors(async (req, res, next) =>
     })
 })
 
+
+// add new service report
+exports.addNewServiceReport = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { adminToken } = req.cookies
+        const admin = await Admin.find({ _id: adminToken.uID })
+        const tempReport = await ServiceReport.find().select("-customerSignImgDataUrl -technicianSignImgDataUrl")
+        await ServiceReport.create({
+            createdBy: {
+                name: admin[0].adminName,
+                adminId: admin[0]._id
+            },
+            reportNumber: `${await pad(tempReport.length, 3)}`,
+            date: req.body.formData.date,
+            time: req.body.formData.time,
+            customerName: req.body.formData.customerName.replaceAll("'", ""),
+            mobile: req.body.formData.mobile.replaceAll("'", ""),
+            technicianName: req.body.formData.technicianName.replaceAll("'", ""),
+            attendingLocation: req.body.formData.attendingLocation.replaceAll("'", ""),
+            address: req.body.formData.address.replace(/(\r\n|\n|\r)/gm, "").replaceAll("'", ""),
+            customerSignImgDataUrl: req.body.formData.customerSignImgDataUrl,
+            technicianSignImgDataUrl: req.body.formData.technicianSignImgDataUrl,
+            service: req.body.allMachines
+        })
+        res.send({
+            success: true
+        })
+    } catch (error) {
+        console.log("This is add new service report error\n" + error)
+        res.send({
+            success: false
+        })
+    }
+})
 
 
 // search service reports
@@ -51,8 +86,8 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
 
             ]
         }).select("-customerSignImgDataUrl").select("-technicianSignImgDataUrl")
-    }else if (query.includes('advWty')) {
-        reports =  await ServiceReport.find({
+    } else if (query.includes('advWty')) {
+        reports = await ServiceReport.find({
             $or: [
                 { "service.warranty": { $regex: `${req.body.wty}`, $options: 'i' } },
             ]
@@ -95,7 +130,7 @@ exports.searchServiceReport = catchAsyncErrors(async (req, res, next) => {
     res.status(200).send({
         status: true,
         reports: reports,
-        query:(req.body.wty)?req.body.wty:""
+        query: (req.body.wty) ? req.body.wty : ""
     })
 })
 
@@ -149,4 +184,11 @@ exports.deleteServiceReport = catchAsyncErrors(async (req, res, next) => {
         }
     })
 })
+
+
+
+function pad(n, length) {
+    var len = length - ('' + n).length;
+    return (len > 0 ? new Array(++len).join('0') : '') + n
+}
 

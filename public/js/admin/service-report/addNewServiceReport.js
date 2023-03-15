@@ -261,7 +261,7 @@ $('#service-report-main-form').on('submit', (e) => {
                     <span class="sr-only">Loading...</span>
                 </div>
             </button>`)
-            axios.post('/vitco-india/control/service-reports/new-form', { formData, allMachines }).then(() => {
+            axios.post('/api/v1/service-report/add-new', { formData, allMachines }).then((res) => {
                 location.reload(true);
             })
         } else {

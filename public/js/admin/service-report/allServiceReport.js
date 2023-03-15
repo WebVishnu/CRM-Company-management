@@ -363,7 +363,6 @@ async function searchReport(query) {
         })
 }
 
-$('[data-toggle="popover"]').popover();
 
 
 $('#advanceSearchModal').on('hidden.bs.modal', function () {

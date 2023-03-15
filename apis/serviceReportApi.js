@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { updateServiceReport, getAllServiceReportMachines, searchServiceReport, deleteServiceReport, getServiceReportNumber,shareReportOnWhatsapp } = require(path.join(__dirname, '../apisController/serviceReportControllerApi'));
+const { updateServiceReport, getAllServiceReportMachines, searchServiceReport, deleteServiceReport, getServiceReportNumber,shareReportOnWhatsapp,addNewServiceReport } = require(path.join(__dirname, '../apisController/serviceReportControllerApi'));
 const { authorizedRoles } = require(path.join(__dirname, "../middlewares/auth"));
 
 
@@ -19,6 +19,14 @@ router.post('/api/v1/service-report/search/:query', async (req, res, next) => {
 // get report number -- get
 router.get('/api/v1/service-report/get-report-number', async (req, res, next) => {
     await getServiceReportNumber(req, res)
+})
+
+// add new service report -- admin -- post
+router.post('/api/v1/service-report/add-new', async (req, res, next) => {
+    if (await authorizedRoles("serviceReport", req, res, next, ["create"])) { 
+        addNewServiceReport(req, res, next) }
+    else { res.send({ success: false }); }
+
 })
 
 // get report number -- get
