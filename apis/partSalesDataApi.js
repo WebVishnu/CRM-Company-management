@@ -24,7 +24,7 @@ router.get('/api/v1/sales-data/parts/search/:query', async (req, res, next) => {
 
 // edit single sales data -- post
 router.post('/api/v1/sales-data/parts/edit/:id', async (req, res, next) => {
-    if (await authorizedRoles("all", req, res, next, ["view", "edit", "create", "delete"])) {
+    if (await authorizedRoles("partSalesData", req, res, next, ["view", "edit", "create", "delete"])) {
         editPartSalesDataAdmin(req, res)
     }
     else { res.send({ success: false, }); }

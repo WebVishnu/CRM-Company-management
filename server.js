@@ -1,7 +1,7 @@
 const path = require('path')
 const app = require(path.join(__dirname,'/app'))
 const connectDatabase = require(path.join(__dirname,'/database/connection'))
-require('dotenv').config({ path: path.join(__dirname,'/database/config.env') });
+require('dotenv').config({ path: path.join(__dirname,'/config.env') });
 // this is a change
 // Uncaught exceptions
 process.on('uncaughtException', (err) => {
