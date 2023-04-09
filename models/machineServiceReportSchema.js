@@ -13,6 +13,26 @@ const machineServiceReport = mongoose.Schema({
             default: ""
         }
     },
+    checked: {
+        viewed: {
+            type: "boolean",
+            default: false
+        },
+        tally: {
+            isReviewed: {
+                type: "boolean",
+                default: false,
+            },
+            bookNo: {
+                type: "string",
+                default: "",
+            },
+            bookDate: {
+                type: "string",
+                default: "",
+            }
+        }
+    },
     date: {
         type: "string",
     },

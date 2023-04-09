@@ -68,9 +68,11 @@
         width: 8.3in;
         height: 10.8in;
     }
-    table thead{
-         background-color: #F8F9FA;
+
+    table thead {
+        background-color: #F8F9FA;
     }
+
     .table td.abbreviation {
         max-width: 30px;
     }
@@ -120,7 +122,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col table-col position-relative" style="height: 38em;overflow: hidden;padding-bottom: 4em;">
+                    <div class="col table-col position-relative"
+                        style="height: 38em;overflow: hidden;padding-bottom: 4em;">
                         <table class="table mt-5 table-responsive position-relative">
                             <thead>
                                 <tr>
@@ -189,8 +192,8 @@
         $('.pages').append(TempPageHtml)
         overflowed = false
         lastIndex = n
-        total = 0
-        advance = 0
+        let total = 0
+        let advance = 0
         for (let i = n; i <= products.length - 1; i++) {
             if ($(`page[data-page-num="${pgNo}"] .table-col`).prop('scrollHeight') - 1 > $(`page[data-page-num="${pgNo}"] .table-col`).outerHeight()) {
                 overflowed = true
@@ -198,7 +201,6 @@
                 break
             }
             const product = products[i];
-            console.log( products)
             total += parseInt(product.grossTotal)
             $(`page[data-page-num="${pgNo}"] table tbody`).append(`
             <tr>
@@ -210,26 +212,33 @@
                 </td>
                 <td class="table-header-td">${format(product.qty)}</td>
                 <td class="table-header-td">₹ ${format(product.rate)}<br><span>${product.unit}</span></td>
-                <td class="table-header-td">₹ ${format(product.totalGst)}<br><span>${product.gstRate}%</span></td>
+                <td class="table-header-td">₹ ${format(product.totalGst)}<br><span>${((product.totalGst / product.amount) * 100).toFixed(0)}%</span></td>
                 <td class="table-header-td">₹ ${format(product.grossTotal)}</td>
             </tr>`)
         }
         paymentReceived = "{{{voucher.advancePaymentReceived}}}"
         if (paymentReceived == "true") {
             payments = [{{{ voucher.advancePayment }}}]
-            payments.forEach(payment => {
-                advance += parseInt(payment.advanceAmount)
-            });
+        payments.forEach(payment => {
+            Amt = payment.advanceAmount
+            if(payment.advanceAmount.includes('-')){
+                Amt = Amt.replaceAll('-','')
+                advance -= (Amt != '') ? parseInt(Amt):0
+            }else{
+                advance += (Amt != '') ? parseInt(Amt):0
+            }
+        });
         }
         $(`page[data-page-num="${pgNo}"] .table-col`).append(`
-                <div class="col position-absolute w-100 text-end py-2 pe-2" style="bottom: 0em;right: 0;background-color: #F8F9FA;">
-                    <h6 class="text-secondary m-0">Total : ₹ ${format(total)}</h6>
-                    <p style="font-size: 11px;" class="text-secondary m-0">Advance : ₹ ${format(advance)}</p>
-                    <p style="font-size: 11px;" class="text-secondary m-0">Current Status : ₹ ${(total >= advance) ? (total == advance) ? "Clear" : format(total - advance) + " Dr" : format(advance - total) + " Cr"} </p>
-                </div> `)
+                    <div class="col position-absolute w-100 text-end py-2 pe-2" style="bottom: 0em;right: 0;background-color: #F8F9FA;">
+                        <h6 class="text-secondary m-0">Total : ₹ ${format(total)}</h6>
+                        <p style="font-size: 11px;" class="text-secondary m-0">Advance : ₹ ${format(advance)}</p>
+                        <p style="font-size: 11px;" class="text-secondary m-0">Current Status : ₹ ${format((total >= advance) ? (total == advance) ? "Clear" : total - advance + " Dr" : advance - total + " Cr")} </p>
+                    </div> `)
         if (overflowed) {
             addNewPage(lastIndex)
         }
+        //`₹ ${(total < advance) ? `<span class="text-success dueAmt">${advance - total}</span> Cr` : `<span class="text-danger dueAmt">${total - advance}</span> Dr`}`
     }
     // print file
     function printDiv() {
@@ -240,7 +249,7 @@
         $('body').attr('style', "overflow-y:auto");
         $('html').attr('style', "overflow-y:auto");
     }
-    
+
     // indian format converter
     function format(x) {
         var negative = x < 0,

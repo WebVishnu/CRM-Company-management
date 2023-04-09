@@ -152,6 +152,27 @@ exports.updateServiceReport = catchAsyncErrors(async (req, res, next) => {
     }
 })
 
+// Update Check Status -- admin
+exports.updateCheckStatus = catchAsyncErrors(async (req, res, next) => {
+    if (req.body.id != "0") {
+        console.log(req.body)
+        await ServiceReport.findByIdAndUpdate(req.body.id, {
+            [`checked.${req.params.task}`]: req.body.data
+        })
+    } else {
+        await ServiceReport.updateMany({}, {
+            $set: {
+                checked: {
+                    [req.params.task]: req.body.data
+                }
+            }
+        })
+    }
+    res.send({
+        success: true,
+        // report: await ServiceReport.find({ _id: req.body.id }).select('-Image')
+    })
+})
 
 // send report on whatsapp
 // exports.shareReportOnWhatsapp = catchAsyncErrors(async (req, res, next) => {
@@ -170,20 +191,20 @@ exports.updateServiceReport = catchAsyncErrors(async (req, res, next) => {
 
 
 // delete service report -- admin
-exports.deleteServiceReport = catchAsyncErrors(async (req, res, next) => {
-    await ServiceReport.findByIdAndDelete(req.params.Sid, function (err, docs) {
-        if (err) {
-            res.send({
-                success: false,
-            })
-        }
-        else {
-            res.send({
-                success: true,
-            })
-        }
-    })
-})
+// exports.deleteServiceReport = catchAsyncErrors(async (req, res, next) => {
+//     await ServiceReport.findByIdAndDelete(req.params.Sid, function (err, docs) {
+//         if (err) {
+//             res.send({
+//                 success: false,
+//             })
+//         }
+//         else {
+//             res.send({
+//                 success: true,
+//             })
+//         }
+//     })
+// })
 
 
 

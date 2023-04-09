@@ -152,6 +152,15 @@ function ShortifyString(str) {
 }
 // open service report modal
 function viewServiceReport(report) {
+    $(".view-sale-data-details-modal input" ).val("")
+    $('.revisions form').attr('onsubmit', `updateCheckStatus('${report._id}',$(this),'tally');return false`)
+    if (report.checked.tally.isReviewed) {
+        $('.revision-tally form div:nth-child(1) input[type="checkbox"]').prop("checked", true);
+        $('.revision-tally form input[name="bookNo"]').val(report.checked.tally.bookNo)
+        $('.revision-tally form input[name="bookDate"]').val(report.checked.tally.bookDate)
+        setRevisedTally(true)
+    } else { setRevisedTally(false) }
+
     toggleServiceReportInputs("report", true);
     $(".submit-changes-service-report-btn").addClass("hide");
     $(".change-service-report-btn").removeClass("hide")
@@ -286,15 +295,22 @@ async function updateServiceReportTable(reports) {
     data = ``
     for (var i = reports.length - 1; i >= 0; i--) {
         data += `
-        <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(reports[i])});'>
-         <td class="user-select-none" data-label="Report Number" >${ShortifyString(reports[i].reportNumber)}</td>
-         <td class="user-select-none" data-label="Date" >${ShortifyString(`${reports[i].date.split('/')[1]}/${reports[i].date.split('/')[0]}/${reports[i].date.split('/')[2]}`)}</td>
-         <td class="user-select-none" data-label="Customer name" >${ShortifyString(reports[i].customerName)}</td>
-         <td class="user-select-none" data-label="Mobile number" >${ShortifyString(reports[i].mobile)}</td>
-         <td class="user-select-none" data-label="Address" >${ShortifyString(reports[i].address)}</td>
-         <td class="user-select-none" data-label="Total Machines" >${ShortifyString(reports[i].service.length)}</td>
-         <td class="user-select-none" data-label="Tech. Name" >${ShortifyString(reports[i].technicianName)}</td>
-         <td class="user-select-none" data-label="Attd. Loc." >${ShortifyString(reports[i].attendingLocation)}</td>
+        <tr class='cursor-pointer move service-report-row row-${i}'>
+         <td class="user-select-none" data-label="Viewed" style="padding: 1em;">
+            <input class="form-check-input cursor-pointer" type="checkbox" ${(reports[i].checked.viewed) ? "checked" : ""} id="flexCheckDefault"
+            onchange="updateCheckStatus('${reports[i]._id}',${i},'viewed')">
+            <div class="spinner-border spinner-border-sm hide" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </td>
+         <td class="user-select-none" data-label="Report Number"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].reportNumber)}</td>
+         <td class="user-select-none" data-label="Date"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(`${reports[i].date.split('/')[1]}/${reports[i].date.split('/')[0]}/${reports[i].date.split('/')[2]}`)}</td>
+         <td class="user-select-none" data-label="Customer name"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].customerName)}</td>
+         <td class="user-select-none" data-label="Mobile number"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].mobile)}</td>
+         <td class="user-select-none" data-label="Address"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].address)}</td>
+         <td class="user-select-none" data-label="Total Machines"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].service.length)}</td>
+         <td class="user-select-none" data-label="Tech. Name"  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${ShortifyString(reports[i].technicianName)}</td>
+         <td class="user-select-none" data-label="Attd. Loc."  onclick='viewServiceReport(${JSON.stringify(reports[i])});'>${((reports[i].checked.tally.isReviewed) ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-x-circle-fill text-danger"></i>')}</td>
         </tr>
         `
     }
@@ -344,6 +360,73 @@ async function getAllServiceReports() {
 }
 getAllServiceReports()
 
+async function updateCheckStatus(id, r, status) {
+    if (status === 'viewed') {
+        // 'r' is used as a row no in viewed
+        const checkboxSelector = $(`.service-report-row.row-${r} td[data-label="Viewed"] input[type="checkbox"]`)
+        const loaderSelector = $(`.service-report-row.row-${r} td[data-label="Viewed"] .spinner-border`)
+        const THcheckboxSelector = $(`.all-service-reports-table th:nth-child(1) input[type="checkbox"]`)
+        const THloaderSelector = $(`.all-service-reports-table th:nth-child(1) .spinner-border`)
+        checkboxSelector.addClass('hide')
+        loaderSelector.removeClass('hide')
+        if (id == "0") {
+            THloaderSelector.removeClass('hide')
+            THcheckboxSelector.addClass('hide')
+        }
+        await axios.post(`/api/v1/service-report/checked/viewed`, {
+            id, data: true
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    if (id != "0") {
+                        checkboxSelector.removeClass('hide')
+                        loaderSelector.addClass('hide')
+                    } else {
+                        THloaderSelector.addClass('hide')
+                        THcheckboxSelector.removeClass('hide')
+                        const state = THcheckboxSelector.prop('checked')
+                        $(`.service-report-row td[data-label="Viewed"] input[type="checkbox"]`).prop('checked', state)
+                    }
+                }
+            }).catch((e) => {
+                alert("There is an error occured. Please wait until it is fixed")
+            })
+    } else if (status === "tally") {
+        // 'r' is used as a element in tally section
+        data = {}
+        formData = r.serializeArray().map(v => { data[v.name] = v.value })
+        data['isReviewed'] = $('.revisions form input[type="checkbox"]').is(':checked')
+        await axios.post(`/api/v1/service-report/checked/tally`, {
+            id, data
+        }).then(res => {
+            if (res.data.success) {
+                setRevisedTally(true)
+            }
+        })
+    }
+}
+
+function setRevisedTally(cmd) {
+    checkbox = $('.revision-tally form div:nth-child(1) input[type="checkbox"]')
+    icon = $('.revision-tally form div:nth-child(1) i')
+    inputs = $('.revision-tally form input')
+    submitBtn = $('.revision-tally form .submit-btn ')
+    if (cmd) {
+        checkbox.addClass('hide')
+        icon.removeClass('hide')
+        inputs.prop('readonly', true)
+        submitBtn.addClass('hide').attr('type', 'button')
+        toggleVisibility(checkbox, '.revisions .content')
+    }
+    else {
+        checkbox.removeClass('hide').prop('checked', false)
+        icon.addClass('hide')
+        inputs.prop('readonly', false)
+        submitBtn.removeClass('hide').attr('type', 'submit')
+        toggleVisibility(checkbox, '.revisions .content')
+    }
+}
+
 // search service reports
 async function searchReport(query) {
     $('.service-report-loading').removeClass('hide')
@@ -391,7 +474,7 @@ $('form#advance-serach-form button[type="submit"]').on('click', (e) => {
         axios({
             method: "post",
             url: `/api/v1/service-report/search/advWty`,
-            data: { wty: $('input[name="advWty"]:checked').val() },
+            data: { wty: $('#advance-serach-form .wty-adv-search-section input[name="advWty"]:checked').val() },
         }).then(function (response) {
             convertTableHead("machine")
             $('.totalResult').html(`${response.data.reports.length} results found`)
@@ -404,14 +487,14 @@ $('form#advance-serach-form button[type="submit"]').on('click', (e) => {
                     if (machine.warranty == response.data.query) {
                         data += `
                         <tr class='cursor-pointer move service-report-row row-${i}' onclick='viewServiceReport(${JSON.stringify(response.data.reports[i])});'>
-                         <td class="user-select-none text-truncate" data-label="Machine name" >${machine.machineName}</td>
-                         <td class="user-select-none text-truncate" data-label="Machine number" >${machine.machineNum}</td>
-                         <td class="user-select-none text-truncate" data-label="Warranty" >${machine.warranty}</td>
-                         <td class="user-select-none text-truncate" data-label="Problem" >${machine.problem}</td>
-                         <td class="user-select-none text-truncate" data-label="Action" >${machine.actionTaken}</td>
-                         <td class="user-select-none text-truncate" data-label="Parts IN" >${machine.partsIN.length}</td>
-                         <td class="user-select-none text-truncate" data-label="Parts OUT" >${machine.partsOUT.length}</td>
-                         <td class="user-select-none text-truncate" data-label="Status" >${machine.status}</td>
+                        <td class="user-select-none text-truncate" data-label="Machine name" >${machine.machineName}</td>
+                        <td class="user-select-none text-truncate" data-label="Machine number" >${machine.machineNum}</td>
+                        <td class="user-select-none text-truncate" data-label="Warranty" >${machine.warranty}</td>
+                        <td class="user-select-none text-truncate" data-label="Problem" >${machine.problem}</td>
+                        <td class="user-select-none text-truncate" data-label="Action" >${machine.actionTaken}</td>
+                        <td class="user-select-none text-truncate" data-label="Parts IN" >${machine.partsIN.length}</td>
+                        <td class="user-select-none text-truncate" data-label="Parts OUT" >${machine.partsOUT.length}</td>
+                        <td class="user-select-none text-truncate" data-label="Status" >${machine.status}</td>
                         </tr>
                         `
                     }
@@ -436,19 +519,30 @@ function convertTableHead(cmd) {
                 <th scope="col" style="word-break:break-all;white-space: nowrap;">P. OUT</th>
                 <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Status</th>
             </tr>`)
-    }else if(cmd == "reports"){
+    } else if (cmd == "reports") {
         $('.all-service-reports-table thead').html(`
             <tr>
-                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
+                <th scope="col" class="user-select-none"
+                style="width: 2em;max-width: 3em;word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0;padding:1em">
+                    <input class="form-check-input cursor-pointer m-1" type="checkbox" id="flexCheckDefault"
+                    onchange="updateCheckStatus('0','0','viewed')">
+                    <div class="spinner-border spinner-border-sm hide" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">S No.</th>
                 <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">Date</th>
                 <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">C Name.</th>
                 <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
                 <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
                 <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
-                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">T. Name</th>
-                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap" data-toggle="tooltip" data-placement="top" title="Technician Name">T. Name</th>
+                <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 " data-toggle="tooltip" data-placement="top" title="Tally Reviewed">T.R</th>
             </tr>`)
     }
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
 }
 
 
@@ -623,6 +717,15 @@ function switchAdvance(option) {
     } else if (option === "warranty") {
         $('.wty-adv-search-section').removeClass('opacity-3')
         $('.combination-adv-search-section').addClass('opacity-3')
+    }
+}
+
+
+function toggleVisibility(checkbox, selector) {
+    if (checkbox.is(":checked")) {
+        $(selector).removeClass('hide')
+    } else {
+        $(selector).addClass('hide')
     }
 }
 // // open filter menu

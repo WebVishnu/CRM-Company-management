@@ -210,6 +210,7 @@
                         <th scope="col">Product Name</th>
                         <th scope="col" class="voucher-details-sr-col">Serial No.</th>
                         <th scope="col">QTY</th>
+                        <th scope="col">Unit</th>
                         <th scope="col">Rate</th>
                         <th scope="col">Amount</th>
                         <th scope="col">GST@</th>
@@ -453,7 +454,7 @@
         for (let i = 0; i < rows.length; i++) {
             DO.products.push({
                 productName: rows[i].children[0].children[0].value,
-                serialNum: (rows[i].children.length == 8) ? rows[0].children[1].children[0].value : ""
+                serialNum: (rows[i].children.length == 9) ? rows[0].children[1].children[0].value : ""
             })
         }
         // API request

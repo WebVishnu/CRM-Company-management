@@ -108,11 +108,12 @@ function openVoucherDetails(voucher) {
         productsData += `
         <tr>
             <td class="px-3"><textarea class="input-transparent pe-none w-100" style="max-width: 8em;">${products[i].productName}</textarea></td>
-            ${(products[i].serialNum)?`<td class="px-3 voucher-details-sr-col"><textarea style="max-width: 8em;" class="input-transparent pe-none">${products[i].serialNum}</textarea></td>`:''}
+            ${(products[i].serialNum) ? `<td class="px-3 voucher-details-sr-col"><textarea style="max-width: 8em;" class="input-transparent pe-none">${products[i].serialNum}</textarea></td>` : ''}
+            <td class="px-3">${products[i].qty}</td>
             <td class="px-3">${products[i].unit}</td>
             <td class="px-3">${products[i].rate}</td>
             <td class="px-3">${products[i].amount}</td>
-            <td class="px-3" style="position:relative;width:4.5em;">${products[i].gstRate}</td>
+            <td class="px-3" style="position:relative;width:4.5em;">${((products[i].totalGst / products[i].amount) * 100).toFixed(0)} %</td>
             <td class="px-3">${products[i].totalGst}</td>
             <td class="px-3">${products[i].grossTotal}</td>
         </tr>`
@@ -147,7 +148,7 @@ function openVoucherDetails(voucher) {
         // there is no seriel num
         $('.voucher-details-sr-col').remove()
     } else {
-        if ($('#allProductsTable thead th').length == 7) {
+        if ($('#allProductsTable thead th').length == 8) {
             $('#allProductsTable thead th:first-child').after(`<th scope="col" class="voucher-details-sr-col">Serial No.</th>`)
         }
     }
@@ -186,7 +187,7 @@ function openVoucherDetails(voucher) {
         }
         $('.advanceEntryTbody').html(advanceData)
         $('.totalAdvncSpan').html(total)
-        
+
     } else {
         $('.advance-payment-container').fadeOut(0)
         $('.advance-payment-heading').html('No advance Payment received').addClass('my-5')

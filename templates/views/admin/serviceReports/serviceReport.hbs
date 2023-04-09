@@ -120,15 +120,22 @@
     <thead>
       <tr>
         <th scope="col" class="user-select-none"
-          style="word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0 ">S No.</th>
+          style="width: 2em;max-width: 3em;word-break:break-all;white-space: nowrap;border-radius:6px 0 0 0;padding:1em">
+          <input class="form-check-input cursor-pointer m-1" type="checkbox" id="flexCheckDefault"
+            onchange="updateCheckStatus('0','0','viewed')">
+          <div class="spinner-border spinner-border-sm hide" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">S No.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">Date</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap;">C Name.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
-        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">T. Name</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap" data-toggle="tooltip" data-placement="top" title="Technician Name">T. Name</th>
         <th scope="col" class="user-select-none"
-          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Atten. Loc</th>
+          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 " data-toggle="tooltip" data-placement="top" title="Tally Revised">T.R</th>
       </tr>
     </thead>
     <tbody id="all-service-reports-body">
@@ -137,8 +144,7 @@
 </div>
 <div class="container service-report-loading hide" style="
     position: relative;
-    bottom: 4em;
-">
+    bottom: 4em;">
   <div class="row">
     <div class="col-12 p-0 d-flex justify-content-center">
       <div class="spinner-border sales-data-loader" role="status">
@@ -234,6 +240,33 @@
             <tbody id="all-service-machines-table-body">
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="col-12 revisions mb-5 pb-5">
+        <div class="revision-tally ps-3 py-1" style="background-color: #f0f0f0;">
+          <form>
+            <div class="d-flex align-items-center py-2">
+              <input class="form-check-input cursor-pointer" type="checkbox"
+                onchange="toggleVisibility($(this),'.revisions .content')">
+              <i class="bi bi-arrow-right hide"></i>
+              <h6 class="d-inline m-0 ps-3">Revised in Tally</h6>
+            </div>
+            <div class="content mt-3 me-3 hide">
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="book-no">Book No.</span>
+                <input required type="text" class="form-control" placeholder="Book No." aria-label="Book No."
+                  aria-describedby="book-no" name="bookNo">
+              </div>
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="book-date">Book date</span>
+                <input required type="text" class="form-control" placeholder="Book date" aria-label="Book date"
+                  aria-describedby="book-date" name="bookDate">
+              </div>
+              <div class="submit-btn d-flex justify-content-end mb-2">
+                <button type="submit" class="btn shadow-none bg-text-base-color">Save</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
       {{!-- <div class="col-md-3 col-6 p-0 offset-md-6 mb-5">
@@ -339,12 +372,13 @@
       <div class="col-md-6">
         <div class="form-group">
           <label for="">Status</label>
-          <select disabled class="form-select shadow-none service-report-machine-details-status" aria-label="Default select example">
+          <select disabled class="form-select shadow-none service-report-machine-details-status"
+            aria-label="Default select example">
             <option value="OK" selected> OK </option>
             <option value="Pending"> Pending </option>
           </select>
-          {{!-- <input readonly type="text" class="form-control shadow-none service-report-machine-details-status" name=""
-            id="" aria-describedby="helpId" placeholder="enter status here"> --}}
+          {{!-- <input readonly type="text" class="form-control shadow-none service-report-machine-details-status"
+            name="" id="" aria-describedby="helpId" placeholder="enter status here"> --}}
         </div>
       </div>
       <div class="col-md-3 d-flex flex-column mb-2">
@@ -593,3 +627,8 @@
 
 <script src="/js/admin/service-report/allServiceReport.js"></script>
 {{/inline}}
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>

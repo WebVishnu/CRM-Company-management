@@ -58,6 +58,13 @@
   width: 3em;
 }
 
+.form-check-input {
+  position: relative !important;
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+}
+
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;

@@ -91,6 +91,7 @@ function submitForm(cmd, e) {
             data["products"] = []
             for (let i = 0; i <= $('#allProductsTable tbody tr').length - 1; i++) {
                 Gtd = table.children()[i].children // array of table data ( <td></td> ) of ( row = i )
+                console.log(Gtd[5].children[0].value)
                 data["products"].push({
                     productName: Gtd[0].children[1].value,
                     // serialNum: Gtd[1].children[0].value,
@@ -385,7 +386,7 @@ function autoComplete(ele, key) {
     // axios.get(`/api/v1/voucher/delivery-order/find/${key}/${(ele[0].value == "")?"@#$":ele[0].value}`).then((res) => {
     //     console.log(res.data)
     //     if(res.data.success){
-            
+
     //     }
     // })
 }
