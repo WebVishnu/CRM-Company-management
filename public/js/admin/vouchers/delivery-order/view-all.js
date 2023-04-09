@@ -113,7 +113,7 @@ function openVoucherDetails(voucher) {
             <td class="px-3">${products[i].unit}</td>
             <td class="px-3">${products[i].rate}</td>
             <td class="px-3">${products[i].amount}</td>
-            <td class="px-3" style="position:relative;width:4.5em;">${((products[i].totalGst / products[i].amount) * 100).toFixed(0)} %</td>
+            <td class="px-3" style="position:relative;width:4.5em;">${(((products[i].grossTotal-products[i].amount)*100)/products[i].amount).toFixed(0)} %</td>
             <td class="px-3">${products[i].totalGst}</td>
             <td class="px-3">${products[i].grossTotal}</td>
         </tr>`
