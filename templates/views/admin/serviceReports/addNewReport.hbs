@@ -187,36 +187,65 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9 col-sm-4 p-3 d-flex flex-column parts-in-inputs-container"  style="position:relative">
-                    <span class="px-2 font-weight-bold" style="position:absolute;top:0.3em;left:2em;background-color:#f5f5f9">PARTS IN</span>
+                <div class="col-12 p-3 d-flex flex-column parts-in-inputs-container" style="position:relative">
+                    <span class="px-2 font-weight-bold"
+                        style="position:absolute;top:0.3em;left:2em;background-color:#f5f5f9">PARTS GIVEN TO CUSTOMER</span>
                     <div class="form-group parts-in-inputs" style="border: 1px solid rgb(194, 194, 194)!important;">
                         <div class=" d-flex m-3">
-                            <div class="w-100">
-                                <label for="partName">Part Name</label>
+                            <div class="w-100 mx-1">
+                                <label for="partName">Name</label>
                                 <input type="text" class="form-control shadow-none partName">
                             </div>
-                            <div class="w-100">
-                                <label for="partSno">Part Sno.</label>
+                            <div class="w-100 mx-1">
+                                <label for="partSno">Sno.</label>
                                 <input type="text" class="form-control shadow-none partSno">
                             </div>
-                            <div class="w-100">
-                                <label for="partWTY">Part Wty</label>
+                            <div class="w-100 mx-1">
+                                <label for="partWTY">Wty</label>
                                 <input type="text" class="form-control shadow-none partWTY">
                             </div>
                         </div>
                     </div>
-                        <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3" onclick="addNewPartsIN()">
-                            + Add more</span>
+                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3" onclick="addNewPartsIN()">
+                        + Add more</span>
                 </div>
-                <div class="col-md-3 col-sm-4 d-flex flex-column">
+
+
+
+                <div class="col-12 p-3 d-flex flex-column" style="position:relative">
+                    <span class="px-2 font-weight-bold"
+                        style="position:absolute;top:0.3em;left:2em;background-color:#f5f5f9">PARTS RECEIVED FROM CUSTOMER</span>
+                    <div class="form-group parts-out-inputs" style="border: 1px solid rgb(194, 194, 194)!important;">
+                        <div class=" d-flex m-3">
+                            <div class="w-100 mx-1">
+                                <label for="partName">Name</label>
+                                <input type="text" class="form-control shadow-none partName">
+                            </div>
+                            <div class="w-100 mx-1">
+                                <label for="partSno">Sno.</label>
+                                <input type="text" class="form-control shadow-none partSno">
+                            </div>
+                            <div class="w-100 mx-1">
+                                <label for="partWTY">Wty</label>
+                                <input type="text" class="form-control shadow-none partWTY">
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3"
+                        onclick="addNewPartsOUT()">
+                        + Add more</span>
+                </div>
+
+
+
+
+                {{!-- <div class="col-md-3 col-sm-4 d-flex flex-column">
                     <div class="form-group  parts-out-inputs">
                         <label for="partsOUT">Parts OUT</label>
                         <input type="text" class="form-control shadow-none partsOUT">
                     </div>
-                    <span class="text-primary cursor-pointer mb-4 mb-md-0 text-end mx-3"
-                        onclick="$('.parts-out-inputs').append(`<input type='text' class='form-control shadow-none my-2 partsOUT'>`);appyOnFocusShortcuts();">
-                        + Add more</span>
-                </div>
+                    
+                </div> --}}
 
                 <div class="col-md-3">
                     <div class="form-group">
@@ -258,8 +287,8 @@
                                 <th scope="col" style="word-break:break-all;white-space: nowrap">Wty</th>
                                 <th scope="col" style="word-break:break-all;white-space: nowrap">Prob.</th>
                                 <th scope="col" style="word-break:break-all;white-space: nowrap">Action</th>
-                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. IN</th>
-                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. Out</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. Given</th>
+                                <th scope="col" style="word-break:break-all;white-space: nowrap">P. Recv.</th>
                                 <th scope="col"
                                     style="word-break:break-all;white-space: nowrap;border-radius:0 6px 0 0">
                                     Status</th>
@@ -280,9 +309,9 @@
             </div>
         </div>
         <div class="row mb-5">
-            <div class="col d-flex justify-content-end flex-wrap">
+            <div class="col d-flex justify-content-sm-end justify-content-center flex-wrap">
                 {{!-- Customer Signature =============================================== --}}
-                <button type="button" class="btn btn-primary mx-sm-4 shadow-none my-2" style="height:3em;"
+                <button type="button" class="btn btn-primary mx-2 shadow-none my-2" style="height:3em;"
                     data-toggle="modal" data-target="#CustomerSignatureModal">Add Customer Signature</button>
                 <img class="customer-sign-img">
                 <input type="text" hidden class="customer-sign-input" name="customerSignImgDataUrl">
@@ -320,7 +349,7 @@
                     </div>
                 </div>
                 {{!-- Technician Signature ============================================= --}}
-                <button type="button" class="btn btn-primary shadow-none my-2" style="height:3em;" data-toggle="modal"
+                <button type="button" class="btn btn-primary mx-2 shadow-none my-2" style="height:3em;" data-toggle="modal"
                     data-target="#TechnicianSignatureModal">Add Technician Signature</button>
                 <img class="technician-sign-img">
                 <input type="text" hidden class="technician-sign-input" name="technicianSignImgDataUrl">
@@ -372,8 +401,6 @@
                 {{/if}}
                 <h6 class="submit-report-error-text text-center text-danger mt-2 me-2"></h6>
                 <input type="text" hidden id="service-report-machine-id-input" name="serviceReportMachineIdInput">
-                {{!-- <button class="btn btn-success shadow-none share-service-report-btn mx-2" type="button"><i
-                        class="bi bi-whatsapp mx-2"></i>Share</button> --}}
                 <button class="btn btn-primary shadow-none submit-service-report-btn" type="submit">Submit & Add
                     more</button>
             </div>

@@ -18,6 +18,9 @@ const machineServiceReport = mongoose.Schema({
             type: "boolean",
             default: false
         },
+        adminViewed: {
+            admins: { type:[String] }
+        },
         tally: {
             isReviewed: {
                 type: "boolean",
@@ -99,7 +102,15 @@ const machineServiceReport = mongoose.Schema({
                 partName: {
                     type: "string",
                     default: ""
-                }
+                },
+                partSerialNumber: {
+                    type: "string",
+                    default: ""
+                },
+                partWty: {
+                    type: "string",
+                    default: ""
+                },
             }],
             status: {
                 type: "string",

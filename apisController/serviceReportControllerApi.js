@@ -154,24 +154,46 @@ exports.updateServiceReport = catchAsyncErrors(async (req, res, next) => {
 
 // Update Check Status -- admin
 exports.updateCheckStatus = catchAsyncErrors(async (req, res, next) => {
-    if (req.body.id != "0") {
-        console.log(req.body)
+    if (req.params.task == "tally") {
         await ServiceReport.findByIdAndUpdate(req.body.id, {
             [`checked.${req.params.task}`]: req.body.data
         })
-    } else {
-        await ServiceReport.updateMany({}, {
-            $set: {
-                checked: {
-                    [req.params.task]: req.body.data
-                }
+        res.send({ success: true })
+    } else if (req.params.task == "viewed") {
+        if (req.body.id != "0") {
+            if (req.body.data != false) {
+                await ServiceReport.findOneAndUpdate({ _id: req.body.id, $ne: { 'checked.adminViewed.admins': req.body.Cid } }, {
+                    $addToSet: {
+                        'checked.adminViewed.admins': req.body.Cid
+                    }
+                })
+            } else {
+                await ServiceReport.findOneAndUpdate({ _id: req.body.id, $eq: { 'checked.adminViewed.admins': req.body.Cid } }, {
+                    $pull: {
+                        'checked.adminViewed.admins': req.body.Cid
+                    }
+                })
             }
-        })
+        } else {
+            if (req.body.data != false) {
+                await ServiceReport.updateMany({ $ne: { 'checked.adminViewed.admins': req.body.Cid } }, {
+                    $addToSet: {
+                        'checked.adminViewed.admins': req.body.Cid
+                    }
+                })
+            } else {
+                await ServiceReport.updateMany({ $eq: { 'checked.adminViewed.admins': req.body.Cid } }, {
+                    $pull: {
+                        'checked.adminViewed.admins': req.body.Cid
+                    }
+                })
+            }
+        }
+        res.send({ success: true })
+    } else {
+        res.send({ success: false })
     }
-    res.send({
-        success: true,
-        // report: await ServiceReport.find({ _id: req.body.id }).select('-Image')
-    })
+
 })
 
 // send report on whatsapp

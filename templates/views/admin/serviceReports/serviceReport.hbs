@@ -57,6 +57,7 @@
       bottom: 4em;
     }
   }
+
 </style>
 {{/style}}
 
@@ -133,9 +134,11 @@
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Mob.</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Address</th>
         <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap">Machines</th>
-        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap" data-toggle="tooltip" data-placement="top" title="Technician Name">T. Name</th>
+        <th scope="col" class="user-select-none" style="word-break:break-all;white-space: nowrap" data-toggle="tooltip"
+          data-placement="top" title="Technician Name">T. Name</th>
         <th scope="col" class="user-select-none"
-          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 " data-toggle="tooltip" data-placement="top" title="Tally Revised">T.R</th>
+          style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 " data-toggle="tooltip"
+          data-placement="top" title="Tally Revised">T.R</th>
       </tr>
     </thead>
     <tbody id="all-service-reports-body">
@@ -232,8 +235,8 @@
                 <th scope="col" style="word-break:break-all;white-space: nowrap">Wty</th>
                 <th scope="col" style="word-break:break-all;white-space: nowrap">Prob.</th>
                 <th scope="col" style="word-break:break-all;white-space: nowrap">Action</th>
-                <th scope="col" style="word-break:break-all;white-space: nowrap">P. IN</th>
-                <th scope="col" style="word-break:break-all;white-space: nowrap;">P. OUT</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap">P Given</th>
+                <th scope="col" style="word-break:break-all;white-space: nowrap;">P Recv.</th>
                 <th scope="col" style="word-break:break-all;white-space: nowrap;border-radius: 0 6px 0 0 ">Status</th>
               </tr>
             </thead>
@@ -377,25 +380,27 @@
             <option value="OK" selected> OK </option>
             <option value="Pending"> Pending </option>
           </select>
-          {{!-- <input readonly type="text" class="form-control shadow-none service-report-machine-details-status"
-            name="" id="" aria-describedby="helpId" placeholder="enter status here"> --}}
         </div>
       </div>
-      <div class="col-md-3 d-flex flex-column mb-2">
-        <div class="form-group">
-          <label for="">Parts OUT</label>
-          <div class="parts-out-inputs">
+      <div class="col-12 mt-3 d-flex flex-column mb-2" style="position:relative">
+        <span class="px-2" style="position:absolute;top:-0.7em;left:2em;background-color:#f8f9fa">Part Received</span>
+        <div class="form-group d-flex p-3 pt-5" style="border: 1px solid rgb(194, 194, 194)!important;">
+          <div class="w-100">
+            <div class="d-flex justify-content-around">
+              <label class="w-100">Part name</label>
+              <label class="w-100">Part Sno.</label>
+              <label class="w-100">Part Wty</label>
+            </div>
+            <div class="parts-out-inputs">
+            </div>
           </div>
         </div>
-        <span class="cursor-pointer text-primary add-new-parts-out hide"
-          onclick="$('.parts-out-inputs')
-          .append(`
-          <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partsOut my-1' placeholder='enter parts out'>`)">
+        <span class="cursor-pointer text-primary add-new-parts-out hide" onclick="addInputsMachine('out')">
           + add new
         </span>
       </div>
-      <div class="col-md-9 mb-5 pb-5 mt-3" style="position:relative">
-        <span class="px-2" style="position:absolute;top:-0.7em;left:2em;background-color:#f8f9fa">Part IN</span>
+      <div class="col-12 mb-5 pb-5 mt-3" style="position:relative">
+        <span class="px-2" style="position:absolute;top:-0.7em;left:2em;background-color:#f8f9fa">Part given</span>
         <div class="form-group d-flex p-3 pt-5" style="border: 1px solid rgb(194, 194, 194)!important;">
           <div class="w-100">
             <div class="d-flex justify-content-around">
@@ -406,20 +411,8 @@
             <div class="parts-in-inputs">
             </div>
           </div>
-          {{!-- <div class="w-50">
-            <label for="">Parts wty</label>
-            <div class="parts-wty-inputs">
-            </div>
-          </div> --}}
         </div>
-        <span class="cursor-pointer text-primary add-new-parts-in hide mb-5" onclick="$('.parts-in-inputs')
-          .append(`
-          <div class='d-flex'>
-                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partName my-1' placeholder='enter parts name'>
-                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partSno my-1' placeholder='enter parts sno'>
-                <input type='text' class='form-control shadow-none service-report-machine-details-parts-in partWty my-1' placeholder='enter parts wty'>
-                </div>`)
-         ">+ add
+        <span class="cursor-pointer text-primary add-new-parts-in hide mb-5" onclick="addInputsMachine('in')">+ add
           new</span>
       </div>
 

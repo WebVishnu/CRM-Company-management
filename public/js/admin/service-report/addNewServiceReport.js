@@ -152,18 +152,25 @@ function dataUriToBlob(dataURI) {
 // add machine function
 // ================================================================================
 $('.add-new-machine-btn').on('click', async () => {
-    tempPartIN = {}
-    let tempPartName = $('.partName').map(function () { return this.value; }).get();
-    let tempPartSno = $('.partSno').map(function () { return this.value; }).get();
-    let tempPartWty = $('.partWTY').map(function () { return this.value; }).get();
-    let partsIn = []
-    for (let i = 0; i < tempPartName.length; i++) {
-        partsIn.push({
-            partName: tempPartName[i],
-            partSerialNumber: tempPartSno[i],
-            partWty: tempPartWty[i],
-        })
+    // retiriving info from machine parts
+    function createPartTable(part){
+        let parts = []
+        let PartName = $(`.parts-${part}-inputs .partName`).map(function () { return this.value; }).get();
+        let tempPartSno = $(`.parts-${part}-inputs .partSno`).map(function () { return this.value; }).get();
+        let tempPartWty = $(`.parts-${part}-inputs .partWTY`).map(function () { return this.value; }).get();
+        for (let i = 0; i < PartName.length; i++) {
+            parts.push({
+                partName: PartName[i],
+                partSerialNumber: tempPartSno[i],
+                partWty: tempPartWty[i],
+            })
+        }
+        return parts
     }
+
+    // creating parts table
+    let partsOut = createPartTable("out")
+    let partsIn = createPartTable("in")
     const addNewMachineData = {
         "machineName": $('#machine-name-input').val(),
         "machineNum": $('#seriel-num-input').val(),
@@ -172,7 +179,7 @@ $('.add-new-machine-btn').on('click', async () => {
         "problem": $('#problem-input').val(),
         "actionTaken": $('#action-input').val(),
         "partsIN": partsIn,
-        "partsOUT": $('.partsOUT').map(function () { return { partName: this.value }; }).get(),
+        "partsOUT": partsOut,
         "status": $('#status').val(),
     }
     if (isEmpty(addNewMachineData) == undefined) {
@@ -187,8 +194,8 @@ $('.add-new-machine-btn').on('click', async () => {
                 <td data-label="Wty">${ShortifyString(addNewMachineData.warranty)}</td>
                 <td data-label="Problem">${ShortifyString(addNewMachineData.problem)}</td>
                 <td data-label="Action">${ShortifyString(addNewMachineData.actionTaken)}</td>
-                <td data-label="Parts IN">${ShortifyString(addNewMachineData.partsIN[0].partName)}</td>
-                <td data-label="Parts OUT">${ShortifyString(addNewMachineData.partsOUT)}</td>
+                <td data-label="Parts IN">${ShortifyString(addNewMachineData.partsIN.length)}</td>
+                <td data-label="Parts OUT">${ShortifyString(addNewMachineData.partsOUT.length)}</td>
                 <td data-label="Status">${ShortifyString(addNewMachineData.status)}</td>
             </tr>
             `)
@@ -235,7 +242,7 @@ function updateAllMachinesServiceReport(result) {
 
 const partsInHtml = $('.parts-in-inputs-container').html()
 const partsOutHtml = $('.parts-out-inputs').html()
-// clear add new machine form 
+// clear add new machine form
 async function clearNewMachineForm() {
     $('.parts-in-inputs-container').html(partsInHtml)
     $('.parts-out-inputs').html(partsOutHtml)
@@ -283,18 +290,36 @@ $('#service-report-main-form').on('submit', (e) => {
 
 
 
-// add new part sin inputs
+// add new part in inputs
 function addNewPartsIN() {
     $('.parts-in-inputs')
         .append(`
         <div class="d-flex m-3">
-            <div class="w-100">
+            <div class="w-100 mx-1">
                 <input type="text" class="form-control shadow-none partName">
             </div>
-            <div class="w-100">
+            <div class="w-100 mx-1">
                 <input type="text" class="form-control shadow-none partSno">
             </div>
-            <div class="w-100">
+            <div class="w-100 mx-1">
+                <input type="text" class="form-control shadow-none partWTY">
+            </div>
+        </div>`)
+    appyOnFocusShortcuts()
+}
+
+// add new part out inputs
+function addNewPartsOUT() {
+    $('.parts-out-inputs')
+        .append(`
+        <div class="d-flex m-3">
+            <div class="w-100 mx-1">
+                <input type="text" class="form-control shadow-none partName">
+            </div>
+            <div class="w-100 mx-1">
+                <input type="text" class="form-control shadow-none partSno">
+            </div>
+            <div class="w-100 mx-1">
                 <input type="text" class="form-control shadow-none partWTY">
             </div>
         </div>`)

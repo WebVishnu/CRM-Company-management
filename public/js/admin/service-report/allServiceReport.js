@@ -24,13 +24,11 @@ keyboardJS.bind('esc', (e) => {
 });
 
 keyboardJS.bind('up', (e) => {
-    console.log($('.move:focus'))
     $('.move:focus').prev().focus()
 });
 
 
 keyboardJS.bind('down', (e) => {
-    console.log($('.move:focus'))
     $('.move:focus').next().focus()
 });
 // refresh all the service reports
@@ -152,7 +150,7 @@ function ShortifyString(str) {
 }
 // open service report modal
 function viewServiceReport(report) {
-    $(".view-sale-data-details-modal input" ).val("")
+    $(".view-sale-data-details-modal input").val("")
     $('.revisions form').attr('onsubmit', `updateCheckStatus('${report._id}',$(this),'tally');return false`)
     if (report.checked.tally.isReviewed) {
         $('.revision-tally form div:nth-child(1) input[type="checkbox"]').prop("checked", true);
@@ -191,8 +189,8 @@ function viewServiceReport(report) {
                 <td data-label="Warranty" >${ShortifyString(report.service[i].warranty)}</td>
                 <td data-label="Problem" >${ShortifyString(report.service[i].problem)}</td>
                 <td data-label="Action" >${ShortifyString(report.service[i].actionTaken)}</td>
-                <td data-label="Parts IN" >${ShortifyString((report.service[i].partsIN[0].partName != "") ? report.service[i].partsIN[0].partName : "open")}</td>
-                <td data-label="Parts OUT">${ShortifyString((report.service[i].partsOUT[0].partName != "") ? report.service[i].partsOUT[0].partName : "open")}</td>
+                <td data-label="Parts IN" >${report.service[i].partsIN.length}</td>
+                <td data-label="Parts OUT">${report.service[i].partsOUT.length}</td>
                 <td data-label="Status" >${ShortifyString(report.service[i].status)}</td>
                 </tr>`
         }
@@ -219,15 +217,17 @@ function viewMachineDetails(machine) {
         for (let i = 0; i < machine.partsIN.length; i++) {
             partIninputsHtml += `
             <div class="d-flex">
-                <input readonly value="${machine.partsIN[i].partName}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partName my-1" placeholder="enter parts IN">
-                <input readonly value="${machine.partsIN[i].partSerialNumber}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partSno my-1" placeholder="enter parts IN">
-                <input readonly value="${machine.partsIN[i].partWty}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partWty my-1" placeholder="enter parts IN">
+                <input readonly value="${machine.partsIN[i].partName}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partName my-1" placeholder="enter parts given">
+                <input readonly value="${machine.partsIN[i].partSerialNumber}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partSno my-1" placeholder="enter parts given">
+                <input readonly value="${machine.partsIN[i].partWty}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partWty my-1" placeholder="enter parts given">
             </div>`
         }
         for (let i = 0; i < machine.partsOUT.length; i++) {
             partWtyinputsHtml += `
             <div class="d-flex">
-                <input readonly value="${machine.partsOUT[i].partName}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partsOut my-1" placeholder="enter parts IN">
+                <input readonly value="${machine.partsOUT[i].partName}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-out partsOut partName my-1" placeholder="enter parts Received">
+                <input readonly value="${machine.partsOUT[i].partSerialNumber}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-out partsOut partSno my-1" placeholder="enter parts Received">
+                <input readonly value="${machine.partsOUT[i].partWty}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-out partsOut my-1 partWty" placeholder="enter parts Received">
             </div>`
         }
         $('.parts-in-inputs').html(partIninputsHtml)
@@ -297,7 +297,7 @@ async function updateServiceReportTable(reports) {
         data += `
         <tr class='cursor-pointer move service-report-row row-${i}'>
          <td class="user-select-none" data-label="Viewed" style="padding: 1em;">
-            <input class="form-check-input cursor-pointer" type="checkbox" ${(reports[i].checked.viewed) ? "checked" : ""} id="flexCheckDefault"
+            <input class="form-check-input cursor-pointer" type="checkbox" ${($.inArray($("#admin-id").val(),reports[i].checked.adminViewed.admins) != -1)?"checked":""} id="flexCheckDefault"
             onchange="updateCheckStatus('${reports[i]._id}',${i},'viewed')">
             <div class="spinner-border spinner-border-sm hide" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -359,7 +359,6 @@ async function getAllServiceReports() {
 
 }
 getAllServiceReports()
-
 async function updateCheckStatus(id, r, status) {
     if (status === 'viewed') {
         // 'r' is used as a row no in viewed
@@ -369,13 +368,15 @@ async function updateCheckStatus(id, r, status) {
         const THloaderSelector = $(`.all-service-reports-table th:nth-child(1) .spinner-border`)
         checkboxSelector.addClass('hide')
         loaderSelector.removeClass('hide')
+        // If we want to change the status of all the service reports
+        // then we send parameter as 0 
+        data = checkboxSelector.is(":checked")
         if (id == "0") {
             THloaderSelector.removeClass('hide')
             THcheckboxSelector.addClass('hide')
+            data = THcheckboxSelector.is(":checked")
         }
-        await axios.post(`/api/v1/service-report/checked/viewed`, {
-            id, data: true
-        })
+        await axios.post(`/api/v1/service-report/checked/viewed`, { id, Cid: $('#admin-id').val(),data })
             .then((response) => {
                 if (response.data.success) {
                     if (id != "0") {
@@ -542,7 +543,7 @@ function convertTableHead(cmd) {
     }
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-      })
+    })
 }
 
 
@@ -595,17 +596,24 @@ async function saveServiceReport() {
 }
 
 async function saveReportMachinesDetails() {
-    let tempPartName = $('.partName').map(function () { return this.value; }).get();
-    let tempPartSno = $('.partSno').map(function () { return this.value; }).get();
-    let tempPartWty = $('.partWty').map(function () { return this.value; }).get();
-    let partsIn = []
-    for (let i = 0; i < tempPartName.length; i++) {
-        partsIn.push({
-            partName: tempPartName[i],
-            partSerialNumber: tempPartSno[i],
-            partWty: tempPartWty[i],
-        })
+    // retiriving info from machine parts
+    function createPartTable(part) {
+        let parts = []
+        let PartName = $(`.parts-${part}-inputs .partName`).map(function () { return this.value; }).get();
+        let tempPartSno = $(`.parts-${part}-inputs .partSno`).map(function () { return this.value; }).get();
+        let tempPartWty = $(`.parts-${part}-inputs .partWty`).map(function () { return this.value; }).get();
+        for (let i = 0; i < PartName.length; i++) {
+            parts.push({
+                partName: PartName[i],
+                partSerialNumber: tempPartSno[i],
+                partWty: tempPartWty[i],
+            })
+        }
+        return parts
     }
+    partsIn = createPartTable('in')
+    partsOut = createPartTable('out')
+
     const id = $('.service-report-machine-details-_id').val()
     axios.post(`/api/v1/service-report/update/machine/${$('.service-report-machine-details-_id').val()}`, {
         'service.$.machineName': $('.service-report-machine-details-machine-name').val(),
@@ -615,7 +623,7 @@ async function saveReportMachinesDetails() {
         'service.$.problem': $('.service-report-machine-details-prob').val(),
         'service.$.actionTaken': $('.service-report-machine-details-action').val(),
         'service.$.partsIN': partsIn,
-        'service.$.partsOUT': $('.partsOut').map(function () { return { partName: this.value }; }).get(),
+        'service.$.partsOUT': partsOut,
         'service.$.status': $('.service-report-machine-details-status').val(),
     }).then((response) => {
         if (response.data.success) {
@@ -727,6 +735,16 @@ function toggleVisibility(checkbox, selector) {
     } else {
         $(selector).addClass('hide')
     }
+}
+
+
+function addInputsMachine(cmd) {
+    $(`.service-machine-modal .parts-${cmd}-inputs`).append(`
+        <div class='d-flex'>
+            <input type='text' class='form-control mx-1 shadow-none service-report-machine-details-parts-${cmd} partName my-1' placeholder='enter parts name'>
+            <input type='text' class='form-control mx-1 shadow-none service-report-machine-details-parts-${cmd} partSno my-1' placeholder='enter parts sno'>
+            <input type='text' class='form-control mx-1 shadow-none service-report-machine-details-parts-${cmd} partWty my-1' placeholder='enter parts wty'>
+        </div>`)
 }
 // // open filter menu
 // function openAdvanceSearch() {
