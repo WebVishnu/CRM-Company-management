@@ -230,6 +230,7 @@ function viewMachineDetails(machine) {
                 <input readonly value="${machine.partsOUT[i].partWty}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-out partsOut my-1 partWty" placeholder="enter parts Received">
             </div>`
         }
+        console.log(machine.partsOUT)
         $('.parts-in-inputs').html(partIninputsHtml)
         $('.parts-out-inputs').html(partWtyinputsHtml)
     } else {
@@ -263,16 +264,18 @@ function viewMachineDetails(machine) {
         for (let i = 0; i < partin.length; i++) {
             partIninputsHtml += `
             <div class="d-flex">
-                <input readonly value="${partin[i]}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partName my-1" placeholder="enter parts name">
-                <input readonly value="" type="text" class="form-control shadow-none service-report-machine-details-parts-in partSno my-1" placeholder="enter parts sno">
-                <input readonly value="${(typeof partWty == 'object') ? partWty[i] : "null"}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partWty my-1" placeholder="enter parts wty">
+                <input readonly value="${partin[i]}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partName my-1" placeholder="enter parts name">
+                <input readonly value="" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partSno my-1" placeholder="enter parts sno">
+                <input readonly value="${(typeof partWty == 'object') ? partWty[i] : "null"}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partWty my-1" placeholder="enter parts wty">
             </div>`
         }
         for (let i = 0; i <= partout.length; i++) {
             if (partout[i] != '' && partout[i] != undefined) {
                 partOutinputsHtml += `
                 <div class="d-flex">
-                    <input readonly value="${partout[i]}" type="text" class="form-control shadow-none service-report-machine-details-parts-in partsOut my-1" placeholder="enter parts out">
+                    <input readonly value="${partout[i]}" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partsOut partName my-1" placeholder="enter parts out">
+                    <input readonly value="" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partsOut partSno my-1" placeholder="enter parts out">
+                    <input readonly value="" type="text" class="form-control mx-1 shadow-none service-report-machine-details-parts-in partsOut my-1 partWty" placeholder="enter parts out">
                 </div>`
             }
         }

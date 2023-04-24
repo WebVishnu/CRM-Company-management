@@ -103,7 +103,7 @@ async function addNewPage(index) {
             $(`tr[data-row-index=${i}] td:nth-child(4)`).attr('rowspan', Math.max(services[i].partsIN.length, services[i].partsOUT.length))
             $(`tr[data-row-index=${i}] td:nth-child(8)`).attr('rowspan', Math.max(services[i].partsIN.length, services[i].partsOUT.length))
             $(`.parts-in-part-name-${i}`).val((services[i].partsIN[0].partSerialNumber != '') ? services[i].partsIN[0].partSerialNumber : services[i].partsIN[0].partName)
-            $(`.parts-in-part-out-${i}`).val(services[i].partsOUT[0].partName)
+            $(`.parts-in-part-out-${i}`).val(services[i].partsOUT[0].partSerialNumber)
             $(`.parts-in-part-wty-${i}`).val(services[i].partsIN[0].partWty)
             for (let j = 1; j < Math.max(services[i].partsIN.length, services[i].partsOUT.length); j++) {
                 if (services[i].partsIN[j] != undefined && services[i].partsIN[j] != undefined && services[i].partsIN[j] != undefined) {
@@ -117,7 +117,7 @@ async function addNewPage(index) {
                     <td style="word-break:break-all;font-size:12px;overflow-y:hidden;width:7em;">
                     <textarea data-TextareaPageNo=${pages} class="print-textarea" spellcheck="false" type="text"
                         style="word-break:break-word;border:none;width:100%;" rows="1"
-                        oninput="autosize(this)">${(services[i].partsOUT[j] != undefined) ? services[i].partsOUT[j].partName : ''}</textarea>
+                        oninput="autosize(this)">${(services[i].partsOUT[j] != undefined) ? services[i].partsOUT[j].partSerialNumber : ''}</textarea>
                     </td>
                     <td style="word-break:break-all;font-size:12px;overflow-y:hidden;width:7em;">
                     <textarea data-TextareaPageNo=${pages} class="print-textarea" spellcheck="false" type="text"
@@ -136,7 +136,7 @@ async function addNewPage(index) {
                     <td style="word-break:break-all;font-size:12px;overflow-y:hidden;width:7em;">
                     <textarea data-TextareaPageNo=${pages} class="print-textarea" spellcheck="false" type="text"
                         style="word-break:break-word;border:none;width:100%;" rows="1"
-                        oninput="autosize(this)">${(services[i].partsOUT[j] != undefined) ? services[i].partsOUT[j].partName : ''}</textarea>
+                        oninput="autosize(this)">${(services[i].partsOUT[j] != undefined) ? services[i].partsOUT[j].partSerialNumber : ''}</textarea>
                     </td>
                     <td style="word-break:break-all;font-size:12px;overflow-y:hidden;width:7em;">
                     <textarea data-TextareaPageNo=${pages} class="print-textarea" spellcheck="false" type="text"
