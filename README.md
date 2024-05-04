@@ -36,6 +36,12 @@ npm run dev
 ```
 2. Access the application in your web browser at http://localhost:3000.
 
+### Login with Demo account
+```
+ID : demo
+PASS : demo
+```
+
 ### Built With
 Node.js - JavaScript runtime
 Express.js - Web application framework
