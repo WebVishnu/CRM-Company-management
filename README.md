@@ -24,7 +24,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Configuration
 
-1. Create a .env file in the root directory based on .env.example and fill in the necessary environment variables
+1. Create a ```config.env``` file in the root directory based on .env.example and fill in the necessary environment variables
 
 ### Database Setup
 1. Ensure MongoDB is running on your local machine or update the database connection URL in the .env file.
