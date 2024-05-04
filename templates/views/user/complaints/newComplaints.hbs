@@ -19,11 +19,6 @@
     {{>loading}}
 
     <form action="/complaint-new/new" enctype="multipart/form-data" method="post">
-        <div class="logo" style="width: 100%;display:flex;justify-content: center">
-            <a href="/">
-                <img src="/images/vitco-logo.ico" alt="" height="100rem">
-            </a>
-        </div>
         <h1>Submit Your complaint</h1>
         {{#if error}}
         <h4 style="text-align: center;color:red">{{error}}</h4>

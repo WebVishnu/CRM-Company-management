@@ -10,8 +10,8 @@ const ServiceReport = require(path.join(
 const bcrypt = require("bcryptjs");
 const { sendTokenAdmin } = require(path.join(__dirname, "../utils/jwtToken"));
 
-Handlebars.registerHelper("ifCond", function  (v1, v2, options) {
-  if  (v1 === v2) {
+Handlebars.registerHelper("ifCond", function (v1, v2, options) {
+  if (v1 === v2) {
     return options.fn(this);
   }
   return options.inverse(this);
@@ -53,23 +53,25 @@ async function clearUserToken(req, res) {
 // admin login -- get req
 exports.adminLogin = async (req, res, next) => {
   const { adminToken } = req.cookies;
-  // await Admin.create({
-  //   adminName: "vitco-admin",
-  //   userName: "@vitco-admin9011",
-  //   password: "@adminVitco!1234",
-  //   role: { roleName: "admin" },
-  //   permissions: [
-  //     {
-  //       permissionName: "all",
-  //       permissionKeys: [
-  //         { keyName: "view" },
-  //         { keyName: "edit" },
-  //         { keyName: "create" },
-  //         { keyName: "delete" },
-  //       ],
-  //     },
-  //   ],
-  // });
+  // console.log(
+  //   await Admin.create({
+  //     adminName: "demo account",
+  //     userName: "demo",
+  //     password: "demo",
+  //     role: { roleName: "admin" },
+  //     permissions: [
+  //       {
+  //         permissionName: "all",
+  //         permissionKeys: [
+  //           { keyName: "view" },
+  //           { keyName: "edit" },
+  //           { keyName: "create" },
+  //           { keyName: "delete" },
+  //         ],
+  //       },
+  //     ],
+  //   })
+  // );
   if (adminToken) {
     clearUserToken(req, res);
     jwt.verify(
@@ -80,7 +82,7 @@ exports.adminLogin = async (req, res, next) => {
           res.clearCookie("adminToken");
           res.render("admin/login/login");
         } else {
-          res.redirect('/vitco-india/control')
+          res.redirect("/vitco-india/control");
         }
       }
     );
@@ -100,7 +102,7 @@ exports.adminLoginPost = async (req, res, next) => {
   });
   if (adminUserDetails[0]) {
     if (await adminUserDetails[0].comparePassword(req.body.password)) {
-      sendTokenAdmin(adminUserDetails[0], 201, res);
+      await sendTokenAdmin(adminUserDetails[0], 201, res);
     } else {
       res.render("admin/login/login", { error: "Wrong Details" });
     }
@@ -137,6 +139,9 @@ exports.adminNotificationsPage = async (req, res, next) => {
 // admin dashboard -- HOMEPAGE
 exports.adminControlPanel = async (req, res, next) => {
   const { adminToken } = req.cookies;
+  console.log("Admin Token " + adminToken.token);
+  console.log("ENV Token " + process.env.JWT_SECRET_ADMIN);
+
   if (adminToken) {
     clearUserToken(req, res);
     jwt.verify(
@@ -144,6 +149,7 @@ exports.adminControlPanel = async (req, res, next) => {
       process.env.JWT_SECRET_ADMIN,
       async function (err, decoded) {
         if (err) {
+          console.log("Admin token is not verified and cleared");
           res.clearCookie("adminToken");
           res.redirect("/vitco-india/admin/login");
         } else {
@@ -216,7 +222,14 @@ exports.adminCreateNewAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName.trim() },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","vouchers","deliveryOrderVoucher"]
+          permissionNames = [
+            "complaints",
+            "machineSalesData",
+            "partSalesData",
+            "serviceReport",
+            "vouchers",
+            "deliveryOrderVoucher",
+          ];
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {
@@ -290,7 +303,14 @@ exports.adminEditAdmin = async (req, res, next) => {
             role: { roleName: req.body.roleName },
             permissions: [],
           };
-          permissionNames = ["complaints", "machineSalesData", "partSalesData", "serviceReport","vouchers","deliveryOrderVoucher"]
+          permissionNames = [
+            "complaints",
+            "machineSalesData",
+            "partSalesData",
+            "serviceReport",
+            "vouchers",
+            "deliveryOrderVoucher",
+          ];
           for (let i = 0; i < permissionNames.length; i++) {
             if (req.body.permissionName.includes(permissionNames[i])) {
               const Per = {

@@ -17,7 +17,7 @@ const adminSchema = mongoose.Schema({
   },
   profilePhoto: {
     type: String,
-    default:"/images/avatar/boy-avatar.png"
+    default: "/images/avatar/boy-avatar.png",
   },
   email: {
     type: String,
@@ -27,15 +27,15 @@ const adminSchema = mongoose.Schema({
   },
   notificationNumber: {
     type: Number,
-    default: 0
+    default: 0,
   },
   notifications: [
     {
       notificationTitle: {
-        type: String
+        type: String,
       },
       profilePhoto: {
-        type: String
+        type: String,
       },
       adminID: {
         type: String,
@@ -44,20 +44,20 @@ const adminSchema = mongoose.Schema({
         type: String,
       },
       time: {
-        type: String
+        type: String,
       },
       message: {
-        type: String
-      }
-    }
+        type: String,
+      },
+    },
   ],
   role: [
     {
       roleName: {
         type: String,
         required: [true, "Please enter a role"],
-      }
-    }
+      },
+    },
   ],
   permissions: [
     {
@@ -68,8 +68,8 @@ const adminSchema = mongoose.Schema({
       permissionKeys: [
         {
           keyName: {
-            type: String
-          }
+            type: String,
+          },
         },
       ],
     },
@@ -84,7 +84,7 @@ adminSchema.pre("save", async function (next) {
 // generating jwt token
 adminSchema.methods.getJWTtoken = function () {
   return jwt.sign({ id: this.__id }, process.env.JWT_SECRET_ADMIN, {
-    expiresIn: process.env.ADMIN_JWT_EXPIRES,
+    expiresIn: process.env.ADMIN_JWT_EXPIRES * 24 * 60 * 60 * 1000,
   });
 };
 
